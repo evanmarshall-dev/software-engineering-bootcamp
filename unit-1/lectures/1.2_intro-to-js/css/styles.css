@@ -1,0 +1,9 @@
+:root {
+  --background-color: oklch(0.5338 0.2503 301.37);
+  --foreground-color: oklch(1 0 0);
+}
+
+body {
+  background-color: var(--background-color, blueviolet);
+  color: var(--foreground-color, #fff);
+}
