@@ -1,1 +1,1 @@
-console.log("Hello party people!!");
+// ? console.log("Hello party people!!");

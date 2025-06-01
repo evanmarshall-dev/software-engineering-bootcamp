@@ -6,3 +6,7 @@ console.log("Hello party people!!");
 let phrase;
 phrase = "YOLO!";
 console.log(phrase);
+
+// Initialization.
+const anotherPhrase = "Yippie!";
+console.log(anotherPhrase);
