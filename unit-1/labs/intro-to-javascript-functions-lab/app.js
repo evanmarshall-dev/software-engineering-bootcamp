@@ -166,17 +166,6 @@ const convertTemperature = (temperature, scale) => {
   }
 };
 
-// const convertTemperature = (temperature, scale) => {
-
-//   if (scale === "C") {
-//     return (temperature * 9) / 5 + 32;
-//   } else if (scale === "F") {
-//     return ((temperature - 32) * 5) / 9;
-//   } else {
-//     return "Invalid scale";
-//   }
-// };
-
 console.log("Exercise 8 Result:", convertTemperature(32, "C"));
 
 /*********************************************************************************************************************************
