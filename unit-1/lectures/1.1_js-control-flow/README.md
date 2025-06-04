@@ -84,3 +84,193 @@ val === 1 ? console.log("The value is 1.") : console.log("The value is not 1.");
 The three or more code paths or multiple if-else statements can use as many else if statements you need and end with an else statement.
 
 ## Module: Looping
+
+Looping is a control flow type that _repeats_ a set of actions or code blocks. These actions are repeated until a _condition_ is no longer or for a certain amount of _iterations_.
+
+### The `for` Loop
+
+The for loop repeats until a condition is false.
+
+It is broken down into the following steps:
+
+1. **Initialization** - Starts a counter variable before loop runs (`let i = 0;`).
+2. **Condition** - Evaluates an expression before each iteration. It is the condition checked to be true/false (i.e. `i <= 10;`).
+3. Code Block or Statement - Actions to be repeated each loop iteration (i.e. `console.log(i);`).
+4. **Afterthought** - Expression evaluated at the end of each iteration. Updates the loop counter and evaluated after code block runs (i.e. `i++`).
+
+For example:
+
+```javascript
+for (let i = 0; i <= 10; i++) {
+  console.log(i);
+}
+```
+
+> [!TIP]
+> It is not required to use `i` as the loop counter. It is often better to use descriptive counters such as `number`.
+
+## Module: Truthy and Falsy
+
+Truthy and Falsy are a concept that treats non-boolean (`true`/`false`) as boolean during runtime (i.e. Evaluating conditionals).
+
+Most things in JS are truthy (i.e. objects or arrays and functions). Falsy values are:
+
+- `null`: Intentional absence of value.
+- `undefined`: Variable not defined.
+- `false`: Boolean value of false.
+- `0`: Number zero.
+- `NaN`: Not a number, which is not a valid number.
+- `""`: Empty string.
+
+> [!NOTE]
+> Truthy/Falsy allows us to write a condition that checks truthiness/falsiness without explicitly writing it out.
+
+For example:
+
+```javascript
+let string = "non empty or truthy string";
+
+if (string) {
+  console.log("Truthy");
+}
+
+// Instead of...
+
+if (string !== "") {
+  console.log("Truthy");
+}
+```
+
+## Module: Single Line `if`
+
+When you have a simple condition that has a single action you can remove curly braces and write the action right after the condition. These are used to keep your code clean and readable.
+
+```javascript
+if (val === 1) console.log("The value is 1.");
+```
+
+## Module: Nested Branching Statements
+
+Sometimes one condition relies on another so you nest them. With these we place `if` statements within `if` or `else` blocks.
+
+Multiple nests can become too complex and confusing so use sparingly.
+
+## Module: Ternary Operator
+
+Used when carrying out one or two actions based on a condition. We can only use expressions or code that evaluates to a single output in ternary operators.
+
+For example:
+
+```javascript
+if (val === 1) {
+  console.log("The value is 1.");
+} else {
+  console.log("The value is not 1.");
+}
+
+// Versus with a ternary operator...
+val === 1 ? console.log("The value is 1.") : console.log("The value is not 1.");
+
+// Or...
+
+let num;
+
+if (val === 1) {
+  num = "The value is 1.";
+} else {
+  num = "The value is not 1.";
+}
+
+// With ternary operator used...
+let num = val === 1 ? "The value is 1." : "The value is not 1.";
+
+console.log(num);
+```
+
+## Module: `switch` Statements
+
+If you have more than three code paths and your conditional always checks the same variable, then instead of using `if` `else` it would be better to use a `switch` statement.
+
+For example:
+
+```javascript
+const mealType = "breakfast";
+
+if (mealType === "breakfast") {
+  console.log("It's breakfast time!");
+} else if (mealType === "lunch") {
+  console.log("It's lunch time!");
+} else if (mealType === "dinner") {
+  console.log("It's dinner time!");
+} else if (mealType === "snacks") {
+  console.log("It's snack time!");
+} else {
+  console.log("Invalid meal type!");
+}
+
+// Versus with a switch statement...
+switch (mealType) {
+  case "breakfast":
+    console.log("It's breakfast time!");
+    break;
+  case "lunch":
+    console.log("It's lunch time!");
+    break;
+  case "dinner":
+    console.log("It's dinner time!");
+    break;
+  case "snacks":
+    console.log("It's snack time!");
+    break;
+  default:
+    console.log("Invalid meal type!");
+}
+```
+
+> [!NOTE]
+> Make sure you have the `break` between each statement in order to allow a break of execution is condition is truthy.
+
+## Module: `while` Loops
+
+When we are not sure how many times we need to repeat an action we would use a `while` loop. The `while` loop only specifies the condition.
+
+```javascript
+for (let number = 1; number <= 10; number++) {
+  console.log(number);
+}
+
+// Versus with a while loop...
+let number = 1;
+
+while (number <= 10) {
+  console.log(number);
+  number++;
+}
+```
+
+> [!WARNING]
+> Do not forget the increment number in a `while` loop or you could run into an infinite loop.
+
+## Module: `do-while` Loops
+
+Similar to `while` loops except they **require** the code block to execute at least once regardless of the condition being truthy or falsy.
+
+```javascript
+let num = 120;
+
+do {
+  console.log(`${num} is even`);
+  num += 2;
+} while (num <= 10);
+```
+
+## Module: Logical Operators
+
+Logical OR (`||`) and Logical AND (`&&`).
+
+**Logical OR** (`||`): Checks each expression left to right and returns the _first_ **truthy** value. If all falsy, it returns the last falsy value.
+
+**Logical AND** (`&&`): Checks each expression left to right and returns the _first_ **falsy** value. If all truthy, it returns the last truthy value.
+
+> [!TIP]
+> The logical AND operator is often used for _conditionals_. Both logical operators can be used to handle _default_ values.
