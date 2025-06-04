@@ -54,3 +54,33 @@ Logical operators are used when you need to make decisions based on the **truthi
 ## Module: Branching
 
 Branching is a type of control flow that allows for different code paths to run based on specific conditions.
+
+### The `if` Statement
+
+The if statement or **single path** branching checks a condition. If the condition is met or `true` then the code within the block will run.
+
+### The `if-else` Statement
+
+The if-else statement or **dual paths** branching checks a condition. If the condition is `true` the code within the block will run. If the condition is not met or `false` then the code within the `else` block will run.
+
+For example:
+
+```javascript
+const val = 2;
+
+if (val === 1) {
+  console.log("The value is 1.");
+} else {
+  console.log("The value is not 1.");
+}
+
+// Can also be written with ternary operators.
+val === 1 ? console.log("The value is 1.") : console.log("The value is not 1.");
+)
+```
+
+### The `if-else`, `else-if` Statements
+
+The three or more code paths or multiple if-else statements can use as many else if statements you need and end with an else statement.
+
+## Module: Looping
