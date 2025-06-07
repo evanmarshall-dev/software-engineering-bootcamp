@@ -212,6 +212,20 @@ Syntax for `slice()`:
 > [!NOTE]
 > You can also copy and array and add a new element to the beginning of the array: `const moreMovies = ["007: Casino Royale", ...bestMovies"];`
 
+## Module: `splice()` Method
+
+The `splice()` method can add or remove any number of elements inside an array. You can even take both actions simultaneously with a single line of code!
+
+Syntax is:
+
+```js
+splice(start);
+splice(start, deleteCount);
+splice(start, deleteCount, item0);
+splice(start, deleteCount, item0, item1);
+splice(start, deleteCount, item0, item1, /* …, */ itemN);
+```
+
 ## Module: Shallow vs Deep Copy
 
 The above methods of copying an array are **shallow** copies. If there are objects within the array then the new copy will only contain a **reference** to said object(s).
