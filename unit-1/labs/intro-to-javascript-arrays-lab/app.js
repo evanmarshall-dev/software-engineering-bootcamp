@@ -90,9 +90,8 @@ Complete Exercise 7 in the space below:
 */
 
 // slice created and including element at index 1 (sushi), ends and not including element at index 3 (tofu).
-const newArray = foods.slice(1, 3);
-// Result placed in newArray assigned to variable of yummy (sushi, cupcake).
-const yummy = newArray;
+// Result assigned to variable of yummy (sushi, cupcake).
+const yummy = foods.slice(1, 3);
 
 console.log("Exercise 7 result:", yummy); // ['sushi', 'cupcake']
 
@@ -107,7 +106,6 @@ Complete Exercise 8 in the space below:
 */
 
 // indexOf with tofu passed in returns index # of tofu in foods array.
-foods.indexOf("tofu");
 // Assign index of tofu to variable soyIdx.
 const soyIdx = foods.indexOf("tofu");
 
@@ -126,7 +124,6 @@ Note: The final result should log as:
 Complete Exercise 9 in the space below:
 */
 
-// ? foods.join(" -> ");
 // Assign resulting string of all elements in the foods array to variable called allFoods. Pass in separator as argument to join method.
 const allFoods = foods.join(" -> ");
 
@@ -244,4 +241,67 @@ const numArrays = [
   [7, 81, 90],
 ];
 
-console.log("Exercise 13 result:", numList);
+// The last index in the numArray would be the last array which can be found using array.length - 1.
+// To select an index in an array you use square bracket notation.
+// Using length - 1 and adding that as the index in a numArrays selection works even if we do not know how many elements or nested arrays are within numArrays.
+const numList = numArrays[numArrays.length - 1];
+
+console.log("Exercise 13 result:", numList); // [7, 81, 90]
+
+// Console logged numArrays to make sure the original array was not altered.
+console.log(numArrays);
+
+/*********************************************************************************************************************************
+Exercise 14: Accessing within nested arrays
+
+1) Retrieve the number `66` from the `numArrays` array. As part of this process do not alter the original `numArrays` array.
+
+2) Assign it to a variable called `num`.
+
+Complete Exercise 14 in the space below:
+*/
+
+// Referenced numArrays 3rd element and within the 3rd element we referenced the 2nd element which is number 66.
+const num = numArrays[2][1];
+
+console.log("Exercise 14 result:", num); // 66
+
+/*********************************************************************************************************************************
+Exercise 15: Nested array sum
+
+1) Use nested loops or `forEach()` methods to sum up all numbers within `numArrays` nested arrays.
+
+2) Assign the sum to a variable called `total`.
+
+Hint: Be sure to declare and initialize the total variable before the iterations.
+
+Complete Exercise 15 in the space below:
+*/
+
+// Placeholder variable which will hold each element of the nested arrays added together.
+// let total = 0;
+
+// Iterate through the first level of elements in the numArrays array. Keep looping until we hit the length of the numArrays or all elements of numArrays array.
+// for (let numArray = 0; numArray < numArrays.length; numArray++) {
+// Each time you iterate through each element in the first level of the numArrays array also iterate through each element of each of those elements or arrays. Keep looping until you have iterated over all elements of the second level arrays.
+// for (
+//   let numArrayTwo = 0;
+//   numArrayTwo < numArrays[numArray].length;
+//   numArrayTwo++
+// ) {
+// Here is where we run the math to sum up all elements of the nested arrays. Basically we add each element of the nested arrays to 0 (total variable starts at 0). On each iteration of the second for loop (iterating over nested array elements) we add another element of the nested arrays to the new value of the total variable. We do this until we reach the last element of the nested arrays.
+//     total += numArrays[numArray][numArrayTwo];
+//   }
+// }
+
+// console.log("Exercise 15 result:\n", total); // 534
+
+let total = 0;
+
+numArrays.forEach((innerArray) => {
+  innerArray.forEach((number) => {
+    total += number;
+  });
+});
+
+console.log("Exercise 15 result:\n", total); // 534
