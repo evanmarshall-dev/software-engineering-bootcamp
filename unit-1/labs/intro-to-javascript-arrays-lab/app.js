@@ -265,6 +265,8 @@ Complete Exercise 14 in the space below:
 const num = numArrays[2][1];
 
 console.log("Exercise 14 result:", num); // 66
+// Check that original numArrays not modified.
+// ? console.log(numArrays);
 
 /*********************************************************************************************************************************
 Exercise 15: Nested array sum
@@ -277,24 +279,6 @@ Hint: Be sure to declare and initialize the total variable before the iterations
 
 Complete Exercise 15 in the space below:
 */
-
-// Placeholder variable which will hold each element of the nested arrays added together.
-// let total = 0;
-
-// Iterate through the first level of elements in the numArrays array. Keep looping until we hit the length of the numArrays or all elements of numArrays array.
-// for (let numArray = 0; numArray < numArrays.length; numArray++) {
-// Each time you iterate through each element in the first level of the numArrays array also iterate through each element of each of those elements or arrays. Keep looping until you have iterated over all elements of the second level arrays.
-// for (
-//   let numArrayTwo = 0;
-//   numArrayTwo < numArrays[numArray].length;
-//   numArrayTwo++
-// ) {
-// Here is where we run the math to sum up all elements of the nested arrays. Basically we add each element of the nested arrays to 0 (total variable starts at 0). On each iteration of the second for loop (iterating over nested array elements) we add another element of the nested arrays to the new value of the total variable. We do this until we reach the last element of the nested arrays.
-//     total += numArrays[numArray][numArrayTwo];
-//   }
-// }
-
-// console.log("Exercise 15 result:\n", total); // 534
 
 let total = 0;
 
