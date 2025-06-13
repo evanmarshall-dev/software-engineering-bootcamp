@@ -244,3 +244,27 @@ Also, log the `game.items` array to confirm that the pokeball quantity is being 
 
 Solve Exercise 11 here:
 */
+
+console.log("\n******************************");
+console.log(
+  "Exercise 11: Added Pokemon to Party & Updated Pokeball Quantity:\n"
+);
+
+// Modified the catchPokemon function to include an if statement checking if pokemonObj has been added to game.party object.
+game.catchPokemon = function (pokemonObj) {
+  if (game.party.push(pokemonObj)) {
+    // If there has been a pokemon added then decrease quantity by one.
+    game.items[1].quantity--;
+  }
+};
+
+game.catchPokemon(pokemon[6]);
+// Check that game.items has been decremented by one after the above call.
+console.log(game.items[1].quantity);
+
+/***********************************************************************************************************
+Exercise 12
+1. Similar to Exercise 6, now complete gyms with a difficulty below 6. How will you approach this? (change the value of `complete` in the qualifying objects from false to true).
+
+Solve Exercise 12 here:
+*/
