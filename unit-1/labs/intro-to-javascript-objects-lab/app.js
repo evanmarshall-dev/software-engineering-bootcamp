@@ -439,3 +439,183 @@ console.log(
 console.log("Exercise 16: The full game object:\n");
 
 console.log(game);
+
+/***********************************************************************************************************
+  LEVEL UP!
+***********************************************************************************************************/
+
+/*
+Exercise 17
+1. Arrange the Pokémon in `game.party` by their HP. The one with the highest HP should come first.
+2. You'll need to use the `.sort()` method. How does the compare function work in sorting numbers?
+
+
+Solve Exercise 17 here:
+*/
+
+console.log(
+  "\n****************************************************************"
+);
+console.log("Exercise 17: Party Sorted by HP:\n");
+
+// Pass in compare function since we are dealing with numbers and we do not want them to be converted to strings and sorted by their equivalent string values vs numerical values.
+game.party.sort(function (a, b) {
+  // By subtracting a value hp from b value of hp creates a descending order of numbers from highest to lowest hp value.
+  return b.hp - a.hp;
+});
+
+console.log(game.party);
+
+/***********************************************************************************************************
+Exercise 18
+Add a new property to the `game` object called `collection` and initialize its value to an empty array.
+
+Copy the `catchPokemon` method you wrote in Exercise Twelve and paste it below. Modify it so that:
+  - Ensure that no more than six Pokemon can be in the party at any time.
+    Excess Pokemon should be placed in the `game.collection` array.
+  - It's up to you how to distribute Pokemon in a situation where more than six
+    would be placed into the `game.party` array.
+
+Again, for this exercise, it's okay to have a negative number of pokeballs.
+
+After updating the method, use it by calling it and passing in a pokemon object of your choice from the `pokemon` data to catch it.
+
+Also, log the `game.items` array to confirm that the pokeball quantity is being decremented.
+
+Solve Exercise 18 here:
+*/
+
+console.log(
+  "\n****************************************************************"
+);
+console.log("Exercise 18: New Pokemon Collection when Party is Full:\n");
+
+// Add collection property to game object and initialize as an empty array.
+game.collection = [];
+
+// Re-defined catchPokemon function with a different if statement and added an else statement.
+game.catchPokemon = function (pokemonObj) {
+  // New condition is that the party object length should be less than or equal to 6 pokemon.
+  if (game.party.length < 6) {
+    // If condition is true then add new pokemon to game party and decrement the pokeball collection by one.
+    game.party.push(pokemonObj);
+    game.items[1].quantity--;
+  } else {
+    // If condition is false then add excess pokemon to the new collection object and decrement the pokeball collection by one.
+    game.collection.push(pokemonObj);
+    game.items[1].quantity--;
+  }
+};
+
+// Added pokemon from pokemon object at 22nd index or the 23rd pokemon and another at the 23rd index or 24th pokemon.
+game.catchPokemon(pokemon[22]);
+game.catchPokemon(pokemon[23]);
+
+// Check if there are any pokemon in the new collection object. If there are then log added pokemon name to console.
+if (game.collection.length > 0) {
+  console.log(`${game.collection[0].name} has been added to the COLLECTION.`);
+}
+
+// Log names of any pokemon added to the party object to the console.
+console.log(
+  `${game.party[game.party.length - 1].name} has been added to the PARTY.`
+);
+
+// Check remaining number of pokeballs after addition.
+console.log(`${game.items[1].quantity} Pokeballs remaining.`);
+// ? console.log(game.collection);
+
+/***********************************************************************************************************
+Exercise 19
+Copy the `catchPokemon` method that you just wrote above, and paste it below. The time has come to make it so that we cannot catch a Pokemon when we do not have any pokeballs to catch it with.
+
+Modify the method so that if there are no pokeballs a message will be displayed that there are not enough pokeballs to catch the desired Pokemon.
+
+Also, ensure that the Pokemon isn't added to the `game.party` or the `game.collection`.
+
+Solve Exercise 19 here:
+*/
+
+console.log(
+  "\n****************************************************************"
+);
+console.log("Exercise 19: Warning Message if No Pokeballs:\n");
+
+game.catchPokemon = function (pokemonObj) {
+  if (game.items[1].quantity > 0) {
+    if (game.party.length < 6) {
+      game.party.push(pokemonObj);
+      game.items[1].quantity--;
+    } else {
+      game.collection.push(pokemonObj);
+      game.items[1].quantity--;
+    }
+  } else {
+    console.log("THERE ARE NOT ENOUGH POKEBALLS TO CATCH THE DESIRED POKEMON!");
+  }
+};
+
+game.catchPokemon(pokemon[140]);
+game.catchPokemon(pokemon[141]);
+game.catchPokemon(pokemon[142]);
+game.catchPokemon(pokemon[143]);
+game.catchPokemon(pokemon[144]);
+// TODO: Un-comment below line to trip the warning for no more pokeballs.
+// ? game.catchPokemon(pokemon[145]);
+
+// ? if (game.collection.length > 0) {
+//   ? console.log("\nExcess Pokemon Collection:\n");
+//   ? console.log(game.collection);
+// ? }
+// ? if (game.party.length > 0) {
+//   ? console.log("\nParty Pokemon:\n");
+//   ? console.log(game.party);
+// ? }
+console.log(`${game.items[1].quantity} Pokeballs remaining.`);
+
+/***********************************************************************************************************
+Exercise 20
+Copy the `catchPokemon` method that you just wrote above, and paste it below. Modify is so that you can just pass in the name of a Pokemon instead of an entire object, and the method will look up the Pokemon from the data set for you.
+
+The string passed in should be allowed to be any case (for example, if the string 'PiKacHU' is passed to the function, it should match to 'Pikachu' in the data set).
+
+If there is not a match, then return a string noting that the selected Pokemon does not exist. Ensure you do not decrement the pokeball count if an invalid Pokemon name is passed in, and also ensure that the Pokemon isn't added to the `game.party` or the `game.collection`.
+
+Solve Exercise 20 here:
+*/
+
+console.log(
+  "\n****************************************************************"
+);
+console.log("Exercise 20: Name-Only for Captured Pokemon:\n");
+
+/***********************************************************************************************************
+Exercise 21
+Dynamically construct an object with the existing `pokemon` data sorted by the different pokemon types. The object will have this structure:
+
+{
+  grass: [
+    { number: 1, name: 'Bulbasaur', type: 'grass', hp: 45, starter: true },
+    { number: 2, name: 'Ivysaur', type: 'grass', hp: 60, starter: false },
+    { number: 3, name: 'Venusaur', type: 'grass', hp: 80, starter: false },
+    * more grass type Pokemon objects...
+  ],
+  fire: [
+    { number: 4, name: 'Charmander', type: 'fire', hp: 39, starter: true },
+    * more fire type Pokemon objects...
+  ],
+  water: [
+    * water type Pokemon objects...
+  ],
+  * etc... until there is an array for every Pokemon type!
+}
+
+Log the object when it's constructed.
+
+Solve Exercise 21 here:
+*/
+
+console.log(
+  "\n****************************************************************"
+);
+console.log("Exercise 21: New Object Sorted by Pokemon Type:\n");
