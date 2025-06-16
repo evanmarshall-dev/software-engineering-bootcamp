@@ -542,6 +542,8 @@ console.log(
 console.log("Exercise 19: Warning Message if No Pokeballs:\n");
 
 game.catchPokemon = function (pokemonObj) {
+  // Wrap the if statement from exercise 18 in an if statement checking if pokeball quantity is greater than 0.
+  // If it is true then run the methods to add pokemon to either the party object or collection object as well as decrement pokeball quantities accordingly.
   if (game.items[1].quantity > 0) {
     if (game.party.length < 6) {
       game.party.push(pokemonObj);
@@ -550,6 +552,7 @@ game.catchPokemon = function (pokemonObj) {
       game.collection.push(pokemonObj);
       game.items[1].quantity--;
     }
+    // If no pokeballs left then do not run the above methods and warn in the console that we are out of pokeballs.
   } else {
     console.log("THERE ARE NOT ENOUGH POKEBALLS TO CATCH THE DESIRED POKEMON!");
   }
@@ -558,8 +561,9 @@ game.catchPokemon = function (pokemonObj) {
 game.catchPokemon(pokemon[140]);
 game.catchPokemon(pokemon[141]);
 game.catchPokemon(pokemon[142]);
-game.catchPokemon(pokemon[143]);
-game.catchPokemon(pokemon[144]);
+// TODO: Un-comment below two lines when demoing this exercise. Needed to comment out in order to run Exercise 20 without being out of pokeballs.
+// game.catchPokemon(pokemon[143]);
+// game.catchPokemon(pokemon[144]);
 // TODO: Un-comment below line to trip the warning for no more pokeballs.
 // ? game.catchPokemon(pokemon[145]);
 
@@ -588,6 +592,61 @@ console.log(
   "\n****************************************************************"
 );
 console.log("Exercise 20: Name-Only for Captured Pokemon:\n");
+
+// Modified catchPokemon method to accept a string of the pokemon name instead of the whole pokemon object.
+game.catchPokemon = function (pokemonName) {
+  const nameToSearch = String(pokemonName).toLowerCase();
+  // Ensure pokemonName is treated as a string and convert to lowercase for case-insensitive search.
+  const pokemonToCatch = pokemon.find(
+    (p) => p.name.toLowerCase() === nameToSearch
+  );
+
+  if (!pokemonToCatch) {
+    // If the Pokemon is not found, return the specified message string.
+    // The calling code should handle displaying this message.
+    return `Selected Pokemon "${pokemonName}" does not exist.`;
+  }
+
+  // If the Pokemon is found, check for pokeballs.
+  if (game.items[1].quantity > 0) {
+    // If there are pokeballs, attempt to catch.
+    if (game.party.length < 6) {
+      game.party.push(pokemonToCatch);
+      console.log(`${pokemonToCatch.name} was caught and added to your party!`);
+    } else {
+      game.collection.push(pokemonToCatch);
+      console.log(
+        `${pokemonToCatch.name} was caught and sent to your collection!`
+      );
+    }
+    // Decrement pokeballs.
+    game.items[1].quantity--;
+    // The method doesn't return anything on successful catch (implicitly undefined).
+  } else {
+    // If no pokeballs.
+    console.log("THERE ARE NOT ENOUGH POKEBALLS TO CATCH THE DESIRED POKEMON!");
+    // The method doesn't return anything if out of pokeballs (implicitly undefined).
+  }
+};
+
+let catchResultEx20 = game.catchPokemon("Pikachu");
+if (typeof catchResultEx20 === "string") {
+  console.log(catchResultEx20);
+}
+
+catchResultEx20 = game.catchPokemon("charMANDER");
+if (typeof catchResultEx20 === "string") {
+  console.log(catchResultEx20);
+}
+
+catchResultEx20 = game.catchPokemon("Mewtwoo"); // Intentionally misspelled
+if (typeof catchResultEx20 === "string") {
+  console.log(catchResultEx20);
+}
+
+console.log(`Current Pokeballs: ${game.items[1].quantity}`);
+console.log(game.party);
+console.log(game.collection);
 
 /***********************************************************************************************************
 Exercise 21
@@ -619,3 +678,21 @@ console.log(
   "\n****************************************************************"
 );
 console.log("Exercise 21: New Object Sorted by Pokemon Type:\n");
+
+// Initialize an empty object to store Pokemon sorted by type.
+const pokemonByType = {};
+
+// Iterate over the pokemon array from data.js
+pokemon.forEach((pmon) => {
+  const type = pmon.type;
+  // If the type doesn't exist as a key in pokemonByType yet,
+  // initialize it with an empty array.
+  if (!pokemonByType[type]) {
+    pokemonByType[type] = [];
+  }
+  // Push the current Pokemon object into the array corresponding to its type.
+  pokemonByType[type].push(pmon);
+});
+
+// Log the constructed object.
+console.log(pokemonByType);
