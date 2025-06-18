@@ -249,3 +249,77 @@ console.log(deepCopy); // ["LMFAO", "BFF4E", "LOL", "ROFL"]
 
 > [!WARNING]
 > Use **deep copying** sparingly because it _doubles_ memory consumed by the data and can decrease performance.
+
+## Module: `map()`, `filter()`, `reduce()` Methods
+
+Similar to `forEach()` except that they return a **new** array that does not modify the original array.
+
+You can circumvent this issue (Modifying original array) with `forEach()` by creating a new empty array and pushing the changed elements to it, but this requires a **push** each time you make a change.
+
+### Map Method
+
+The **map** method takes a **callback** (cb) function with three parameters (Current value, Index, and Array), but we usually only need the _first_ parameter. The new array has the original array's elements _transformed_ based on the cb function passed into the map method as well as its **return** value.
+
+The **map** method _iterates_ over each element in an array, the cb function passed into map runs for each element in the array, and new array created from the cb function's **return** value. The return value creates each element of the new array.
+
+> [!NOTE]
+> The new array is the **same** size or length of the original array.
+
+> [!TIP]
+> If the cb function only contains a return statement and one parameter then we can simplify the code by removing the _curly braces_, the _return keyword_, and the _parenthesis_.
+
+For example:
+
+```js
+// Map Method
+const numbers = [1, 2, 3, 4];
+
+const newArr = numbers.map((number) => {
+  return number * number;
+});
+
+console.log(newArr); // [1, 4, 9, 16]
+```
+
+```js
+// Another example.
+const prices = [4, 8, 15, 16, 23, 42];
+// Using forEach()
+const discountedPrices = [];
+
+// Calculate a 50% discount for each prices element.
+prices.forEach((price, i, arr) => {
+  discountedPrices.push(price * 0.5);
+});
+
+console.log(discountedPrices); // [2, 4, 7.5, 8, 11.5, 21]
+
+// Using map()
+// Only need the first param (price), which represents the current value.
+const newPrices = prices.map((price) => {
+  // Do not need to push anything. Instead we return the value.
+  return price * 0.5;
+});
+
+// New array.
+console.log(discountedPrices); // [2, 4, 7.5, 8, 11.5, 21]
+// Original array stays unmodified.
+console.log(prices); // [4, 8, 15, 16, 23, 42]
+```
+
+```js
+// Another example.
+const products = [
+  {name: "Laptop", price: 499, color: "white"}
+  {name: "Smartphone", price: 899, color: "black"}
+  {name: "Headphones", price: 50, color: "white"}
+  {name: "Tablet", price: 199, color: "grey"}
+  {name: "Keyboard", price: 210, color: "blue"}
+]
+
+const discounts = products.map((product) => {
+  return product.price * 0.5;
+})
+
+console.log(discounts); // [249.5, 449.5, 25, 99.5, 105]
+```
