@@ -318,7 +318,12 @@ const products = [
 ]
 
 const discounts = products.map((product) => {
-  return product.price * 0.5;
+  // return product.price * 0.5;
+  // We want to copy everything to the new array except for the price.
+  // To do this we will use the spread operator.
+  return {
+    ...product
+  }
 })
 
 console.log(discounts); // [249.5, 449.5, 25, 99.5, 105]
