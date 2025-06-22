@@ -10,11 +10,18 @@
   <body>
     <h1 id="main-title">DOM Events</h1>
     <p>DOM events are the key to interactivity!</p>
+    <div id="likes-dislikes-container">
+      Likes:
+      <p id="likes-count">0</p>
+      Dislikes:
+      <p id="dislikes-count">0</p>
+    </div>
     <div>
       <button id="like-btn">👍Like this post</button>
-      <button onclick="dislikeEvent()" id="dislike-btn">
+      <!-- ? <button onclick="dislikeEvent()" id="dislike-btn">
         👎Dislike this post
-      </button>
+      ? </button> -->
+      <button id="dislike-btn">👎Dislike this post</button>
     </div>
     <h2>Comments</h2>
     <ul id="comments-list">
