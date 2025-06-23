@@ -6,15 +6,37 @@
 body {
   background-color: var(--background-color);
   color: var(--foreground-color);
+  height: 100vh;
+  border: 5px solid red;
+  margin: 0;
 }
 
 div {
   background-color: darkslategray;
   padding: 0.5rem;
   display: inline-block;
+  width: 100%;
+  border: 3px solid green;
 }
 
 button {
   cursor: pointer;
   margin: 0.5rem;
+}
+
+ul#todo-list-container {
+  border: 3px solid navy;
+  padding: 0.5rem;
+  margin: 0;
+  list-style-type: none;
+  background-color: burlywood;
+
+  li {
+    margin: 0.25rem 0;
+    border: 2px solid black;
+    padding: 0.5rem;
+    background-color: rgba(37, 37, 37, 0.466);
+    font-size: 1rem;
+    font-weight: 900;
+  }
 }
