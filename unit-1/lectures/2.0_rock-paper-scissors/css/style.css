@@ -1,0 +1,83 @@
+:root {
+  --background-color: oklch(0.5338 0.2503 301.37);
+  --foreground-color: oklch(1 0 0);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+html,
+body {
+  background-color: var(--background-color);
+  color: var(--foreground-color);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 2rem;
+
+  header {
+    padding: 1.5rem;
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+
+    #result-display {
+      min-height: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    button {
+      color: var(--foreground-color);
+      padding: 1rem;
+      margin: 1rem;
+      font-size: 1.5rem;
+      border-radius: 5px;
+      background-color: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: border 0.2s ease-in-out;
+
+      &:hover,
+      &:focus {
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+      }
+    }
+  }
+
+  main {
+    width: 100%;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+
+    button {
+      margin: 1rem;
+      font-size: 2.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: transparent;
+      transition: border 0.2s ease-in-out;
+
+      &:hover,
+      &:focus {
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+      }
+    }
+  }
+}
