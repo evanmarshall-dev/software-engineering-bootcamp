@@ -115,5 +115,93 @@ const commentElements = document.querySelectorAll("#comments li");
 
 commentElements.forEach((commentElement) => {
   console.log(commentElement.textContent);
+  commentElement.style.fontSize = "30px";
 });
 ```
+
+## Module: Element Attributes
+
+There are methods in JS that allow you to interact with HTML elements via their attributes (i.e. id and class).
+
+- `getAttribute()`: Retrieves the value of a specified attribute.
+- `setAttribute()`: Sets or updates the value of a specified attribute. Accepts 2 arguments (name of attribute to change and value of attribute to change to).
+- `hasAttribute()`: Checks if an element has a certain attribute.
+- `removeAttribute()`: Removes a specified attribute from an element.
+
+For example:
+
+```html
+<button disabled>Click Me!</button>
+
+<script>
+  // 1. Select button element.
+  const btnEl = document.querySelector("button");
+  // 2. Check if button is disabled.
+  if (btnEl.hasAttribute("disabled")) {
+    console.log("Button is disabled!");
+    // 3. Remove disabled attribute.
+    btnEl.removeAttribute("disabled");
+  } else {
+    console.log("Button is enabled!");
+  }
+
+  // 4. Give button id of submit.
+  btnEl.setAttribute("id", "submit");
+</script>
+```
+
+### The `class` Attribute
+
+The `classList` property is an object that provides methods to manipulate classes of an element.
+
+- `add(className, ...)` - Adds one or more class names to an element. If the class already exists, it won’t be added again.
+- `remove(className, ...)` - Removes one or more class names from an element. If the class does not exist, nothing happens.
+- `toggle(className)` - Adds the class if it does not exist, and removes it if it does.
+- `contains(className)` - Checks if the element has the specified class.
+- `replace(oldClass, newClass)` - Replaces an existing class with a new class.
+
+For example:
+
+```js
+// Code from above...
+// 5. Add class btn to button element.
+btnEl.classList.add("btn");
+// 6. Remove class btn and replace with class of action-btn.
+btnEl.classList.replace("btn", "action-btn");
+```
+
+## Module: The `getElementById()` Method
+
+This is the most efficient way to select a DOM element, but requires the element to have an `id`. Since `id` is specified in the method we do **not** need a hashtag in the selection.
+
+## Module: The `innerHTML` Property
+
+Unlike the `textContent` property `innerHTML` allows for the addition of HTML inside of a DOM element. It retrieves and sets HTML in the format of a string (`pEl.innerHTML = 'Comments for <strong>today</strong>';`).
+
+## Module: Placing Elements Precisely
+
+The `appendChild()` method is most commonly used, but there are other ways to place elements in the DOM.
+
+For example, if we want to place the new h2 element **after** the paragraph element we can:
+
+```js
+// Previous code...
+// Remove.
+bodyEl.appendChild(h2El);
+// Replace with.
+pEl.after(h2El);
+```
+
+Besides the `after()` method there are many more including `before()` and `replaceChild()`.
+
+## Module: `Nodelist`
+
+Methods that return a collection of DOM elements (i.e. `querySelectorAll()`) return an array-like object called a `NodeList`. It has a `forEach()` method, but not other useful array methods.
+
+If you need to utilize more array methods then you would use `Array.from()` method to convert the `NodeList` to an array.
+
+`const itemEls = Array.from(commentEls);`
+
+You could also use the Spread Syntax to convert a NodeList into an array with an **array literal** (`[]`).
+
+`const itemEls = [...commentEls];`
