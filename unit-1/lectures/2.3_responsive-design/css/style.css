@@ -1,0 +1,38 @@
+:root {
+  /* this has to be set to switch between light or dark */
+  color-scheme: light dark;
+
+  --light-bg: oklch(98.112% 0.00938 286.056);
+  --light-color: oklch(61.854% 0.03176 196.483);
+
+  --dark-bg: oklch(40.297% 0.03774 195.826);
+  --dark-color: oklch(98.112% 0.00938 286.056);
+}
+
+body {
+  background-color: light-dark(var(--light-bg), var(--dark-bg));
+  color: light-dark(var(--light-color), var(--dark-color));
+  margin: 0px;
+  font-family: system-ui, sans-serif;
+}
+
+@media (width >= 480px) {
+  body {
+    background-color: oklch(86.801% 0.15576 144.118);
+    color: oklch(35.894% 0.01406 17.668);
+  }
+}
+
+@media (width >= 768px) {
+  body {
+    background-color: oklch(89.449% 0.0001 271.152);
+    color: oklch(35.894% 0.01406 17.668);
+  }
+}
+
+@media (width >= 1200px) {
+  body {
+    background-color: oklch(44.027% 0.16037 303.368);
+    color: light-dark(var(--light-color), var(--dark-color));
+  }
+}
