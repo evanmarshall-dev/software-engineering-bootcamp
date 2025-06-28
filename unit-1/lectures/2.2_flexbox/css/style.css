@@ -1,32 +1,53 @@
 body {
-  background-color: gray;
+  background-color: oklch(59.987% 0.00007 271.152);
   font-family: sans-serif;
   margin: 0;
 
   .flex-parent {
-    background-color: black;
+    background-color: oklch(0% 0 0);
+    /* Converts it to a flex container. */
+    display: flex;
+    flex-direction: column;
+    height: 600px; /* more space to move things around */
+    justify-content: space-around;
+    /* ? justify-content: space-between; */
+    /* ? justify-content: space-evenly; */
+    /* ? justify-content: center; */
+    /* ? align-items: flex-start; */
+    /* ? align-items: flex-end; */
+    align-items: center;
 
+    /* Now become flex-items. */
+    /* All switch from default block to inline-block (height same, but width = content width). */
+    /* Arranged in a row by default. */
     .flex-child {
-      font-size: 48px;
+      font-size: 3rem;
+      height: 100px; /* lets make our boxes larger */
+      width: 100px;
+      /* Now flex-items also become flex-containers */
+      display: flex;
+      /* Below we will vertically/horizontally align the flex-children, which is the text inside. */
+      justify-content: center;
+      align-items: center;
 
-      #one {
-        background-color: #f0f0f0;
-        color: #707070;
+      &#one {
+        background-color: oklch(95.514% 0.00011 271.152);
+        color: oklch(54.517% 0.00006 271.152);
       }
 
-      #two {
-        background-color: #d0d0d0;
-        color: #505050;
+      &#two {
+        background-color: oklch(85.761% 0.0001 271.152);
+        color: oklch(43.128% 0.00005 271.152);
       }
 
-      #three {
-        background-color: #b0b0b0;
-        color: #303030;
+      &#three {
+        background-color: oklch(75.721% 0.00009 271.152);
+        color: oklch(30.919% 0.00004 271.152);
       }
 
-      #four {
-        background-color: #909090;
-        color: #101010;
+      &#four {
+        background-color: oklch(65.335% 0.00007 271.152);
+        color: oklch(17.304% 0.00002 271.152);
       }
     }
   }
