@@ -1,0 +1,60 @@
+/* Child selector (>) */
+/* Adjacent sibling selector (+) */
+/* General sibling selector (~) */
+/* Margin collapsing can be prevented by using CSS flexbox or grid. */
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap");
+
+* {
+  /* Border box includes padding and border in the width of element. */
+  /* Border box is more commonly used because setting height and width sets height and width of element so it is more predictable. */
+  box-sizing: border-box;
+  /* Content box does not include anything but the content width for the element so if you add padding it adds to the width of the element. */
+  /* ? box-sizing: content-box; */
+}
+
+body {
+  /* ? font-family: system-ui, sans-serif; */
+  font-family: "Montserrat", sans-serif;
+  /* https://ishadeed.com/article/new-viewport-units/ */
+  min-height: 100dvh;
+
+  h1 {
+    text-align: center;
+  }
+
+  /* Attribute selectors */
+  /* We can use the following attribute selector to target all <input> elements with a value of "number" on the type attribute */
+  input[type="number"] {
+    color: tomato;
+  }
+
+  /* Pseudo-classes */
+  /* Use the :hover pseudo-class to change the cursor to the little hand-pointer when it’s over any elements nested inside the ul.top-level-list. */
+  ul.top-level-list > li:hover {
+    cursor: pointer;
+  }
+
+  /* Pseudo-elements */
+  /* p::first-letter - Style the first letter of all <p> elements.
+     p::first-line - Style the first line of all <p> elements.
+     ::selection - Style the part of an element selected by the user.
+     .special::before - Add content before all elements with a class of .special.
+     .special::after - Add content after all elements with a class of .special. */
+  /* Use the ::first-letter pseudo-element to set the size of the “C” in “Comments” to be 60px. */
+  #comments-title::first-letter {
+    font-size: 60px;
+  }
+
+  .top-level-list > li {
+    border: solid 1px orange;
+  }
+
+  div + div {
+    color: green;
+  }
+
+  input ~ input {
+    border: 1px solid red;
+  }
+}
