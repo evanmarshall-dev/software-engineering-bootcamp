@@ -256,7 +256,7 @@ Similar to `forEach()` except that they return a **new** array that does not mod
 
 You can circumvent this issue (Modifying original array) with `forEach()` by creating a new empty array and pushing the changed elements to it, but this requires a **push** each time you make a change.
 
-### Map Method
+### Map Array Method
 
 The **map** method takes a **callback** (cb) function with three parameters (Current value, Index, and Array), but we usually only need the _first_ parameter. The new array has the original array's elements _transformed_ based on the cb function passed into the map method as well as its **return** value.
 
@@ -267,6 +267,8 @@ The **map** method _iterates_ over each element in an array, the cb function pas
 
 > [!TIP]
 > If the cb function only contains a return statement and one parameter then we can simplify the code by removing the _curly braces_, the _return keyword_, and the _parenthesis_.
+
+You can map over an object and return an exact copy using the **spread operator**, _simplify_ an object to a single array of strings, and _add_ new properties to each element of and array (See below).
 
 For example:
 
@@ -322,9 +324,128 @@ const discounts = products.map((product) => {
   // We want to copy everything to the new array except for the price.
   // To do this we will use the spread operator.
   return {
-    ...product
+    // Spread to copy all props from original product object.
+    ...product,
+    // override price prop with a discounted price.
+    // This keeps the same structure, copy entire object and only change the price.
+    price: product.price * 0.5
   }
 })
 
 console.log(discounts); // [249.5, 449.5, 25, 99.5, 105]
+
+// You can also use map to simplify a list.
+// Returning a list of object into a list of string like below:
+const productNames = products.map((product) => {
+  return product.name;
+});
+
+console.log(productNames); // ["Laptop", "Smartphone", "Headphones", "Tablet", "Keyboard"]
+
+// Or the opposite and add to object.
+const categorizedProducts = products.map((product) => {
+  let category;
+  if (product.price < 100) category = "Budget";
+  else if (product.price < 500) category = "Mid-range";
+  else category = "Premium";
+  return {
+    // Still copy all other props from original with spread, but adding new props to every item element in the array (category).
+    ...product,
+    category
+  }
+});
+
+console.log(categorizedProducts);
+```
+
+### Filter Array Method
+
+Useful for filtering categories or a search input on a website.
+
+The `filter` method allows you to filter out elements of an array based on a _condition_. It iterates over an array, returns a _new_ array with **only** items that _pass_ the condition you return.
+
+The `filter` method takes a callback function with **params**, value, index, and array. It goes through each element of an array and checks it against a condition. If true we keep element in new array and we do not keep it for false.
+
+The condition can be anything. Checking for a string with `includes()` method, a property equal to something (i.e. color), which would all be useful for a search filter on a site. You can also _combine_ conditions.
+
+For example:
+
+```js
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+// Returns a new array with only even numbers.
+numbers.filter((number) => {
+  return number % 2 === 0;
+}); // [2, 4, 6, 8, 10]
+
+// OR returns a new array of prime numbers.
+numbers.filter(isPrimes); // [2, 3, 5, 7]
+```
+
+Example using the products array from above:
+
+```js
+// ... previous code ...
+
+// Create new array with products less than $200.
+const affordableProducts = products.filter((product) => {
+  return product.price < 200;
+});
+console.log(affordableProducts);
+```
+
+### Reduce Array Method
+
+Reduce turns a list of values into one **single** value. The value could be a _sum_, _text_ or a new _object/array_ (i.e. a number or a string usually).
+
+Unlike filter and map it does not return an array unless we specify it with an _empty square bracket_ at the end.
+
+Reduce takes a callback function with two params, the **accumulator** and the **current value**. It iterates over the array and calls the cb function for each element. The return statement within the cb function **reassigns** the accumulator variable every time and we add the current value to the accumulator each time. Next, we need to initialize the accumulator. This is done in the _second_ param of the reduce method, which is the starting value of the accumulator.
+
+> [!NOTE]
+> If we do not specify the starting value of the accumulator (second reduce param) then the method will take the first value of the array as its initial value.
+
+For example:
+
+```js
+const prices = [4, 8, 15, 16, 23, 42];
+
+// Determine the total price of all items in a shopping cart.
+// Use reduce method on the prices array, which reduces all numbers into a single value.
+const totalPrice = prices.reduce((total, currentPrice) => {
+  // Show the breakdown.
+  console.log(`${total} + ${currentPrice} = ${total + currentPrice}\n`);
+  // What is returned will be the total for the next iteration.
+  // Each iteration we add the current price to the total so it updates the total each time.
+  return total + currentPrice;
+  // We need to initialize the accumulator, the starting value of the total.
+}, 0);
+// On the first iteration we add 4 to 0, then second we add 8 to 4, and so on.
+console.log(totalPrice); // 108
+```
+
+Example where the reduce method returns a **string** instead of a **number**:
+
+```js
+const words = ["Hello", " ", "World"];
+// Return a string of the combined string elements.
+const sentence = words.reduce((result, word) => {
+  return result + word;
+  // Initial value would be empty string.
+}, "");
+console.log(sentence); // Hello World"
+```
+
+Example using the reduce method to return an object:
+
+```js
+const fruits = ["apple", "banana", "apple", "orange", "banana", "apple"];
+
+// Tally up how many of each fruit there are and return as an object.
+const count = fruits.reduce((tally, fruit) => {
+  tally[fruit] = (tally[fruit] || 0) + 1;
+  return tally;
+}, {});
+
+console.log(count); // {apple: 3, banana: 2, orange: 1}
 ```
