@@ -1,20 +1,45 @@
-body {
-  background-color: gainsboro;
-  /* Use a system font, if none are available use an available sans-sarif */
-  font-family: system-ui, sans-serif;
+:root {
+  --bg-color: oklch(40.457% 0.00401 16.691);
+  --fg-color: oklch(97.515% 0.01276 244.483);
+}
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
   margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--fg-color);
+  font-family: system-ui, sans-serif;
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  header {
+    margin: 0 0 2rem;
+  }
 
   .board {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     width: 325px;
+    height: 325px;
 
     .sqr {
-      width: 30%;
-      aspect-ratio: 1/1;
-      border: 3px solid black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 3px solid var(--fg-color);
       font-size: 64px;
-      text-align: center;
     }
   }
 }
