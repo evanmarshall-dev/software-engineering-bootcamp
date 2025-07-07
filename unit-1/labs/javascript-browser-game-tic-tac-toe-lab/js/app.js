@@ -57,17 +57,21 @@ let tie;
   Cached Element References
 ---------------------------*/
 const squareEls = document.querySelectorAll(".sqr");
-console.dir(squareEls);
+// ? console.dir(squareEls);
 const messageEl = document.getElementById("message");
-console.dir(messageEl);
+// ? console.dir(messageEl);
+const boardEl = document.querySelector(".board");
+const resetBtnEl = document.getElementById("reset");
+// ? console.dir(resetBtnEl);
 
 /*---------------------------
   Functions
 ---------------------------*/
+init();
 // Loading initialization state.
 // Can manually update values in board array to see it change on app.
 function init() {
-  console.log("Game has loaded!");
+  // ? console.log("Game has loaded!");
   // Set board variable to nine empty strings for each board square.
   board = ["", "", "", "", "", "", "", "", ""];
   // Set turn variable to X to represent player X.
@@ -77,6 +81,7 @@ function init() {
   // Not currently a tie so set tie variable to false.
   tie = false;
   // Call render function that will throw error until next step.
+  render();
 }
 
 // State of game rendered to user.
@@ -88,22 +93,83 @@ function render() {
 
 function updateBoard() {
   // Loop over board for each element.
-  squareEls.forEach((squareEl, index) => {
-    board[index] = squareEl.innerText;
+  board.forEach((cellValue, index) => {
+    // ? console.log(boardEl, index);
+    squareEls[index].innerText = cellValue;
   });
 }
 
 function updateMessage() {
   // Render message based on current game state.
-  if (winner && tie === false) {
-    messageEl.innerText = `Game in progress, it is ${turn}'s turn.`;
-  } else if (winner === false && tie === true) {
+  if (winner) {
+    messageEl.innerText = `${winner} wins!`;
+  } else if (tie) {
     messageEl.innerText = `It's a tie!`;
   } else {
-    messageEl.innerText = `${winner} wins!`;
+    messageEl.innerText = `Game in progress, it is ${turn}'s turn.`;
   }
 }
+
+function handleClick(event) {
+  // ? console.log(event.target.id);
+  const clickedEl = event.target;
+
+  // Guard Clause: If the clicked element is not a square, exit.
+  // Handle clicks on the board's gaps.
+  if (!clickedEl.classList.contains("sqr")) {
+    return;
+  }
+
+  const squareIndex = parseInt(clickedEl.id);
+
+  // Guard clauses for game logic:
+  // 1. If the board at the clicked index is already filled, do nothing.
+  // 2. If there is already a winner, do nothing to prevent further moves.
+  if (board[squareIndex] || winner) return;
+
+  placePiece(squareIndex);
+  checkForWinner();
+  checkForTie();
+  switchPlayerTurn();
+  render();
+}
+
+const placePiece = (index) => {
+  // Update the board state array with the current player's mark.
+  board[index] = turn;
+};
+
+const checkForWinner = () => {
+  // Iterate through the winningCombos to see if any combination is met.
+  for (const combo of winningCombos) {
+    // Destructure the combo array for readability.
+    const [a, b, c] = combo;
+    // Check if the board has the same non-empty value at these three indices.
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+      // If a winning combo is found, update the winner state variable.
+      winner = board[a];
+    }
+  }
+};
+
+const checkForTie = () => {
+  // If there's already a winner, it can't be a tie.
+  if (winner) return;
+  // If the board does not include any empty strings, the game is a tie.
+  if (!board.includes("")) {
+    tie = true;
+  }
+};
+
+const switchPlayerTurn = () => {
+  // If there's a winner, the game is over, so don't switch turns.
+  if (winner) return;
+  // Toggle the turn between 'X' and 'O'.
+  turn = turn === "X" ? "O" : "X";
+};
 
 /*---------------------------
   Event Listeners
 ---------------------------*/
+boardEl.addEventListener("click", handleClick);
+resetBtnEl.addEventListener("click", init);
