@@ -120,3 +120,18 @@ const evenFruitsMap = fruits.map((fruit, index) => {
 
 // Using the powerful reduce method.
 // One thing it does is takes all values of an array and reduces it to one.
+
+// Fine method
+// Returns the first element in an array that matches the condition you give it. It stops after the first match even if there are multiples.
+
+const cats = [
+  { name: "Mocha", isSleepy: false },
+  { name: "Whiskers", isSleepy: true },
+  { name: "Tiger", isSleepy: false },
+  { name: "Pudding", isSleepy: true },
+];
+
+// Find the first cat that has isSleepy set to true.
+// If you want all sleepy cats you would use filter.
+const sleepyCat = cats.find((cat) => cat.isSleepy === true); // Could also be written as: (cat) => cat.isSleepy
+console.log(sleepyCat); // { name: 'Whiskers', isSleepy: true }
