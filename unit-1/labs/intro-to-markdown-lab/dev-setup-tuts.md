@@ -20,7 +20,7 @@
 
 ### GitHub Setup
 
-1. Create a [GitHub](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home) account.
+1. Create a [GitHub](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home){:target="_blank"} account.
 
 ### Homebrew Setup
 
@@ -69,13 +69,13 @@
    brew install --cask font-hack-nerd-font
    ```
 
-   - Alternatively, go to [FiraCode Font](https://github.com/tonsky/FiraCode) to download another great font manually.
+   - Alternatively, go to [FiraCode Font](https://github.com/tonsky/FiraCode){:target="_blank"} to download another great font manually.
 
 ## Further IDE and Dev Directory Setup
 
 ### vscode
 
-1. Follow along with my vscode `settings.json` after installing the fonts and ZSH. We will add on to these settings as we continue on with the following setup. The example `settings.json` is referenced _here_: [vscode settings.json](https://github.com/evanmarshall-dev/dotfiles/blob/main/vscode/settings.json)
+1. Follow along with my vscode `settings.json` after installing the fonts and ZSH. We will add on to these settings as we continue on with the following setup. The example `settings.json` is referenced _here_: [vscode settings.json](https://github.com/evanmarshall-dev/dotfiles/blob/main/vscode/settings.json){:target="_blank"}
 2. Activate Settings Sync in vscode and link to your Github account.
 
 ### Git Setup
@@ -87,7 +87,7 @@
    git config --global user.email "youremail@example.com"
    ```
 
-   > The first time you run these commands, a `.gitconfig` file will be created in your home directory. You can find my example here: [Sample Git Config](https://github.com/evanmarshall-dev/dotfiles/blob/main/gitconf/.gitconfig).
+   > The first time you run these commands, a `.gitconfig` file will be created in your home directory. You can find my example here: [Sample Git Config](https://github.com/evanmarshall-dev/dotfiles/blob/main/gitconf/.gitconfig){:target="_blank"}.
 
 2. Create a global `.gitignore` file to exclude certain files (like `.DS_Store`) from all your repositories.
 
@@ -101,7 +101,7 @@
    git config --global core.excludesfile ~/.gitignore_global
    ```
 
-   > We will use and modify the example gitignore file to suit your needs. The example is referenced here: [Sample Git Ignore](https://github.com/evanmarshall-dev/dotfiles/blob/main/gitignore/.gitignore_global)
+   > We will use and modify the example gitignore file to suit your needs. The example is referenced here: [Sample Git Ignore](https://github.com/evanmarshall-dev/dotfiles/blob/main/gitignore/.gitignore_global){:target="_blank"}.
 
 ### Node & NVM Setup
 
@@ -154,7 +154,7 @@ To update Oh My ZSH and its plugins, run:
 omz update
 ```
 
-My config file example for Oh My ZSH (omz) can be found here: [`.zshrc` Config File](https://github.com/evanmarshall-dev/dotfiles/blob/main/zsh/.zshrc). Configuration, theme, aliases, plugins, and more setup for Oh My ZSH.
+My config file example for Oh My ZSH (omz) can be found here: [`.zshrc` Config File](https://github.com/evanmarshall-dev/dotfiles/blob/main/zsh/.zshrc){:target="_blank"}. Configuration, theme, aliases, plugins, and more setup for Oh My ZSH.
 
 You can find a list of keyboard shortcut by clicking the cog icon in vscode action bar, but the following are some useful ones:
 
@@ -189,8 +189,8 @@ You can find a list of keyboard shortcut by clicking the cog icon in vscode acti
 
 | #   | Plugin/Tool                                                                                                                                | Description                                                                                                                           |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | [ZSH Auto Suggestions](https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md)                                            | Suggests commands as you type based on your history. Follow the install instructions for Oh My ZSH.                                   |
-| 2   | [ZSH Syntax Highlighting](https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md)                                     | Provides syntax highlighting for commands in the terminal, helping to prevent errors. Follow the install instructions for Oh My ZSH.  |
-| 3   | [Securing Your Connection to Github Using SSH](https://www.darraghoriordan.com/2021/05/04/configure-multiple-github-accounts-one-computer) | You should generate SSH keys to secure your connection to your GitHub remote repositories. This is more secure than using a password. |
+| 1   | [ZSH Auto Suggestions](https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md){:target="_blank"}                                            | Suggests commands as you type based on your history. Follow the install instructions for Oh My ZSH.                                   |
+| 2   | [ZSH Syntax Highlighting](https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md){:target="_blank"}                                     | Provides syntax highlighting for commands in the terminal, helping to prevent errors. Follow the install instructions for Oh My ZSH.  |
+| 3   | [Securing Your Connection to Github Using SSH](https://www.darraghoriordan.com/2021/05/04/configure-multiple-github-accounts-one-computer){:target="_blank"} | You should generate SSH keys to secure your connection to your GitHub remote repositories. This is more secure than using a password. |
 
 <!-- @TODO: | 4 | More Advanced Development Setups using Gulp | Again, this could warrant another tutorial, but basically gulp helps you automate tedious development tasks and speeds up your development workflow/efficiency. It can aid with tasks such as processing SASS code into CSS, minifying code, compressing/optimizing images, preparing code for production, etc. -->
