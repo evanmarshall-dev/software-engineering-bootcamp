@@ -69,13 +69,13 @@
    brew install --cask font-hack-nerd-font
    ```
 
-   - Alternatively, go to FiraCode Font to download another great font manually.
+   - Alternatively, go to [FiraCode Font](https://github.com/tonsky/FiraCode) to download another great font manually.
 
 ## Further IDE and Dev Directory Setup
 
 ### vscode
 
-1. Follow along with my vscode `settings.json` after installing the fonts and ZSH. We will add on to these settings as we continue on with the following setup. The example `settings.json` is referenced _here_: vscode settings.json
+1. Follow along with my vscode `settings.json` after installing the fonts and ZSH. We will add on to these settings as we continue on with the following setup. The example `settings.json` is referenced _here_: [vscode settings.json](https://github.com/evanmarshall-dev/dotfiles/blob/main/vscode/settings.json)
 2. Activate Settings Sync in vscode and link to your Github account.
 
 ### Git Setup
@@ -87,7 +87,7 @@
    git config --global user.email "youremail@example.com"
    ```
 
-   > The first time you run these commands, a `.gitconfig` file will be created in your home directory. You can find my example here: Sample Git Config.
+   > The first time you run these commands, a `.gitconfig` file will be created in your home directory. You can find my example here: [Sample Git Config](https://github.com/evanmarshall-dev/dotfiles/blob/main/gitconf/.gitconfig).
 
 2. Create a global `.gitignore` file to exclude certain files (like `.DS_Store`) from all your repositories.
 
@@ -101,7 +101,7 @@
    git config --global core.excludesfile ~/.gitignore_global
    ```
 
-   > We will use and modify the example gitignore file to suit your needs. The example is referenced here: Sample Git Ignore
+   > We will use and modify the example gitignore file to suit your needs. The example is referenced here: [Sample Git Ignore](https://github.com/evanmarshall-dev/dotfiles/blob/main/gitignore/.gitignore_global)
 
 ### Node & NVM Setup
 
@@ -154,7 +154,7 @@ To update Oh My ZSH and its plugins, run:
 omz update
 ```
 
-My config file example for Oh My ZSH (omz) can be found here: `.zshrc` Config File. Configuration, theme, aliases, plugins, and more setup for Oh My ZSH.
+My config file example for Oh My ZSH (omz) can be found here: [`.zshrc` Config File](https://github.com/evanmarshall-dev/dotfiles/blob/main/zsh/.zshrc). Configuration, theme, aliases, plugins, and more setup for Oh My ZSH.
 
 You can find a list of keyboard shortcut by clicking the cog icon in vscode action bar, but the following are some useful ones:
 
