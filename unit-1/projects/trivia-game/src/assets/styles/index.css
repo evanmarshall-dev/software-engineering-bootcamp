@@ -1,0 +1,224 @@
+:root {
+  --titleColor: #0a2540;
+  --textColor: #425466;
+  --accentColor: #635bff;
+  --muted-color: #596171;
+  --backgroundColor: #f6f9fc;
+  --buttonDisabledColor: #cfd7df;
+  --buttonPill: 1rem;
+  --buttonBorderRadius: 0.5rem;
+  --buttonBackgroundColor: #0a2540;
+  --buttonColor: #fff;
+  --inputPlaceholderColor: #727f96;
+  --inputErrorAccentColor: #ff5996;
+  --cardBackground: #fff;
+  --cardBorderColor: #cbd6e0;
+  --cardBorderRadius: 0.5rem;
+  --cardShadowXSmall: 0 3px 6px -1px rgba(50, 50, 93, 0.25),
+    0 1px 4px -1px rgba(0, 0, 0, 0.3);
+  --cardShadowSmall: 0 6px 12px -2px rgba(50, 50, 93, 0.25),
+    0 3px 7px -3px rgba(0, 0, 0, 0.3);
+  --cardShadowMedium: 0 13px 27px -5px rgba(50, 50, 93, 0.25),
+    0 8px 16px -8px rgba(0, 0, 0, 0.3);
+  --cardShadowLarge: 0 30px 60px -12px rgba(50, 50, 93, 0.25),
+    0 18px 36px -18px rgba(0, 0, 0, 0.3);
+  --transition: 0.2s ease-in-out;
+  --fontWeightLight: 200;
+  --fontWeightNormal: 300;
+  --fontWeightSemibold: 425;
+  --fontWeightBold: 500;
+  --layoutWidthMax: 1080px;
+  --viewportWidthSmall: 375px;
+  --viewportWidthMedium: 600px;
+  --viewportWidthLarge: 1112px;
+  --maxScreenSmall: min(var(--viewportWidthSmall), calc(70% + 100px));
+  --maxScreenMedium: min(var(--viewportWidthMedium), calc(70% + 100px));
+  --maxScreenLarge: min(var(--viewportWidthLarge), calc(70% + 100px));
+  --bgImgUrl: url("../images/trivia-game-hero.jpg");
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  overflow-wrap: break-word;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: var(--backgroundColor, #f6f9fc);
+}
+
+/* Make main a vertical flex container and at least height of viewport. */
+main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  .bg-image {
+    background-color: var(--titleColor);
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+      var(--bgImgUrl);
+    height: 100vh;
+    height: 100dvh;
+    background-position: center center;
+    background-repeat: repeat;
+    background-size: cover;
+
+    .content__container {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      height: 100vh;
+      height: 100dvh;
+
+      .content {
+        display: flex;
+        flex-direction: column;
+        padding: min(1.5rem, 15%);
+        text-align: center;
+        gap: 1rem;
+        max-width: var(--maxScreenMedium);
+        color: #fff;
+
+        h1 {
+          font-size: clamp(1.8rem, calc(7vw + 1rem), 5rem);
+        }
+
+        p {
+          font-size: clamp(1.125rem, calc(4vw + 1rem), 1.5rem);
+        }
+
+        button {
+          display: inline-flex;
+          flex-direction: row;
+          justify-content: center;
+          align-self: center;
+          padding: 0.5rem 1.125rem;
+          line-height: 2.125rem;
+          font-size: clamp(1.125rem, calc(3vw + 1rem), 1.25rem);
+          text-align: center;
+          border-radius: var(--buttonBorderRadius);
+          background-color: var(--backgroundColor);
+          border: 2px solid var(--backgroundColor);
+          color: var(--textColor);
+          transition: all 0.125s ease;
+          overflow: hidden;
+          vertical-align: middle;
+          outline: none;
+
+          &:hover,
+          &:active,
+          &:focus {
+            color: var(--backgroundColor);
+            background-color: transparent;
+          }
+        }
+      }
+    }
+  }
+
+  article {
+    &.modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      padding-top: 100px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      /* background-color: rgb(0, 0, 0); */
+      /* background-color: rgba(0, 0, 0, 0.4); */
+
+      .modal-content {
+        margin: 0 auto;
+        background-color: #fefefe;
+        padding: 20px;
+        /* border: 1px solid #888; */
+        width: 80%;
+        border-radius: var(--cardBorderRadius);
+        box-shadow: var(--cardShadowLarge);
+
+        .close {
+          color: #aaa;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+
+          &:hover,
+          &:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  /* aspect-ratio: 9 / 16; */
+  /* aspect-ratio: 16 / 9; */
+  object-fit: contain;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+}
+
+#root,
+#__next {
+  isolation: isolate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
