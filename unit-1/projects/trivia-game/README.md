@@ -74,7 +74,7 @@ Once the MVP is complete, the following features will be considered for future d
 - **Winning Animation**: Add a fun CSS animation or confetti effect on the winner announcement screen.
 - **Answer Sheet**: A detailed post-game screen showing each question, the correct answer, and how each player answered.
 - **Level Up System**: A simple progression system where players can earn badges or titles based on their win count.
-- **Expanded Question Bank**: Fetch questions from an external API (like the Open Trivia Database) for more variety and replayability.
+- **Expanded Question Bank**: Fetch questions from an external API (like the Open Trivia Database) for more variety and re-playability.
 - **Topic Selection**: Allow players to choose a trivia category before starting the game (e.g., Science, Movies, Music).
 - **Timed Responses**: Add a timer for each question to increase the challenge.
 

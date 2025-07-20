@@ -65,6 +65,52 @@ body {
   background-color: var(--backgroundColor, #f6f9fc);
 }
 
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  /* aspect-ratio: 9 / 16; */
+  /* aspect-ratio: 16 / 9; */
+  object-fit: contain;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+}
+
+#root,
+#__next {
+  isolation: isolate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Make main a vertical flex container and at least height of viewport. */
 main {
   display: flex;
@@ -139,9 +185,11 @@ main {
   article {
     &.modal {
       display: none;
+      justify-content: center;
+      align-items: center;
       position: fixed;
       z-index: 1;
-      padding-top: 100px;
+      /* margin: 2rem 0; */
       left: 0;
       top: 0;
       width: 100%;
@@ -155,7 +203,9 @@ main {
         background-color: #fefefe;
         padding: 20px;
         /* border: 1px solid #888; */
-        width: 80%;
+        /* width: fit-content; */
+        width: 90%;
+        height: 90vh;
         border-radius: var(--cardBorderRadius);
         box-shadow: var(--cardShadowLarge);
 
@@ -174,51 +224,5 @@ main {
         }
       }
     }
-  }
-}
-
-img,
-picture,
-video,
-canvas,
-svg {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  /* aspect-ratio: 9 / 16; */
-  /* aspect-ratio: 16 / 9; */
-  object-fit: contain;
-}
-
-input,
-button,
-textarea,
-select {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-  border: none;
-}
-
-#root,
-#__next {
-  isolation: isolate;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html:focus-within {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
   }
 }

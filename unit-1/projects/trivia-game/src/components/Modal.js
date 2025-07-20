@@ -19,7 +19,7 @@ const initializeModal = () => {
     return;
   }
 
-  openBtn.onclick = () => (modal.style.display = "block");
+  openBtn.onclick = () => (modal.style.display = "flex");
   closeBtn.onclick = () => (modal.style.display = "none");
 
   window.onclick = (event) => {
