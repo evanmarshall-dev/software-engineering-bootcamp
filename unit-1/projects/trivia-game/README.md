@@ -1,8 +1,8 @@
-# Trivia, Eh? 🇨🇦 - A Two-Player Trivia Game
+# Trivia, Eh? 🍁 - A Two-Player Trivia Game
 
 ![Trivia hero image](./assets/trivia-game-hero.jpg)
 
-Welcome to "Trivia, Eh?", a browser-based trivia game designed for two players. This project is built with vanilla HTML, CSS, and JavaScript, focusing on clean code, solid game logic, and a great user experience.
+Welcome to "Trivia, Eh?", a browser-based trivia game designed for one player. This project is built with vanilla HTML, CSS, and JavaScript, focusing on clean code, solid game logic, and a great user experience.
 
 ---
 
@@ -21,11 +21,10 @@ Welcome to "Trivia, Eh?", a browser-based trivia game designed for two players. 
 ## How to Play
 
 1. **Start the Game**: Open the `index.html` file in your web browser.
-2. **Player 1's Turn**: Player 1 will be presented with 5 trivia questions, one at a time. After selecting an answer for each question, the game will store the response.
-3. **Player 2's Turn**: Once Player 1 has finished, Player 2 will be prompted to answer the _same_ 5 questions.
-4. **Scoring**: The score is tallied for each player as they answer the questions.
-5. **Winner Announcement**: After both players have submitted their answers, the game will display a final results screen with an animation, announcing the winner and showing both players' final scores.
-6. **Answer Review**: Players can view an answer sheet that details which questions they got right and wrong.
+2. **Player Turn**: Player will be presented with 10 trivia questions (multi-choice), one at a time. After selecting an answer for each question, the game will store the response and move onto next question.
+3. **Scoring**: The score is tallied for each answer and presented at the end.
+4. **Winner Announcement**: After player has submitted their answers, the game will display a final results screen with an animation, announcing the winner and showing final scores.
+5. **Answer Review**: Player can view an answer sheet that details which questions they got right and wrong.
 
 ---
 
@@ -33,15 +32,15 @@ Welcome to "Trivia, Eh?", a browser-based trivia game designed for two players. 
 
 - **HTML5**: For the core structure and content of the game.
 - **CSS3**: For styling, layout, and animations.
-- **JavaScript (ES6+)**: For all game logic, state management, and DOM manipulation.
+- **JavaScript**: For all game logic, state management, and DOM manipulation.
 
 ---
 
 ## User Stories
 
 - **As a player**, I want to see a clear welcome screen so I know how to start the game.
-- **As Player 1**, I want to answer a series of 5 trivia questions so I can test my knowledge.
-- **As Player 2**, I want to be prompted for my turn after Player 1 has finished.
+- **As a player**, I want to be able to select category and difficulty of questions.
+- **As a player**, I want to answer a series of 10 trivia questions so I can test my knowledge.
 - **As a player**, I want to receive immediate feedback on whether my answer was correct or not (stretch goal).
 - **As a player**, I want my score to be updated and displayed after each question.
 - **As a player**, I want to be blocked from changing my answer once it has been submitted.
@@ -53,17 +52,13 @@ Welcome to "Trivia, Eh?", a browser-based trivia game designed for two players. 
 
 ## MVP (Minimum Viable Product)
 
-The core focus is to deliver a complete and playable two-player game loop.
+The core focus is to deliver a complete and playable one-player game loop with no repetitive questions.
 
 1. **Game Board**: A clean UI to display the current question, multiple-choice answers, current player, and scores.
-2. **Question Set**: A hard-coded set of at least 5 questions, each with 4 multiple-choice answers and one correct answer.
-3. **Two-Player Turn Logic**:
-   - Player 1 answers all 5 questions. The app saves their answers.
-   - The game prompts Player 2 to take their turn.
-   - Player 2 answers the same 5 questions.
-4. **Scoring System**: The application must track each player's score in memory.
-5. **Winner Declaration**: At the end of the game, display a message announcing the winner (or a tie).
-6. **Reset Game**: A button to reset the game to its initial state.
+2. **Question Set**: A set of 10 questions pulled from the Open Trivia API.
+3. **Scoring System**: The application must track player's score in memory.
+4. **Winner Declaration**: At the end of the game, display a message announcing the score.
+5. **Reset Game**: A button to reset the game to its initial state.
 
 ---
 
@@ -71,11 +66,11 @@ The core focus is to deliver a complete and playable two-player game loop.
 
 Once the MVP is complete, the following features will be considered for future development:
 
-- **Winning Animation**: Add a fun CSS animation or confetti effect on the winner announcement screen.
-- **Answer Sheet**: A detailed post-game screen showing each question, the correct answer, and how each player answered.
-- **Level Up System**: A simple progression system where players can earn badges or titles based on their win count.
+- **Winning Animation**: Add a fun CSS animation or confetti effect on the score announcement screen.
+- **Answer Sheet**: A detailed post-game screen showing each question, the correct answer, and how player answered.
+- **Level Up System**: A simple progression system where player can earn badges or titles based on their win count and create login for saving progress.
 - **Expanded Question Bank**: Fetch questions from an external API (like the Open Trivia Database) for more variety and re-playability.
-- **Topic Selection**: Allow players to choose a trivia category before starting the game (e.g., Science, Movies, Music).
+- **Topic Selection**: Allow player to choose a trivia category before starting the game (e.g., Science, Movies, Music).
 - **Timed Responses**: Add a timer for each question to increase the challenge.
 
 ---
@@ -84,20 +79,24 @@ Once the MVP is complete, the following features will be considered for future d
 
 ```sh
 trivia-game/
-├── css/
-│   └── app.css
-├── images/
-│   └── (optional game assets)
-├── scripts/
-│   └── app.js
-└── index.html
+├── public/
+│   └── index.html
+├── src/
+│   ├── assets/
+│   │    ├── images/
+│   │    │    └── trivia-game-hero.jpg
+│   │    └── styles/
+│   │         └── index.css
+│   └── scripts/
+│       └── index.js
+└── README.md
 ```
 
 ---
 
 ## Game Logic Pseudocode
 
-This pseudocode outlines the core structure and flow of the `app.js` file, establishing a clear plan for development.
+This pseudocode outlines the core structure and flow of the `index.js` file, establishing a clear plan for development.
 
 ```javascript
 /*----- constants -----*/

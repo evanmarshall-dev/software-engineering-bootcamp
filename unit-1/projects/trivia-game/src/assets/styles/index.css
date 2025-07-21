@@ -186,7 +186,7 @@ main {
     &.modal {
       display: none;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       position: fixed;
       z-index: 1;
       /* margin: 2rem 0; */
@@ -199,13 +199,14 @@ main {
       /* background-color: rgba(0, 0, 0, 0.4); */
 
       .modal-content {
-        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin: 2rem auto;
         background-color: #fefefe;
         padding: 20px;
-        /* border: 1px solid #888; */
-        /* width: fit-content; */
         width: 90%;
-        height: 90vh;
+        max-width: 800px;
         border-radius: var(--cardBorderRadius);
         box-shadow: var(--cardShadowLarge);
 
@@ -220,6 +221,76 @@ main {
             color: black;
             text-decoration: none;
             cursor: pointer;
+          }
+        }
+
+        #trivia-form {
+          display: flex;
+          flex-direction: column;
+
+          .question {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--cardBorderColor);
+
+            .question-text {
+              font-weight: var(--fontWeightSemibold);
+              margin-bottom: 0.75rem;
+              color: var(--titleColor);
+            }
+
+            .answers-container {
+              display: flex;
+              flex-direction: column;
+              gap: 0.5rem;
+            }
+          }
+
+          #submit-answers {
+            align-self: center;
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--accentColor);
+            color: var(--buttonColor);
+            border-radius: var(--buttonBorderRadius);
+            font-weight: var(--fontWeightSemibold);
+            transition: background-color var(--transition);
+
+            &:hover {
+              background-color: #534de0; /* A slightly darker shade of the accent color */
+            }
+
+            &:disabled {
+              background-color: var(--buttonDisabledColor);
+              cursor: not-allowed;
+            }
+          }
+        }
+
+        .answer {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.25rem;
+
+          label {
+            color: var(--textColor);
+            cursor: pointer;
+          }
+
+          &.correct {
+            background-color: #e9f7eb;
+            border-radius: 4px;
+          }
+
+          &.correct label {
+            color: #28a745; /* Green */
+            font-weight: var(--fontWeightBold);
+          }
+
+          &.incorrect label {
+            color: #dc3545; /* Red */
+            text-decoration: line-through;
           }
         }
       }
