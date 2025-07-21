@@ -1,6 +1,6 @@
 # Trivia, Eh? 🍁 - A Two-Player Trivia Game
 
-![Trivia hero image](./assets/trivia-game-hero.jpg)
+![Trivia hero image](./src/assets/images/trivia-game-hero.jpg)
 
 Welcome to "Trivia, Eh?", a browser-based trivia game designed for one player. This project is built with vanilla HTML, CSS, and JavaScript, focusing on clean code, solid game logic, and a great user experience.
 
