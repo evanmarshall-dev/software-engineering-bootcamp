@@ -25,7 +25,34 @@
         <div class="modal-content">
           <span class="close">&times;</span>
           <h2>Play Trivia, Eh? 🍁</h2>
-          <form id="trivia-form">
+          <div id="options-container">
+            <div class="form-group">
+              <label for="category-select">Category:</label>
+              <select id="category-select" name="category">
+                <option value="">Any Category</option>
+                <!-- Categories will be populated by JavaScript -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="difficulty-select">Difficulty:</label>
+              <select id="difficulty-select" name="difficulty">
+                <option value="">Any Difficulty</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="type-select">Question Type:</label>
+              <select id="type-select" name="type">
+                <option value="">Any Type</option>
+                <option value="multiple">Multiple Choice</option>
+                <option value="boolean">True / False</option>
+              </select>
+            </div>
+            <button id="start-trivia-btn" type="button">Start Trivia</button>
+          </div>
+          <form id="trivia-form" style="display: none">
             <div class="question-container"></div>
             <button type="submit" id="submit-answers">Submit Answers</button>
           </form>
@@ -33,6 +60,9 @@
             <h3 id="current-score">Current Score: 0</h3>
             <h3 id="top-score">Top Score: 0</h3>
           </div>
+          <button id="play-again-btn" type="button" style="display: none">
+            Play Again
+          </button>
           <footer>
             <p>
               Trivia questions provided by

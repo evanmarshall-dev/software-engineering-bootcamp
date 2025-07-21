@@ -21,7 +21,7 @@ Welcome to "Trivia, Eh?", a browser-based trivia game designed for one player. T
 ## How to Play
 
 1. **Start the Game**: Open the `index.html` file in your web browser.
-2. **Player Turn**: Player will be presented with 10 trivia questions (multi-choice), one at a time. After selecting an answer for each question, the game will store the response and move onto next question.
+2. **Player Turn**: Player will be presented with 5 trivia questions (multi-choice), one at a time. After selecting an answer for each question, the game will store the response and move onto next question.
 3. **Scoring**: The score is tallied for each answer and presented at the end.
 4. **Winner Announcement**: After player has submitted their answers, the game will display a final results screen with an animation, announcing the winner and showing final scores.
 5. **Answer Review**: Player can view an answer sheet that details which questions they got right and wrong.
@@ -40,7 +40,7 @@ Welcome to "Trivia, Eh?", a browser-based trivia game designed for one player. T
 
 - **As a player**, I want to see a clear welcome screen so I know how to start the game.
 - **As a player**, I want to be able to select category and difficulty of questions.
-- **As a player**, I want to answer a series of 10 trivia questions so I can test my knowledge.
+- **As a player**, I want to answer a series of 5 trivia questions so I can test my knowledge.
 - **As a player**, I want to receive immediate feedback on whether my answer was correct or not (stretch goal).
 - **As a player**, I want my score to be updated and displayed after each question.
 - **As a player**, I want to be blocked from changing my answer once it has been submitted.
@@ -55,7 +55,7 @@ Welcome to "Trivia, Eh?", a browser-based trivia game designed for one player. T
 The core focus is to deliver a complete and playable one-player game loop with no repetitive questions.
 
 1. **Game Board**: A clean UI to display the current question, multiple-choice answers, current player, and scores.
-2. **Question Set**: A set of 10 questions pulled from the Open Trivia API.
+2. **Question Set**: A set of 5 questions pulled from the Open Trivia API.
 3. **Scoring System**: The application must track player's score in memory.
 4. **Winner Declaration**: At the end of the game, display a message announcing the score.
 5. **Reset Game**: A button to reset the game to its initial state.

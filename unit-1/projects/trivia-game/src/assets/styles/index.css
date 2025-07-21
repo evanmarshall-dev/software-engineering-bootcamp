@@ -293,6 +293,63 @@ main {
             text-decoration: line-through;
           }
         }
+
+        #play-again-btn {
+          align-self: center;
+          margin-top: 1rem;
+          padding: 0.75rem 1.5rem;
+          background-color: var(--titleColor);
+          color: var(--buttonColor);
+          border-radius: var(--buttonBorderRadius);
+          font-weight: var(--fontWeightSemibold);
+          transition: background-color var(--transition);
+
+          &:hover {
+            background-color: #2a4a6e; /* A slightly darker shade of titleColor */
+          }
+        }
+
+        #options-container {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          margin-bottom: 1rem;
+          border-bottom: 1px solid var(--cardBorderColor);
+          padding-bottom: 1rem;
+
+          .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            label {
+              font-weight: var(--fontWeightSemibold);
+              color: var(--titleColor);
+            }
+
+            select {
+              padding: 0.5rem;
+              border-radius: var(--buttonBorderRadius);
+              border: 1px solid var(--cardBorderColor);
+              background-color: #fff;
+            }
+          }
+        }
+
+        #start-trivia-btn {
+          align-self: center;
+          margin-top: 1rem;
+          padding: 0.75rem 1.5rem;
+          background-color: var(--accentColor);
+          color: var(--buttonColor);
+          border-radius: var(--buttonBorderRadius);
+          font-weight: var(--fontWeightSemibold);
+          transition: background-color var(--transition);
+
+          &:hover {
+            background-color: #534de0; /* A slightly darker shade of the accent color */
+          }
+        }
       }
     }
   }

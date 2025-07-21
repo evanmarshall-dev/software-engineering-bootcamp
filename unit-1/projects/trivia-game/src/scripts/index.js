@@ -1,5 +1,6 @@
 /*----- constants -----*/
-const API_URL = "https://opentdb.com/api.php?amount=5&type=multiple";
+// const API_URL = "https://opentdb.com/api.php?amount=5&type=multiple";
+const API_BASE_URL = "https://opentdb.com/api.php";
 
 /*----- state variables -----*/
 let questions = []; // Array of question objects from the API
@@ -10,11 +11,17 @@ let topScore = 0; // In a future step, this could be saved to localStorage
 const modal = document.getElementById("myModal");
 const openBtn = document.getElementById("openModal");
 const closeBtn = document.querySelector("#myModal .close");
+const optionsContainer = document.getElementById("options-container");
+const categorySelect = document.getElementById("category-select");
+const difficultySelect = document.getElementById("difficulty-select");
+const typeSelect = document.getElementById("type-select");
 const questionContainer = document.querySelector(".question-container");
 const triviaForm = document.getElementById("trivia-form");
 const currentScoreEl = document.getElementById("current-score");
 const topScoreEl = document.getElementById("top-score");
 const submitBtn = document.getElementById("submit-answers");
+const startTriviaBtn = document.getElementById("start-trivia-btn");
+const playAgainBtn = document.getElementById("play-again-btn");
 
 /*----- event listeners -----*/
 // Event listeners are attached in the init function to ensure elements exist.
@@ -132,7 +139,7 @@ const handleFormSubmit = (event) => {
   });
 
   // Update state variables
-  currentScore = score;
+  currentScore += score;
   if (currentScore > topScore) {
     topScore = currentScore;
   }
@@ -142,11 +149,48 @@ const handleFormSubmit = (event) => {
   const allInputs = triviaForm.querySelectorAll('input[type="radio"]');
   allInputs.forEach((input) => (input.disabled = true));
   submitBtn.disabled = true;
+  playAgainBtn.style.display = "block";
 };
 
-const fetchTriviaQuestions = async () => {
+/**
+ * Resets the game to the options screen for a new round.
+ */
+const resetGame = () => {
+  showOptionsScreen();
+};
+
+/**
+ * Sets up the UI for the user to select game options.
+ */
+const showOptionsScreen = () => {
+  questions = [];
+
+  updateScoreDisplay();
+
+  // Show options and hide the trivia form
+  optionsContainer.style.display = "flex";
+  triviaForm.style.display = "none";
+
+  // Reset buttons to their initial state
+  submitBtn.disabled = false;
+  playAgainBtn.style.display = "none";
+  questionContainer.innerHTML = ""; // Clear previous questions
+};
+
+const fetchTriviaQuestions = async (options) => {
+  // Build the URL with user-selected options
+  let url = `${API_BASE_URL}?amount=5`;
+  if (options.category) url += `&category=${options.category}`;
+  if (options.difficulty) url += `&difficulty=${options.difficulty}`;
+  if (options.type) url += `&type=${options.type}`;
+
+  // Show loading state
+  questionContainer.innerHTML = "<p>Loading questions...</p>";
+  optionsContainer.style.display = "none";
+  triviaForm.style.display = "flex";
+
   try {
-    const response = await fetch(API_URL);
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -154,6 +198,12 @@ const fetchTriviaQuestions = async () => {
     // console.log("Successfully fetched trivia data:", data);
     // Store questions for later use
     questions = data.results;
+    if (questions.length === 0) {
+      questionContainer.innerHTML =
+        "<p>No questions found for the selected criteria. Please try different options.</p>";
+      submitBtn.disabled = true; // Disable submit if no questions
+      return;
+    }
     // Render the questions into the UI
     renderQuestions();
   } catch (error) {
@@ -166,6 +216,23 @@ const fetchTriviaQuestions = async () => {
   }
 };
 
+const populateCategories = async () => {
+  try {
+    const response = await fetch("https://opentdb.com/api_category.php");
+    if (!response.ok) throw new Error("Could not fetch categories.");
+    const data = await response.json();
+    data.trivia_categories.forEach((category) => {
+      const option = document.createElement("option");
+      option.value = category.id;
+      option.textContent = category.name;
+      categorySelect.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Failed to populate categories:", error);
+    // Optionally, disable the category select or show an error
+  }
+};
+
 const initializeModal = () => {
   // Guard clause: if modal elements don't exist, do nothing.
   if (!modal || !openBtn || !closeBtn) {
@@ -173,7 +240,11 @@ const initializeModal = () => {
     return;
   }
 
-  openBtn.onclick = () => (modal.style.display = "flex");
+  openBtn.onclick = () => {
+    modal.style.display = "flex";
+    currentScore = 0; // Reset score when starting a new game from the main page.
+    showOptionsScreen(); // Always start at the options screen
+  };
   closeBtn.onclick = () => (modal.style.display = "none");
 
   window.onclick = (event) => {
@@ -187,13 +258,33 @@ const initializeModal = () => {
 // Initialize the app when the script loads.
 const init = () => {
   initializeModal();
-  fetchTriviaQuestions();
+  populateCategories();
 
   // Guard clause for the form to ensure it exists before adding a listener.
   if (triviaForm) {
     triviaForm.addEventListener("submit", handleFormSubmit);
   } else {
     console.warn("Trivia form not found. Submission will not work.");
+  }
+
+  // Guard clause for the play again button.
+  if (playAgainBtn) {
+    playAgainBtn.addEventListener("click", resetGame);
+  } else {
+    console.warn("Play Again button not found. Reset will not work.");
+  }
+
+  if (startTriviaBtn) {
+    startTriviaBtn.addEventListener("click", () => {
+      const options = {
+        category: categorySelect.value,
+        difficulty: difficultySelect.value,
+        type: typeSelect.value,
+      };
+      fetchTriviaQuestions(options);
+    });
+  } else {
+    console.warn("Start Trivia button not found.");
   }
 };
 
