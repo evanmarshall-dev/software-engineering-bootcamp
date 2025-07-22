@@ -335,6 +335,11 @@ main {
               background-color: #fff;
             }
           }
+
+          .form-group-helper {
+            font-size: 0.8rem;
+            color: var(--muted-color);
+          }
         }
 
         #start-trivia-btn {
