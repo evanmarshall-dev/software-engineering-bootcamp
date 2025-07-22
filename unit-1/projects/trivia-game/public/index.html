@@ -13,8 +13,8 @@
           <div class="content">
             <h1>Trivia, Eh? 🍁</h1>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic
-              adipisci blanditiis quae odio ipsum quaerat itaque enim.
+              Select your category, difficulty, and question format then test
+              your knowledge! 🤓
             </p>
             <button id="openModal" type="submit">Start Game</button>
           </div>
@@ -25,6 +25,7 @@
         <div class="modal-content">
           <span class="close">&times;</span>
           <h2>Play Trivia, Eh? 🍁</h2>
+          <div id="timer-display" style="display: none"></div>
           <div id="options-container">
             <div class="form-group">
               <label for="category-select">Category:</label>
@@ -50,6 +51,15 @@
                 <option value="boolean">True / False</option>
               </select>
             </div>
+            <div class="form-group">
+              <label for="timer-select">Challenge Mode (Optional):</label>
+              <select id="timer-select" name="timer">
+                <option value="">No Timer</option>
+                <option value="30">30 Seconds</option>
+                <option value="60">1 Minute</option>
+                <option value="120">2 Minutes</option>
+              </select>
+            </div>
             <button id="start-trivia-btn" type="button">Start Trivia</button>
           </div>
           <form id="trivia-form" style="display: none">
@@ -63,6 +73,25 @@
           <button id="play-again-btn" type="button" style="display: none">
             Play Again
           </button>
+          <!-- Challenge Result Overlays -->
+          <div id="win-overlay" class="challenge-overlay" style="display: none">
+            <div class="overlay-content">
+              <h2>Challenge Won!</h2>
+              <p>You're a trivia master! 🏆</p>
+              <button class="overlay-close-btn">Continue</button>
+            </div>
+          </div>
+          <div
+            id="lose-overlay"
+            class="challenge-overlay"
+            style="display: none"
+          >
+            <div class="overlay-content">
+              <h2 id="lose-title">Challenge Lost!</h2>
+              <p id="lose-message">Better luck next time. 😫</p>
+              <button class="overlay-close-btn">Continue</button>
+            </div>
+          </div>
           <footer>
             <p>
               Trivia questions provided by
