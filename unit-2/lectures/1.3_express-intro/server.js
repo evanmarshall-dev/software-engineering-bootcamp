@@ -18,9 +18,9 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-// Static url path.
 // This would fall under the :username path so in order to fix you need to place this before the dynamic path in the code.
-app.get("/home", (req, res) => {
+// Static route for the homepage.
+app.get("/home", (res) => {
   res.send("<h1>Homepage</h1>");
 });
 
