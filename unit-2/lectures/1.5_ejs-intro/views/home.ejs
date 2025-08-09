@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home 🏠</title>
+    <!-- <title><%# item.name %></title> -->
+  </head>
+
+  <%- include("./partials/nav") %> <%# const message = "EJS page! 🥳"; %> <%#
+  let showMessage = true; %> <%# let showMessage = false; %>
+  <body>
+    <h1>We are rendering an <%= message %></h1>
+
+    <% if (showMessage) { %>
+    <p>✅ This message only shows if <strong>showMessage</strong> is true!</p>
+    <% } else { %>
+    <p>❎ This message shows if <strong>showMessage</strong> is false!</p>
+    <% } %>
+
+    <ul>
+      <!-- Add the index parameter -->
+      <% inventory.forEach((item, index) => { %>
+      <!-- Wrap each li in an <a> tag -->
+      <a href="/<%= index %>">
+        <li><%= item.name %>: <%= item.qty %></li>
+      </a>
+      <% }); %>
+    </ul>
+  </body>
+</html>
