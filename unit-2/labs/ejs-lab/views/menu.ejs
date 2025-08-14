@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Full Menu: <%= RESTAURANT.name %></title>
+  </head>
+  <body>
+    <%- include('./partials/nav') %>
+    <h1>Full Menu</h1>
+
+    <h2>Mains</h2>
+    <ul>
+      <% RESTAURANT.menu.forEach(item => { %> <% if (item.category === 'mains')
+      { %>
+      <li>
+        <strong><%= item.name %></strong><br />
+        Price: $<%= item.price.toFixed(2) %><br />
+        Rating: <%= item.rating %> stars<br />
+        <%= item.details %>
+      </li>
+      <% } %> <% }); %>
+    </ul>
+
+    <h2>Desserts</h2>
+    <ul>
+      <% RESTAURANT.menu.forEach(item => { %> <% if (item.category ===
+      'desserts') { %>
+      <li>
+        <strong><%= item.name %></strong><br />
+        Price: $<%= item.price.toFixed(2) %><br />
+        Rating: <%= item.rating %> stars<br />
+        <%= item.details %>
+      </li>
+      <% } %> <% }); %>
+    </ul>
+
+    <h2>Sides</h2>
+    <ul>
+      <% RESTAURANT.menu.forEach(item => { %> <% if (item.category === 'sides')
+      { %>
+      <li>
+        <strong><%= item.name %></strong><br />
+        Price: $<%= item.price.toFixed(2) %><br />
+        Rating: <%= item.rating %> stars<br />
+        <%= item.details %>
+      </li>
+      <% } %> <% }); %>
+    </ul>
+  </body>
+</html>

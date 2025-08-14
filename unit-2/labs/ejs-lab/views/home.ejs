@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EJS Lab Homepage: <%= RESTAURANT.name %></title>
+  </head>
+  <body>
+    <%- include('./partials/nav') %>
+    <h1><%= RESTAURANT.name %></h1>
+    <address>
+      <p><%= RESTAURANT.address %></p>
+      <p>Phone: <%= RESTAURANT.phone %></p>
+    </address>
+  </body>
+</html>

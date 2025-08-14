@@ -1,37 +1,44 @@
 // IMPORTS
 const express = require("express");
 
+// IMPORT ROUTERS
+// const usersRouter = require("./routes/usersRouter");
+// const storiesRouter = require("./routes/storiesRouter");
+const indexRouter = require("./routes/indexRouter");
+const menuRouter = require("./routes/menuRouter");
+const menuCategoryRouter = require("./routes/menuCategoryRouter");
+
+// IMPORT ENV VARIABLES
+const PORT = process.env.PORT || 8090;
+
 // CREATE EXPRESS APP
 const app = express();
 
-// VARIABLES
-const PORT = 8090;
+// MIDDLEWARE
 
-// CREATE SHOW ROUTE
-const inventory = [
-  { name: "Candle", qty: 4 },
-  { name: "Cheese", qty: 10 },
-  { name: "Phone", qty: 1 },
-  { name: "Tent", qty: 0 },
-  { name: "Torch", qty: 5 },
-];
+// DATA
+const RESTAURANT = require("./data/restaurant");
+
+// Make RESTAURANT available to all routes as a local
+app.use((req, res, next) => {
+  res.locals.RESTAURANT = RESTAURANT;
+  next();
+});
 
 // ROUTES
-app.get("/", (req, res) => {
-  const data = {
-    message: "EJS page! 🥳",
-    showMessage: true,
-    inventory: inventory,
-  };
-  res.render("home.ejs", data);
-});
+app.use("/", indexRouter);
 
-app.get("/:itemId", (req, res) => {
-  const index = req.params.itemId;
-  res.render("show.ejs", {
-    item: inventory[index],
-  });
-});
+// users routes
+// app.use("/users", usersRouter);
+
+// stories routes
+// app.use("/stories", storiesRouter);
+
+// menu routes
+app.use("/menu", menuRouter);
+
+// menu category routes
+app.use("/menu", menuCategoryRouter);
 
 // START SERVER
 app.listen(PORT, () => {
