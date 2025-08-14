@@ -11,7 +11,8 @@
     <ul>
       <% menuItems.forEach(function(item) { %>
       <li>
-        <strong><%= item.name %></strong><br />
+        <strong><%= item.name %><% if (item.rating === 5) { %> ⭐<% } %></strong
+        ><br />
         Price: $<%= item.price.toFixed(2) %><br />
         Rating: <%= item.rating %> stars<br />
         <%= item.details %>
