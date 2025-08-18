@@ -1,0 +1,6 @@
+{
+  "env": {
+    "PORT": 8090,
+    "MONGODB_URI": "mongodb+srv://evanmarshall1986:NKQIF9ZbCJ4gmUFV@student-cluster.x144wd1.mongodb.net/ejs-project?retryWrites=true&w=majority&appName=student-cluster"
+  }
+}
