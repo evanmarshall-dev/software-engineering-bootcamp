@@ -1,0 +1,4 @@
+views/fruits/*.ejs
+/views/fruits/*.ejs
+./views/fruits/*.ejs
+*/views/fruits/*.ejs

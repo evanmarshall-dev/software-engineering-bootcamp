@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= fruit.name %> EDIT</title>
+    <!-- Dynamic title based on fruit name -->
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <!-- update the header -->
+    <h1>Edit <%= fruit.name %></h1>
+    <!-- The Edit form needs to make a PUT request to /fruits/:fruitID in the same way that the New form needs to make a POST request to /fruits.
+  Remember, that browsers don’t support PUT requests, so we will use the same method-override middleware as we did with the delete route. We’ll append ?_method=PUT to the end of our action URL. -->
+    <form action="/fruits/<%=fruit._id%>?_method=PUT" method="POST">
+      <label for="name">Name:</label>
+      <!-- For the ‘name’ input field, we’ll use the value attribute to prepopulate it with the fruit’s name. -->
+      <input type="text" name="name" value="<%= fruit.name %>" />
+
+      <div class="checkbox-div">
+        <label for="isReadyToEat">Ready to Eat?</label>
+        <!-- To conditionally render the checked attribute based on the fruit.isReadyToEat value, we’ll use EJS control flow logic in the checkbox input. -->
+        <!-- This setup ensures that the checkbox reflects the current state of the fruit. If fruit.isReadyToEat is true, the checked attribute is added, and the checkbox will be checked when the page loads. Otherwise, it remains unchecked. -->
+        <!-- <input type="checkbox" name="isReadyToEat" <%# if (fruit.isReadyToEat) { %>checked<%# } %> > -->
+        <input type="checkbox" name="isReadyToEat" />
+      </div>
+
+      <button type="submit">Update Fruit</button>
+    </form>
+    <a class="fruits-index-link" href="/fruits"
+      ><div class="index-link-text">Back to Fruits</div></a
+    >
+  </body>
+</html>

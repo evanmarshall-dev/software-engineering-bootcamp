@@ -1,0 +1,27 @@
+{
+  "name": "men-stack-crud-app-fruits",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "plugins": [
+    "prettier-plugin-ejs"
+  ],
+  "packageManager": "pnpm@10.12.4",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^8.17.2",
+    "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "prettier-plugin-ejs": "^1.0.3"
+  }
+}

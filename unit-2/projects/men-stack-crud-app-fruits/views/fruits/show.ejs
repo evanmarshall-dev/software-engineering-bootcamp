@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= fruit.name %></title>
+    <!-- Dynamic title based on fruit name -->
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <div class="fruit-details">
+      <!-- dynamically updating our HTML template using the fruit data we’ve passed. -->
+      <h1><%= fruit.name %></h1>
+      <!-- Display fruit name -->
+      <!-- To enhance our fruit details page, we’ll incorporate conditional rendering based on the fruit’s isReadyToEat property. This will display different messages depending on whether the fruit is ready to eat or not.
+    We’ll use EJS control flow to dynamically display a message about the fruit’s readiness. Insert an if/else statement in the HTML body, right after the <h1> tag -->
+      <% if (fruit.isReadyToEat) { %>
+      <p>This fruit is ready to eat!</p>
+      <% } else { %>
+      <p>This fruit is not ready to eat!</p>
+      <% } %>
+      <!-- Form Action and Method:
+    The action attribute in the form is set to the URL /fruits/<%=fruit._id%>, where <%=fruit._id%> dynamically inserts the ID of the current fruit. This tells the form where to send the request.
+    Normally, forms only support GET or POST methods, but we want to send a DELETE request. To achieve this, we use a query parameter ?_method=DELETE in the action URL. This tricks our server into treating the POST request as a DELETE request, thanks to the method-override middleware we set up in server.js. -->
+      <div class="fruit-actions">
+        <form
+          class="delete-form"
+          action="/fruits/<%=fruit._id%>?_method=DELETE"
+          method="POST"
+        >
+          <button class="delete-button" type="submit">
+            Delete <%= fruit.name %>
+          </button>
+        </form>
+        <!-- Navigation -->
+        <!-- In this code, we’re dynamically generating the href attribute of the “Edit” link by inserting the unique _id of the fruit. This ensures that the link leads to the correct edit page for each specific fruit. -->
+        <a class="edit-link" href="/fruits/<%= fruit._id %>/edit"
+          ><div class="edit-text">Edit <%= fruit.name %></div></a
+        >
+      </div>
+    </div>
+    <a class="fruits-index-link" href="/fruits/"
+      ><div class="index-link-text">Back to Fruits</div></a
+    >
+  </body>
+</html>
