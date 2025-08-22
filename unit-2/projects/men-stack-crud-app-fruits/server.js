@@ -22,6 +22,7 @@ const Fruit = require("./models/fruit.js");
 // This middleware parses incoming request bodies, extracting form data and converting it into a JavaScript object. It then attaches this object to the req.body property of the request, making the form data easily accessible within our route handlers.
 // app.use extends the capabilities of the express app.
 app.use(express.urlencoded({ extended: false }));
+// The _method needs to be used exactly the same in the ejs templates.
 app.use(methodOverride("_method"));
 app.use(morgan("dev"));
 // Serve static files from the "public" directory
@@ -63,12 +64,14 @@ app.get("/fruits/new", (req, res) => {
 // ? });
 // We’ll use Mongoose’s .findById() method for fetching a specific fruit by its _id. This method is perfect for retrieving a single document based on its unique identifier.
 // req.params.fruitId captures the ID from the URL, and we use it to find the specific fruit. We’ve also made the function async so that we can await the asynchronous database operation.
+// The colon indicates a key in the route parameter.
 app.get("/fruits/:fruitId", async (req, res) => {
   const foundFruit = await Fruit.findById(req.params.fruitId);
   // ? res.send(
   //   ? `This route renders the show page for fruit id: ${req.params.fruitId}!`
   // ? );
   // After fetching the fruit, we’ll update from res.send() to res.render() to display the show page template. We’ll also pass the retrieved fruit data to the template.
+  // The fruit keyword needs to match the data reference in ejs.
   res.render("fruits/show.ejs", { fruit: foundFruit });
 });
 
