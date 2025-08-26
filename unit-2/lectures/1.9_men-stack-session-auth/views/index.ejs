@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home Page</title>
+  </head>
+  <body>
+    <% if (user) { %>
+    <h1>Welcome to the app, <%= user.username %>!</h1>
+    <p>
+      <!-- new sign out link -->
+      <a href="/auth/sign-out">Sign out</a>
+    </p>
+    <% } else { %>
+    <h1>Welcome to the app, guest.</h1>
+    <p>
+      <a href="/auth/sign-up">Sign up</a> or
+      <a href="/auth/sign-in">Sign in</a>.
+    </p>
+    <% } %>
+
+    <p><a href="/vip-lounge">Get into the VIP Users Only lounge!</a></p>
+    <!-- Note, however, that any time you restart the server, the version of the session object being stored in the server’s memory will be deleted, and it will be as though you never signed in! If you make any modifications that restart the server, you will have to sign in all over again.
+    If you get annoyed enough by this during your development process, we have a solution to store the sessions in MongoDB, instead of the server’s local memory, in the level up section of this module. -->
+    <!-- Now that we’re creating sessions when users sign in, we can simply delete those sessions when a user wants to sign out.
+    Let’s start by adding a link on the landing page for users to sign out. We only want to show this link if there is a currently signed in user, so we should put it inside the same conditional that displays that user’s username. -->
+
+    <!-- In many web applications, you aren’t able to see any of the good stuff until you’re a logged in user. Most sites also don’t want to allow you to create things in their database as an unauthenticated user, so they’ll prevent you from ever reaching a form to do so. We can refer to this concept as protecting routes from unauthenticated users.
+    There are many ways to implement this concept, and for our application, we’ll stick with the most straightforward approach of using an if check to determine if there’s a user attached to a given request.
+    To practice this concept, we’ll add a special route just for signed in users to access: the VIP Lounge. We’ll present this link to every user on the landing page, but if you’re not signed in, the controller function will send you a discouraging message rejecting you from the club. If you are signed in, we’ll give the user a simple res.send message greeting them to the VIP lounge: no need to over-complicate this example. -->
+  </body>
+</html>
