@@ -142,27 +142,54 @@
 /* Action Button Groups */
 .action-buttons {
   display: flex;
-  gap: var(--space-xs);
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: var(--space-md);
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid rgba(138, 43, 226, 0.2);
 
-  @media (width >= 768px) {
-    gap: var(--space-sm);
+  @media (width >= 600px) {
+    flex-direction: row;
+    justify-content: space-evenly;
     flex-wrap: nowrap;
+    gap: var(--space-md);
   }
 
   .btn {
-    font-size: var(--font-size-xs);
-    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-sm);
+    padding: var(--space-sm) var(--space-md);
+    width: 100%;
+    min-height: 44px;
 
-    @media (width >= 768px) {
+    @media (width >= 600px) {
       font-size: var(--font-size-sm);
-      padding: var(--space-sm) var(--space-md);
+      padding: var(--space-sm) var(--space-lg);
+      width: auto;
+      flex: 1;
+      min-width: 90px;
+    }
+
+    @media (width >= 900px) {
+      min-width: 100px;
+      padding: var(--space-md) var(--space-lg);
     }
   }
 
   .delete-form {
-    display: inline;
+    display: flex;
+    width: 100%;
+
+    @media (width >= 600px) {
+      width: auto;
+      flex: 1;
+    }
+
+    .btn {
+      width: 100%;
+
+      @media (width >= 600px) {
+        width: 100%;
+      }
+    }
   }
 }

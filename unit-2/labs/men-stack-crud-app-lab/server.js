@@ -32,7 +32,6 @@ app.get("/", (req, res) => {
   res.render("index.ejs");
 });
 
-// Solar Bodies routes
 const solarBodiesRouter = require("./routes/solarBodies");
 app.use("/solar-bodies", solarBodiesRouter);
 
