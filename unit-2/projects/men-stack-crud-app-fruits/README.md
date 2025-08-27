@@ -121,3 +121,76 @@ module.exports = {
   // export others: show, edit, update, delete
 };
 ```
+
+## Server-Side Error Handling
+
+### Try-Catch Blocks
+
+```javascript
+// models/fruit.js
+const fruitSchema = mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+});
+```
+
+In the fruit schema the `name` prop is `required`. This prevents empty `name` strings from being added to the database by triggering a validation error.
+
+Below, we will update the controller function for **creating** fruits to handle said validation error:
+
+```javascript
+// controllers/fruits.js
+router.post("/", async (req, res) => {
+  try {
+    await Fruit.create(req.body);
+    res.redirect("/fruits");
+  } catch (err) {
+    console.log(err.message); // Logs the error message
+    res.send("An error has occurred.  Go back and try again.");
+  }
+});
+```
+
+Now if a user submits a form without a `name`, the validation error is dealt with. The `catch` receives an `Error` object as an argument which contains a `message` prop with details of the error. The `message` will show in the terminal and be sent back to the user in the response.
+
+### Custom Error Handling
+
+There could be an edge case when a user submits a `name` with some blank spaces, which will not be caught by a validation error because technically it is not blank.
+
+To deal with this error we update the controller below:
+
+```javascript
+// controllers/fruits.js
+router.post("/", async (req, res) => {
+  try {
+    if (!req.body.name.trim()) {
+      throw new Error("Invalid input: The name field cannot be empty!");
+    }
+    await Fruit.create(req.body);
+    res.redirect("/fruits");
+  } catch (err) {
+    res.render("fruits/new.ejs", { errorMessage: err.message });
+  }
+});
+```
+
+This uses an `if` statement with the trim `method`. Trim returns a new string with the whitespace removed. This is applied to the `name` prop of `req.body` so that if the `name` is invalid we create and `throw` a new error with a descriptive message. When we `throw` an error the control passes immediately to the `catch` block where the error message is passed to our view and `create()` is never called.
+
+Now we can add the error message to our view for users to see:
+
+```html
+<!-- views/fruits/new.ejs -->
+<% if (typeof errorMessage !== 'undefined') { %>
+<p><%= errorMessage %></p>
+<% } %>
+```
+
+## Client-Side Error Handling
+
+### HTML Form Validation
+
+Can prevent errors before being submitted to the server by things as simple as using the `required` attribute in your HTML forms.
+
+You can also provide **CSS feedback** by changing the styles of an invalid input field when there is a validation error.
