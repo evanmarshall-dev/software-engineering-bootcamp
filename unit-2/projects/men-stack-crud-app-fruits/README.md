@@ -65,3 +65,59 @@ In this section, we’ll combine an overview of the technologies used in our web
 `res.render()`: Always provided a string as the first argument. That string should be a file path and will never start with a `/`.
 
 `res.redirect()`: Always provided a string as the first argument. That string should be a valid route and will always start with a `/`.
+
+## Sample MVC CRUD App Architecture
+
+```javascript
+// server.js
+
+const fruitsCtrl = require("./controllers/fruits");
+
+app.get("/", fruitsCtrl.home);
+app.get("/fruits/new", fruitsCtrl.showNewForm);
+app.post("/fruits", fruitsCtrl.create);
+app.get("/fruits", fruitsCtrl.index);
+app.get("/fruits/:fruitId", fruitsCtrl.show);
+app.delete("/fruits/:fruitId", fruitsCtrl.delete);
+app.get("/fruits/:fruitId/edit", fruitsCtrl.edit);
+app.put("/fruits/:fruitId", fruitsCtrl.update);
+
+app.listen(3000, () => {
+  console.log("The express app is ready!");
+});
+```
+
+```javascript
+// controllers/fruits.js
+
+const Fruit = require("../models/fruit");
+
+const home = (req, res) => {
+  res.render("index.ejs");
+};
+
+const showNewForm = (req, res) => {
+  res.render("fruits/new.ejs");
+};
+
+const create = async (req, res) => {
+  req.body.isReadyToEat = req.body.isReadyToEat === "on";
+  await Fruit.create(req.body);
+  res.redirect("/fruits");
+};
+
+const index = async (req, res) => {
+  const foundFruits = await Fruit.find();
+  res.render("fruits/index.ejs", { fruits: foundFruits });
+};
+
+// Add the rest of your controller functions here
+
+module.exports = {
+  home,
+  showNewForm,
+  create,
+  index,
+  // export others: show, edit, update, delete
+};
+```
