@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add New Solar Body - Solar System Manager</title>
+    <link rel="stylesheet" href="/styles/globals.css" />
+    <link rel="stylesheet" href="/styles/components/navbar.css" />
+    <link rel="stylesheet" href="/styles/components/buttons.css" />
+    <link rel="stylesheet" href="/styles/components/forms.css" />
+  </head>
+  <body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container">
+      <div class="form-container">
+        <h1>🚀 Add New Solar Body</h1>
+
+        <form action="/solar-bodies" method="POST" class="form">
+          <div class="form-group">
+            <label for="name">Name *</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              placeholder="e.g., Earth, Mars, Ceres"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="type">Type *</label>
+            <select id="type" name="type" required>
+              <option value="">Select a type</option>
+              <option value="Planet">Planet</option>
+              <option value="Dwarf Planet">Dwarf Planet</option>
+              <option value="Moon">Moon</option>
+              <option value="Asteroid">Asteroid</option>
+              <option value="Star">Star</option>
+              <option value="Comet">Comet</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="positionFromSun">Position from Sun *</label>
+            <input
+              type="number"
+              id="positionFromSun"
+              name="positionFromSun"
+              required
+              min="1"
+              placeholder="e.g., 3 (for Earth)"
+            />
+            <small
+              >Enter the numerical order from the Sun (1 for closest)</small
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="image">Image Filename *</label>
+            <select id="image" name="image" required>
+              <option value="">Select an image</option>
+              <option value="sun.jpg">Sun</option>
+              <option value="mercury.jpg">Mercury</option>
+              <option value="venus.jpg">Venus</option>
+              <option value="earth.jpg">Earth</option>
+              <option value="mars.jpg">Mars</option>
+              <option value="jupiter.jpg">Jupiter</option>
+              <option value="saturn.jpg">Saturn</option>
+              <option value="uranus.jpg">Uranus</option>
+              <option value="neptune.jpg">Neptune</option>
+              <option value="pluto.jpg">Pluto</option>
+              <option value="ceres.jpg">Ceres</option>
+              <option value="eris.jpg">Eris</option>
+              <option value="haumea.jpg">Haumea</option>
+              <option value="makemake.jpg">Makemake</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="id">Unique ID *</label>
+            <input
+              type="number"
+              id="id"
+              name="id"
+              required
+              min="1"
+              placeholder="e.g., 1001"
+            />
+            <small>Enter a unique numerical identifier</small>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input
+                type="checkbox"
+                id="isPlanet"
+                name="isPlanet"
+                value="true"
+              />
+              <span class="checkmark">✓</span>
+              This is officially classified as a planet
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              🌟 Create Solar Body
+            </button>
+            <a href="/solar-bodies" class="btn btn-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <style>
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+
+        .form-container {
+          background: linear-gradient(
+            135deg,
+            rgba(74, 20, 140, 0.3) 0%,
+            rgba(45, 27, 105, 0.3) 100%
+          );
+          border: 1px solid rgba(138, 43, 226, 0.4);
+          border-radius: 20px;
+          padding: 2.5rem;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 10px 30px rgba(138, 43, 226, 0.2);
+
+          h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.2rem;
+          }
+
+          .solar-body-form {
+            .form-group {
+              margin-bottom: 1.5rem;
+
+              label {
+                display: block;
+                margin-bottom: 0.5rem;
+                color: #e8e8ff;
+                font-weight: 500;
+                text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+              }
+
+              input,
+              select {
+                width: 100%;
+                padding: 0.75rem 1rem;
+                border: 2px solid rgba(138, 43, 226, 0.3);
+                border-radius: 10px;
+                background: rgba(26, 26, 62, 0.8);
+                color: #e8e8ff;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+                box-sizing: border-box;
+
+                &:focus {
+                  outline: none;
+                  border-color: rgba(138, 43, 226, 0.7);
+                  box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
+                  background: rgba(26, 26, 62, 0.9);
+                }
+
+                &::placeholder {
+                  color: rgba(232, 232, 255, 0.5);
+                }
+              }
+
+              small {
+                display: block;
+                margin-top: 0.25rem;
+                color: rgba(232, 232, 255, 0.7);
+                font-size: 0.85rem;
+              }
+
+              &.checkbox-group {
+                .checkbox-label {
+                  display: flex;
+                  align-items: center;
+                  gap: 0.75rem;
+                  cursor: pointer;
+                  padding: 0.5rem;
+                  border-radius: 8px;
+                  transition: background-color 0.3s ease;
+
+                  &:hover {
+                    background: rgba(138, 43, 226, 0.1);
+                  }
+
+                  input[type="checkbox"] {
+                    width: auto;
+                    margin: 0;
+                    opacity: 0;
+                    position: absolute;
+
+                    &:checked + .checkmark {
+                      background: linear-gradient(135deg, #4a148c, #7b1fa2);
+                      color: white;
+                      transform: scale(1.1);
+                    }
+                  }
+
+                  .checkmark {
+                    width: 20px;
+                    height: 20px;
+                    border: 2px solid rgba(138, 43, 226, 0.5);
+                    border-radius: 4px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: transparent;
+                    transition: all 0.3s ease;
+                    font-size: 12px;
+                    color: transparent;
+                  }
+                }
+              }
+            }
+
+            .form-actions {
+              display: flex;
+              gap: 1rem;
+              justify-content: center;
+              margin-top: 2rem;
+
+              .btn {
+                padding: 0.875rem 2rem;
+                border: none;
+                border-radius: 25px;
+                font-size: 1.1rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-decoration: none;
+                display: inline-block;
+                text-align: center;
+                min-width: 150px;
+
+                &.btn-primary {
+                  background: linear-gradient(
+                    135deg,
+                    #4a148c 0%,
+                    #7b1fa2 50%,
+                    #4a148c 100%
+                  );
+                  color: white;
+
+                  &:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 25px rgba(138, 43, 226, 0.4);
+                  }
+                }
+
+                &.btn-secondary {
+                  background: linear-gradient(
+                    135deg,
+                    rgba(74, 20, 140, 0.4) 0%,
+                    rgba(45, 27, 105, 0.4) 100%
+                  );
+                  color: #e8e8ff;
+                  border: 1px solid rgba(138, 43, 226, 0.5);
+
+                  &:hover {
+                    background: linear-gradient(
+                      135deg,
+                      rgba(74, 20, 140, 0.6) 0%,
+                      rgba(45, 27, 105, 0.6) 100%
+                    );
+                    transform: translateY(-2px);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    </style>
+  </body>
+</html>

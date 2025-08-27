@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solar System Manager - MEN Stack CRUD App Lab</title>
+    <link rel="stylesheet" href="/styles/globals.css" />
+    <link rel="stylesheet" href="/styles/components/navbar.css" />
+    <link rel="stylesheet" href="/styles/components/buttons.css" />
+    <link rel="stylesheet" href="/styles/components/cards.css" />
+    <link rel="stylesheet" href="/styles/components/hero.css" />
+    <link rel="stylesheet" href="/styles/components/grids.css" />
+  </head>
+  <body>
+    <%- include('./partials/navbar') %>
+
+    <div class="container">
+      <div class="hero-section">
+        <div class="hero-content">
+          <h1>🌌 Welcome to the Solar System Manager</h1>
+          <p class="hero-subtitle">
+            Explore, catalog, and manage celestial bodies in our solar system
+          </p>
+
+          <div class="hero-image">
+            <img src="/images/solar-system.jpg" alt="Solar System" />
+          </div>
+
+          <div class="hero-actions">
+            <a href="/solar-bodies" class="btn btn-primary">
+              <span class="btn-icon">🚀</span>
+              Explore Solar System
+            </a>
+            <a href="/solar-bodies/new" class="btn btn-secondary">
+              <span class="btn-icon">➕</span>
+              Add New Body
+            </a>
+          </div>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🪐</div>
+            <h3>Manage Planets</h3>
+            <p>
+              Keep track of all planets in our solar system, from Mercury to
+              Neptune
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🌑</div>
+            <h3>Dwarf Planets</h3>
+            <p>
+              Catalog dwarf planets like Pluto, Ceres, and other fascinating
+              celestial objects
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">⭐</div>
+            <h3>Stars & More</h3>
+            <p>
+              Document stars, moons, asteroids, and comets in our cosmic
+              neighborhood
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

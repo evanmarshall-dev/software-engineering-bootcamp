@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solar System Bodies - Solar System Manager</title>
+    <link rel="stylesheet" href="/styles/globals.css" />
+    <link rel="stylesheet" href="/styles/components/navbar.css" />
+    <link rel="stylesheet" href="/styles/components/buttons.css" />
+    <link rel="stylesheet" href="/styles/components/cards.css" />
+    <link rel="stylesheet" href="/styles/components/hero.css" />
+    <link rel="stylesheet" href="/styles/components/grids.css" />
+  </head>
+  <body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container">
+      <h1>🌌 Solar System Bodies</h1>
+
+      <% if (solarBodies && solarBodies.length > 0) { %>
+      <div class="solar-bodies-grid">
+        <% solarBodies.forEach(solarBody => { %>
+        <div class="solar-body-card">
+          <div class="solar-body-image">
+            <img
+              src="/images/<%= solarBody.image %>"
+              alt="<%= solarBody.name %>"
+            />
+          </div>
+          <div class="solar-body-info">
+            <h3><%= solarBody.name %></h3>
+            <p class="solar-body-type">Type: <%= solarBody.type %></p>
+            <p class="solar-body-position">
+              Position from Sun: <%= solarBody.positionFromSun %>
+            </p>
+            <% if (solarBody.isPlanet) { %>
+            <span class="planet-badge">🪐 Planet</span>
+            <% } %>
+            <div class="solar-body-actions action-buttons">
+              <a href="/solar-bodies/<%= solarBody._id %>" class="btn btn-view"
+                >View Details</a
+              >
+              <a
+                href="/solar-bodies/<%= solarBody._id %>/edit"
+                class="btn btn-edit"
+                >Edit</a
+              >
+              <form
+                action="/solar-bodies/<%= solarBody._id %>?_method=DELETE"
+                method="POST"
+                class="delete-form"
+                onsubmit="return confirm('Are you sure you want to delete <%= solarBody.name %>?')"
+              >
+                <button type="submit" class="btn btn-delete">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <% } else { %>
+      <div class="empty-state">
+        <h2>🚀 No Solar Bodies Found</h2>
+        <p>
+          Start building your solar system by adding your first celestial body!
+        </p>
+        <a href="/solar-bodies/new" class="btn btn-primary"
+          >Add First Solar Body</a
+        >
+      </div>
+      <% } %>
+    </div>
+  </body>
+</html>

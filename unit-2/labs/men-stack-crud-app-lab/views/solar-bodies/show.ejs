@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= solarBody.name %> - Solar System Manager</title>
+    <link rel="stylesheet" href="/styles/globals.css" />
+  </head>
+  <body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container">
+      <div class="solar-body-detail">
+        <div class="solar-body-header">
+          <div class="solar-body-image-large">
+            <img
+              src="/images/<%= solarBody.image %>"
+              alt="<%= solarBody.name %>"
+            />
+          </div>
+          <div class="solar-body-title">
+            <h1><%= solarBody.name %></h1>
+            <p class="solar-body-subtitle"><%= solarBody.type %></p>
+            <% if (solarBody.isPlanet) { %>
+            <div class="planet-badge-large">🪐 Official Planet Status</div>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="solar-body-info-grid">
+          <div class="info-card">
+            <div class="info-icon">🌟</div>
+            <h3>Position from Sun</h3>
+            <p>
+              <%= solarBody.positionFromSun %><% if (solarBody.positionFromSun
+              === 1) { %>st<% } else if (solarBody.positionFromSun === 2) {
+              %>nd<% } else if (solarBody.positionFromSun === 3) { %>rd<% } else
+              { %>th<% } %>
+            </p>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">🔢</div>
+            <h3>Unique ID</h3>
+            <p>#<%= solarBody.id %></p>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">📂</div>
+            <h3>Classification</h3>
+            <p><%= solarBody.type %></p>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">
+              <% if (solarBody.isPlanet) { %>🪐<% } else { %>🌑<% } %>
+            </div>
+            <h3>Planet Status</h3>
+            <p>
+              <% if (solarBody.isPlanet) { %>Officially Recognized<% } else {
+              %>Not a Planet<% } %>
+            </p>
+          </div>
+        </div>
+
+        <div class="solar-body-actions">
+          <a
+            href="/solar-bodies/<%= solarBody._id %>/edit"
+            class="btn btn-primary"
+          >
+            <span class="btn-icon">✏️</span>
+            Edit <%= solarBody.name %>
+          </a>
+          <form
+            action="/solar-bodies/<%= solarBody._id %>?_method=DELETE"
+            method="POST"
+            class="delete-form"
+            onsubmit="return confirm('Are you sure you want to delete <%= solarBody.name %>? This action cannot be undone.')"
+          >
+            <button type="submit" class="btn btn-danger">
+              <span class="btn-icon">🗑️</span>
+              Delete <%= solarBody.name %>
+            </button>
+          </form>
+          <a href="/solar-bodies" class="btn btn-secondary">
+            <span class="btn-icon">🔙</span>
+            Back to Solar System
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+
+        .solar-body-detail {
+          background: linear-gradient(
+            135deg,
+            rgba(74, 20, 140, 0.3) 0%,
+            rgba(45, 27, 105, 0.3) 100%
+          );
+          border: 1px solid rgba(138, 43, 226, 0.4);
+          border-radius: 20px;
+          padding: 2.5rem;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 15px 40px rgba(138, 43, 226, 0.2);
+
+          .solar-body-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+
+            .solar-body-image-large {
+              img {
+                width: 200px;
+                height: 200px;
+                object-fit: cover;
+                border-radius: 50%;
+                border: 4px solid rgba(138, 43, 226, 0.6);
+                box-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
+              }
+            }
+
+            .solar-body-title {
+              flex: 1;
+              min-width: 250px;
+
+              h1 {
+                margin: 0 0 0.5rem 0;
+                font-size: 3rem;
+                color: #e8e8ff;
+                text-shadow: 0 0 15px rgba(138, 43, 226, 0.8);
+              }
+
+              .solar-body-subtitle {
+                font-size: 1.5rem;
+                color: #b8b8d0;
+                margin: 0 0 1rem 0;
+              }
+
+              .planet-badge-large {
+                display: inline-block;
+                background: linear-gradient(45deg, #4a148c, #7b1fa2);
+                color: #fff;
+                padding: 0.75rem 1.5rem;
+                border-radius: 25px;
+                font-size: 1.1rem;
+                font-weight: 500;
+                text-shadow: none;
+                box-shadow: 0 5px 15px rgba(74, 20, 140, 0.4);
+              }
+            }
+          }
+
+          .solar-body-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+
+            .info-card {
+              background: linear-gradient(
+                135deg,
+                rgba(26, 26, 62, 0.6) 0%,
+                rgba(45, 27, 105, 0.4) 100%
+              );
+              border: 1px solid rgba(138, 43, 226, 0.3);
+              border-radius: 15px;
+              padding: 1.5rem;
+              text-align: center;
+              transition: all 0.3s ease;
+
+              &:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 25px rgba(138, 43, 226, 0.3);
+                border-color: rgba(138, 43, 226, 0.5);
+              }
+
+              .info-icon {
+                font-size: 2.5rem;
+                margin-bottom: 0.75rem;
+                display: block;
+              }
+
+              h3 {
+                margin: 0 0 0.5rem 0;
+                font-size: 1.1rem;
+                color: #e8e8ff;
+              }
+
+              p {
+                margin: 0;
+                font-size: 1.3rem;
+                font-weight: 500;
+                color: #b8b8d0;
+              }
+            }
+          }
+
+          .solar-body-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+
+            .btn {
+              padding: 1rem 1.5rem;
+              border: none;
+              border-radius: 25px;
+              font-size: 1.1rem;
+              cursor: pointer;
+              transition: all 0.3s ease;
+              text-decoration: none;
+              display: inline-flex;
+              align-items: center;
+              gap: 0.5rem;
+              min-width: 180px;
+              justify-content: center;
+
+              .btn-icon {
+                font-size: 1.2rem;
+              }
+
+              &.btn-primary {
+                background: linear-gradient(135deg, #2196f3, #21cbf3);
+                color: white;
+
+                &:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+                }
+              }
+
+              &.btn-danger {
+                background: linear-gradient(135deg, #f44336, #e57373);
+                color: white;
+
+                &:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(244, 67, 54, 0.4);
+                }
+              }
+
+              &.btn-secondary {
+                background: linear-gradient(
+                  135deg,
+                  rgba(74, 20, 140, 0.4) 0%,
+                  rgba(45, 27, 105, 0.4) 100%
+                );
+                color: #e8e8ff;
+                border: 1px solid rgba(138, 43, 226, 0.5);
+
+                &:hover {
+                  background: linear-gradient(
+                    135deg,
+                    rgba(74, 20, 140, 0.6) 0%,
+                    rgba(45, 27, 105, 0.6) 100%
+                  );
+                  transform: translateY(-2px);
+                }
+              }
+            }
+
+            .delete-form {
+              display: inline;
+            }
+          }
+        }
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .container .solar-body-detail .solar-body-header {
+          flex-direction: column;
+          text-align: center;
+
+          .solar-body-image-large img {
+            width: 150px;
+            height: 150px;
+          }
+
+          .solar-body-title h1 {
+            font-size: 2.2rem;
+          }
+        }
+
+        .container .solar-body-detail .solar-body-actions {
+          flex-direction: column;
+          align-items: center;
+
+          .btn {
+            width: 100%;
+            max-width: 280px;
+          }
+        }
+      }
+    </style>
+  </body>
+</html>

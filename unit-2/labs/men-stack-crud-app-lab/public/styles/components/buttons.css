@@ -1,0 +1,168 @@
+/* ===== BUTTON COMPONENTS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--transition-base);
+  text-align: center;
+  justify-content: center;
+  min-height: 44px; /* Touch target minimum */
+
+  @media (width >= 768px) {
+    padding: var(--space-sm) var(--space-lg);
+    font-size: var(--font-size-base);
+  }
+
+  @media (width >= 1024px) {
+    padding: var(--space-md) var(--space-xl);
+    font-size: var(--font-size-lg);
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-text);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-icon {
+    font-size: 1em;
+    flex-shrink: 0;
+  }
+
+  /* Primary Button */
+  &.btn-primary {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+
+    &:hover:not(:disabled) {
+      box-shadow: var(--shadow-md);
+    }
+  }
+
+  /* Secondary Button */
+  &.btn-secondary {
+    background: var(--gradient-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(
+        135deg,
+        rgba(74, 20, 140, 0.6) 0%,
+        rgba(45, 27, 105, 0.6) 100%
+      );
+      border-color: rgba(138, 43, 226, 0.7);
+    }
+  }
+
+  /* Action Button Variants */
+  &.btn-view {
+    background: linear-gradient(135deg, #2196f3, #21cbf3);
+    color: white;
+  }
+
+  &.btn-edit {
+    background: linear-gradient(135deg, #ff9800, #ffb74d);
+    color: white;
+  }
+
+  &.btn-delete {
+    background: linear-gradient(135deg, #f44336, #e57373);
+    color: white;
+  }
+
+  &.btn-danger {
+    background: linear-gradient(135deg, #f44336, #e57373);
+    color: white;
+
+    &:hover:not(:disabled) {
+      box-shadow: 0 8px 25px rgba(244, 67, 54, 0.4);
+    }
+  }
+
+  /* Size Variants */
+  &.btn-sm {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-xs);
+    min-height: 36px;
+  }
+
+  &.btn-lg {
+    padding: var(--space-md) var(--space-xl);
+    font-size: var(--font-size-xl);
+    min-height: 52px;
+
+    @media (width >= 768px) {
+      padding: var(--space-lg) var(--space-2xl);
+    }
+  }
+}
+
+/* Button Groups */
+.btn-group {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  justify-content: center;
+
+  @media (width >= 768px) {
+    gap: var(--space-md);
+    flex-wrap: nowrap;
+  }
+
+  .btn {
+    flex: 1;
+    min-width: 120px;
+
+    @media (width >= 768px) {
+      flex: none;
+      min-width: 150px;
+    }
+  }
+}
+
+/* Action Button Groups */
+.action-buttons {
+  display: flex;
+  gap: var(--space-xs);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: var(--space-md);
+
+  @media (width >= 768px) {
+    gap: var(--space-sm);
+    flex-wrap: nowrap;
+  }
+
+  .btn {
+    font-size: var(--font-size-xs);
+    padding: var(--space-xs) var(--space-sm);
+
+    @media (width >= 768px) {
+      font-size: var(--font-size-sm);
+      padding: var(--space-sm) var(--space-md);
+    }
+  }
+
+  .delete-form {
+    display: inline;
+  }
+}
