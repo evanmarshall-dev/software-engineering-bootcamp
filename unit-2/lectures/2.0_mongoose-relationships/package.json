@@ -1,0 +1,17 @@
+{
+  "name": "2.0_mongoose-relationships",
+  "version": "1.0.0",
+  "description": "",
+  "main": "queries.js",
+  "scripts": {
+    "dev": "node queries.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.4",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "mongoose": "^8.18.0"
+  }
+}
