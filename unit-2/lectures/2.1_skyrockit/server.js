@@ -11,6 +11,8 @@ const isSignedIn = require("./middleware/is-signed-in.js");
 const passUserToView = require("./middleware/pass-user-to-view.js");
 
 const authController = require("./controllers/auth.js");
+// Next, we will import the applications controller into server.js. Place this import near the top, before the port variable is defined.
+const applicationsController = require("./controllers/applications.js");
 
 const port = process.env.PORT ? process.env.PORT : "3000";
 
@@ -43,6 +45,9 @@ app.get("/", (req, res) => {
 app.use("/auth", authController);
 // ** For this application, users must be signed in to view any of the routes associated with their applications. Therefore, isSignedIn should be placed above the applications controller, but not before auth. If above homepage then you will have to be signed in to even access that route.
 app.use(isSignedIn);
+// ** Finally, link your controller to a specific route in server.js. This tells the server that any incoming requests to /users/:userId/applications will be handled by your applications controller.
+// Place it just above our app.listen logic in the server
+app.use("/users/:userId/applications", applicationsController);
 
 app.listen(port, () => {
   console.log(`The express app is ready on port ${port}!`);
