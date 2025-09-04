@@ -55,7 +55,7 @@ Reference this chart when building your RESTful routes in your controller.
 | Update | `/users/:userId/foods/:itemId`      | PUT       |
 | Delete | `/users/:userId/foods/:itemId`      | DELETE    |
 
-## Structure and Setup
+## CRUD Structure and Setup
 
 ### 1. Build the controller
 
@@ -103,3 +103,153 @@ Reference this chart when building your RESTful routes in your controller.
 - rendered conditionally based on whether or not a `user` is signed in.
 - If a `user` is signed in, they should see links to “View my Pantry” or “Sign Out”.
 - If a `user` is not signed in, they should see links to “Sign In” or “Sign Up”.
+
+### 5. Build the `index` route
+
+Index route concept. For your landing page, you will use:
+
+- `GET /users/:userId/foods`
+
+Defining the route.
+
+- In your `foods` controller, create a new `index` route to serve as the landing page.
+- This route should `res.render()` a `index.ejs` view.
+
+Render the `index` template
+
+- Create a new directory called `foods` inside of the `views` directory. This will hold the templates for your `foods` pages.
+- - Create an `index.ejs` file in `foods`. Add a basic HTML boilerplate to this file.
+
+### 6. Build the `new` page
+
+The `new` route concept. For your `new` page, you will use:
+
+- `GET /users/:userId/foods/new`
+
+Define the `new` route. This route will render a page that displays a form to add a new item to the user’s pantry.
+
+- In `controllers/foods.js`, create a `new` route.
+- This route should `res.render()` a `new.ejs` view.
+- Add a “Add New Item” link to the `index` page and point it to your new route.
+
+Render the `new` template.
+
+- Create a new template called `new.ejs` in the `views` directory.
+- This view should display a form to add a new food item to the user’s pantry. Design your form based on the `foodschema` defined earlier.
+- The form action will `POST` to the `create` route.
+
+### 7. Build the `create` functionality
+
+The `create` route concept. This route will:
+
+- `POST` to `/users/:userId/foods`
+
+Define the `create` route. This route will create new `foods` in the embedded pantry array on the `user` model.
+
+- Look up the user from `req.session`
+- Push `req.body` (the new form data object) to the `pantry` array of the current user.
+- Save changes to the `user`.
+- Redirect back to the application’s `index` view.
+- If any errors, log them and redirect back home `/`.
+
+### 8. Add pantry items to `index` page
+
+Build the `index` functionality. Refactor the `index` route to send all items in a user’s pantry to the `index` view:
+
+- Look up the current user’s pantry
+- Send all pantry items to the view via `res.locals`
+- If any errors, log them and redirect back home `/`.
+
+Update the `index` template.
+
+- Use conditional rendering to display a list of pantry items or a message that reads “There are no items in this pantry.”
+
+### 9. Build `delete` route
+
+The `delete` route concept. This route will:
+
+- `DELETE` to `/users/:userId/foods/:itemId`
+- Add `?_method=DELETE` to utilize the method override middleware
+
+Define the `delete` route
+
+- Define the `delete` route in the `foods` controller
+
+Add `delete` link to the `index` template
+
+- Add a simple form element to each pantry item that posts to the `delete` route
+- The form should appear as a single `delete` button in the UI
+
+Build the `delete` functionality. This route will delete the food item from the user’s pantry.
+
+- Look up the user from `req.session`
+- Use the `.deleteOne()` method to delete a food using the id supplied from `req.params`
+- Save changes to the `user`
+- Redirect back to the `index` view
+- If any errors, log them and redirect back home `/`.
+
+### 10. Build the `edit` page
+
+The `edit` route concept. For your `edit` page, you will use:
+
+- `GET /users/:userId/foods/:itemId/edit`
+
+Define the `edit` route and build `edit` functionality. This route will render a page that displays a form to edit a specific food item in the user’s pantry.
+
+- In `controllers/foods.js`, create an edit route.
+- Look up the user from `req.session`
+- Find the current food from the id using `req.params`
+- This route should `res.render()` an `edit.ejs` view.
+- Send the current food to the view via `res.locals`
+- If any errors, log them and redirect back home `/`.
+- Back in the user’s index page, add an edit link to each food item rendered.
+
+Render the `edit` template
+
+- Create a new template called `edit.ejs` in the `views` directory.
+- This view should display a form to edit a specific food item in the user’s pantry. Design your form based on the `foodschema` defined earlier.
+- Auto-fill the form with the `food` data supplied from the route.
+- The form action will `POST` to the `update` route.
+
+### 11. Build the `update` functionality
+
+The `update` route concept. This route will:
+
+- `POST` to `/users/:userId/foods/:itemId`
+- Add `?_method=PUT` to utilize the method override middleware
+
+Define the `update` route
+
+- Define the update route in the `foods` controller
+
+Build the `update` functionality. This route will update a specific food item from the user’s pantry:
+
+- Find the user from `req.session`
+- Find the current food from the id supplied by `req.params`
+- Use the `.set()` method, updating the current food to reflect the new form data on `req.body`
+- Save the current `user`
+- Redirect back to the `index` view
+- If any errors, log them and redirect back home `/`.
+
+## Add a Community page
+
+There are two final `user` views to reach your final application. Building a community page for users to find each other and gain inspiration from the pantry items of others.
+
+To meet this requirement you will need a new `users` controller and `views` directory for `users`.
+
+- Create a simple `/users` controller with an `index` route to get all users.
+- Connect your new controller in `server.js`
+- Create a new directory inside of `views` called `users`.
+- Add a new view called `index.ejs`
+- Render a list of all users on the `index` page.
+- Add a link to your nav partial that says “Explore Our Community”. Link it to your new community page.
+
+### 1. View other users’ pantries
+
+From the community page, users should be able to click on the names of other users and see their pantry. This requires one final route and view.
+
+- Create a `show` route in your `/users` controller
+- Create a `show.ejs` in the `users` views directory
+- Add a link for each user’s `show` page in the rendered community list.
+- On each user’s `show` page, render a list of that user’s pantry items.
+- This list should be read-only.
