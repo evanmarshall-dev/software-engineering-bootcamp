@@ -4,7 +4,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
-const morgan = require("morgan");
+// ? const morgan = require("morgan");
 const session = require("express-session");
 // Now that we have our middleware created, we need to mount and use it in our server. Import the middleware just below our other dependencies at the top of server.js.
 const isSignedIn = require("./middleware/is-signed-in.js");
@@ -16,6 +16,8 @@ const applicationsController = require("./controllers/applications.js");
 
 const port = process.env.PORT ? process.env.PORT : "3000";
 
+const path = require("path");
+
 mongoose.connect(process.env.MONGODB_URI);
 
 mongoose.connection.on("connected", () => {
@@ -24,7 +26,10 @@ mongoose.connection.on("connected", () => {
 
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method"));
-// app.use(morgan('dev'));
+// ? app.use(morgan('dev'));
+
+app.use(express.static(path.join(__dirname, "public")));
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -36,10 +41,21 @@ app.use(
 // ** The passUserToView middleware should be included before all our routes, including our homepage, just in case we want to include conditional rendering with a user’s details. If there is no signed in user the locals object will be set to null.
 app.use(passUserToView);
 
+// ? app.get("/", (req, res) => {
+//   ? res.render("index.ejs", {
+//     ? user: req.session.user,
+//   ? });
+// ? });
+// Change to conditional routing to app page if signed in or sign in page if not.
 app.get("/", (req, res) => {
-  res.render("index.ejs", {
-    user: req.session.user,
-  });
+  // Check if the user is signed in
+  if (req.session.user) {
+    // Redirect signed-in users to their applications index
+    res.redirect(`/users/${req.session.user._id}/applications`);
+  } else {
+    // Show the homepage for users who are not signed in
+    res.render("index.ejs");
+  }
 });
 
 app.use("/auth", authController);

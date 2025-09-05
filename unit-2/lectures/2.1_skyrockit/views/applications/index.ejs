@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Apps</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <!-- <body>
+    <%#- include('../partials/_navbar.ejs') %>
+    <h1>Your Apps</h1>
+  </body> -->
+  <!-- We need a link on our applications index page that will take us to our new view. -->
+  <body>
+    <%- include('../partials/_navbar.ejs') %>
+    <div class="all-apps-body">
+      <div class="all-apps-header">
+        <h1>Your Apps</h1>
+        <a class="add-app-link" href="/users/<%=user._id%>/applications/new"
+          >Add an App</a
+        >
+      </div>
+
+      <ul>
+        <% applications.forEach((application)=>{ %>
+        <a href="/users/<%= user._id %>/applications/<%= application._id %>">
+          <li><%= application.title %> at <%= application.company %></li>
+        </a>
+        <% }) %>
+      </ul>
+    </div>
+  </body>
+</html>
