@@ -1,13 +1,27 @@
 const mongoose = require("mongoose");
 
 const foodSchema = new mongoose.Schema({
-  name: {
+  store: {
     type: String,
     required: true,
   },
+  item: {
+    type: String,
+    required: true,
+  },
+  notes: {
+    type: String,
+  },
+  source: {
+    type: String,
+  },
+  status: {
+    type: String,
+    enum: ["need", "onList", "have", "outOfStock", "stored"],
+  },
 });
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
@@ -16,7 +30,7 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  pantry: [foodSchema],
+  foods: [foodSchema],
 });
 
 const User = mongoose.model("User", userSchema);

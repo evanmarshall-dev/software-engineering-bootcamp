@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Explore Our Community - CookBook</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/users.css" />
+  </head>
+  <body>
+    <%- include('../partials/_navbar.ejs') %>
+
+    <div class="all-apps-body">
+      <div class="all-apps-header">
+        <h1>Explore Our Community</h1>
+        <p class="community-description">
+          Discover what fellow community members have in their pantries and get inspired for your next meal!
+        </p>
+      </div>
+
+      <% if (users && users.length > 0) { %>
+        <div class="community-container">
+          <% users.forEach(function(communityUser) { %>
+            <div class="user-card">
+
+              <div class="user-card-content">
+                <!-- User Header -->
+                <div class="user-header">
+                  <div class="user-avatar">
+                    <%= communityUser.username.charAt(0).toUpperCase() %>
+                  </div>
+                  <div class="user-info">
+                    <a href="/users/<%= communityUser._id %>" class="user-name-link">
+                      <h3 class="user-name">
+                        <%= communityUser.username %>
+                      </h3>
+                    </a>
+                    <p class="user-stats">
+                      <%= communityUser.foods.length %> <%= communityUser.foods.length === 1 ? 'item' : 'items' %> in pantry
+                      <!-- <span class="explore-hint">→ Click to explore</span> -->
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Pantry Items Preview -->
+                <% if (communityUser.foods.length > 0) { %>
+                  <div class="pantry-preview">
+                    <h4 class="pantry-preview-title">
+                      Recent Pantry Items:
+                    </h4>
+                    <div class="food-tags">
+                      <%
+                        // Show up to 6 most recent items
+                        const itemsToShow = communityUser.foods.slice(0, 6);
+                        itemsToShow.forEach(function(food) {
+                      %>
+                        <span class="food-tag">
+                          <%= food.item %>
+                        </span>
+                      <% }); %>
+
+                      <% if (communityUser.foods.length > 6) { %>
+                        <span class="food-tag more-indicator">
+                          +<%= communityUser.foods.length - 6 %> more
+                        </span>
+                      <% } %>
+                    </div>
+                  </div>
+                <% } else { %>
+                  <p class="empty-pantry-message">
+                    This user hasn't added any pantry items yet.
+                  </p>
+                <% } %>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <div class="no-community-message">
+          <h3 class="no-community-title">No Community Members Yet</h3>
+          <p>Be the first to join our food pantry community!</p>
+        </div>
+      <% } %>
+    </div>
+  </body>
+</html>

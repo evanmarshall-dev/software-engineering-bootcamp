@@ -3,10 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home Page</title>
+    <title>CookBook</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
   </head>
-  <body>
-    <%- include('./partials/_navbar.ejs') %>
-    <h1>Welcome to CookBook</h1>
+  <body class="index-body">
+    <div class="index-container">
+      <div class="text-container">
+        <h1 class="main-header">CookBook</h1>
+        <p class="subheader">A pantry food management application.</p>
+      </div>
+      <div class="auth-links">
+        <a class="signup-link" href="/auth/sign-up">Sign Up</a>
+        <a class="signin-link" href="/auth/sign-in">Sign In</a>
+      </div>
+    </div>
   </body>
 </html>

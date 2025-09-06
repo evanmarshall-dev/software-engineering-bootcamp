@@ -1,14 +1,10 @@
 {
-  "name": "men-stack-session-auth-template",
+  "name": "cookbook app",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/evanmarshall-dev/software-engineering-bootcamp/tree/main/unit-2/labs/men-stack-crud-app-lab"
   },
   "author": "",
   "license": "ISC",
@@ -19,7 +15,7 @@
     "express": "^5.0.0",
     "express-session": "^1.17.3",
     "method-override": "^3.0.0",
-    "mongoose": "^8.0.1",
+    "mongoose": "^8.18.0",
     "morgan": "^1.10.0"
   },
   "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184"

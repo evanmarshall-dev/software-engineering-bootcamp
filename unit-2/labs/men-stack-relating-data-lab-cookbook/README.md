@@ -36,7 +36,7 @@ Each user’s pantry will contain an array of `foods`, each defined by a simple 
 
 Take at look at this ERD (Entity-Relationship Diagram) to help you visualize the relationships between these entities, `User` and `foodSchema`:
 
-![Cookbook ERD](./assets/images/erd.png)
+![Cookbook ERD](./public/images/erd.png)
 
 > [!NOTE]
 > For this exercise, you can ignore the schemas for recipe and ingredient. Additional sections of this lab explore relating data using referencing.

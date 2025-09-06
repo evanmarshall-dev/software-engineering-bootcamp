@@ -3,10 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Pantry</title>
+    <title>Your Pantry</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
   </head>
   <body>
-    <%- include('./partials/_navbar.ejs') %>
-    <h1>Welcome to my Pantry</h1>
+    <%- include('../partials/_navbar.ejs') %>
+    <div class="all-apps-body">
+      <div class="all-apps-header">
+        <h1>Your Pantry</h1>
+        <a class="add-app-link" href="/users/<%=user._id%>/foods/new"
+          >Add Food</a
+        >
+      </div>
+
+      <ul>
+        <% foods.forEach((food)=>{ %>
+        <a href="/users/<%= user._id %>/foods/<%= food._id %>">
+          <li><%= food.item %> at <%= food.store %></li>
+        </a>
+        <% }) %>
+      </ul>
+    </div>
   </body>
 </html>

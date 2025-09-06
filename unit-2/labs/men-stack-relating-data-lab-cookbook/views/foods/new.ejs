@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add New Food Item</title>
+    <link rel="stylesheet" href="/stylesheets/show.css" />
+  </head>
+  <body>
+    <%- include('../partials/_navbar.ejs') %>
+
+    <div class="new-body">
+      <h1>Add New Food Item</h1>
+      <form action="/users/<%= user._id %>/foods" method="POST">
+        <label for="store">Store/Source:</label>
+        <input
+          type="text"
+          name="store"
+          id="store"
+          placeholder="e.g., Local Food Bank, Grocery Store"
+          required
+        />
+
+        <label for="item">Food Item:</label>
+        <input
+          type="text"
+          name="item"
+          id="item"
+          placeholder="e.g., Canned Tomatoes, Fresh Apples"
+          required
+        />
+
+        <label for="notes">Notes & Details:</label>
+        <textarea
+          name="notes"
+          id="notes"
+          placeholder="Add expiration date, quantity, storage instructions, or any special notes..."
+        ></textarea>
+
+        <label for="source">Source:</label>
+        <input
+          type="url"
+          name="source"
+          id="source"
+          placeholder="https://example.com/food-source"
+        />
+
+        <label for="status">Status:</label>
+        <select id="status" name="status" required>
+          <option value="">-- Select Status --</option>
+          <option value="need">Need to Get</option>
+          <option value="onList">On Shopping List</option>
+          <option value="have">Currently Have</option>
+          <option value="outOfStock">Used Up</option>
+          <option value="stored">Stored/Preserved</option>
+        </select>
+
+        <button type="submit">Add Food Item</button>
+      </form>
+    </div>
+  </body>
+</html>

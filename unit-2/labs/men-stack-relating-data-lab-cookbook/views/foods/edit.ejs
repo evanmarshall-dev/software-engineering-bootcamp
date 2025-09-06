@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editing <%= food.item %></title>
+    <link rel="stylesheet" href="/stylesheets/show.css" />
+  </head>
+  <body>
+    <%- include('../partials/_navbar.ejs') %>
+
+    <div class="edit-body">
+      <h1>Edit <%= food.item %> from <%= food.store %></h1>
+
+      <form
+        action="/users/<%= user._id %>/foods/<%= food._id %>?_method=PUT"
+        method="POST"
+      >
+        <label for="store">Store/Source:</label>
+        <input
+          type="text"
+          name="store"
+          id="store"
+          value="<%= food.store %>"
+          placeholder="e.g., Local Food Bank, Grocery Store"
+          required
+        />
+
+        <label for="item">Food Item:</label>
+        <input
+          type="text"
+          name="item"
+          id="item"
+          value="<%= food.item %>"
+          placeholder="e.g., Canned Tomatoes, Fresh Apples"
+          required
+        />
+
+        <label for="notes">Notes & Details:</label>
+        <textarea
+          name="notes"
+          id="notes"
+          placeholder="Add expiration date, quantity, storage instructions, or any special notes..."
+        ><%= food.notes || '' %></textarea>
+
+        <label for="source">Source:</label>
+        <input
+          type="url"
+          name="source"
+          id="source"
+          value="<%= food.source || '' %>"
+          placeholder="https://example.com/food-source"
+        />
+
+        <label for="status">Status:</label>
+        <select id="status" name="status" required>
+          <option value="">-- Select Status --</option>
+          <option
+            value="need"
+            <%= food.status === 'need' ? 'selected' : '' %>
+          >
+            Need to Get
+          </option>
+          <option
+            value="onList"
+            <%= food.status === 'onList' ? 'selected' : '' %>
+          >
+            On Shopping List
+          </option>
+          <option
+            value="have"
+            <%= food.status === 'have' ? 'selected' : '' %>
+          >
+            Currently Have
+          </option>
+          <option
+            value="outOfStock"
+            <%= food.status === 'outOfStock' ? 'selected' : '' %>
+          >
+            Used Up
+          </option>
+          <option
+            value="stored"
+            <%= food.status === 'stored' ? 'selected' : '' %>
+          >
+            Stored/Preserved
+          </option>
+        </select>
+
+        <button type="submit">Update Food Item</button>
+      </form>
+    </div>
+  </body>
+</html>

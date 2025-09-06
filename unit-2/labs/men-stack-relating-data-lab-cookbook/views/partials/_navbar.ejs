@@ -1,10 +1,22 @@
+<link rel="stylesheet" href="/stylesheets/partials.css" />
+
 <nav>
-  <a href="/">Home</a>
   <% if(user) { %>
-  <a href="/users/<%=user._id%>/foods">View my Pantry</a>
-  <a href="/auth/sign-out">Sign Out</a>
+  <div class="navbar">
+    <h1 id="nav-header">CookBook</h1>
+    <div class="nav-links">
+      <a class="authlink" href="/users/<%=user._id%>/foods">Your Pantry</a>
+      <a class="authlink" href="/users">Explore Our Community</a>
+      <a class="authlink" href="/auth/sign-out">Sign Out</a>
+    </div>
+  </div>
   <% } else { %>
-  <a href="/auth/sign-in">Sign In</a>
-  <a href="/auth/sign-up">Sign Up</a>
+  <div class="navbar">
+    <h1 id="nav-header">CookBook</h1>
+    <div class="nav-links">
+      <a class="authlink" href="/auth/sign-in">Sign In</a>
+      <a class="authlink" href="/auth/sign-up">Sign Up</a>
+    </div>
+  </div>
   <% } %>
 </nav>

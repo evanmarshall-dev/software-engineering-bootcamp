@@ -1,0 +1,384 @@
+/* Food Pantry Cookbook Color Palette */
+:root {
+  --primary-rust: #d2691e;
+  --primary-rust-hover: #b8860b;
+  --secondary-sage: #9caf88;
+  --secondary-sage-hover: #7a9b6a;
+  --accent-cream: #fff8dc;
+  --accent-warm-white: #faf0e6;
+  --text-dark: #654321;
+  --text-medium: #8b4513;
+  --background-light: #faf0e6;
+  --background-medium: #f5deb3;
+  --shadow-warm: rgba(139, 69, 19, 0.2);
+  --shadow-dark: rgba(101, 67, 33, 0.3);
+}
+
+/* Community Page Styles */
+.community-description {
+  text-align: center;
+  color: var(--text-medium);
+  font-size: 1.1rem;
+  margin: 10px 0;
+}
+
+.community-container {
+  width: 90%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.user-card {
+  background-color: var(--accent-cream);
+  border: 2px solid var(--secondary-sage);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 8px var(--shadow-warm);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px var(--shadow-dark);
+  }
+}
+
+.user-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.user-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 1px solid var(--secondary-sage);
+  padding-bottom: 15px;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  background-color: var(--primary-rust);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-cream);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name-link {
+  text-decoration: none;
+}
+
+.user-name {
+  margin: 0;
+  color: var(--text-dark);
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--primary-rust);
+  }
+}
+
+.user-stats {
+  margin: 5px 0 0 0;
+  color: var(--text-medium);
+  font-size: 0.9rem;
+}
+
+.explore-hint {
+  color: var(--primary-rust);
+  font-weight: 600;
+}
+
+.pantry-preview {
+  margin-top: 10px;
+}
+
+.pantry-preview-title {
+  margin: 0 0 10px 0;
+  color: var(--text-dark);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.food-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.food-tag {
+  background-color: var(--secondary-sage);
+  color: var(--accent-cream);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.food-tag.more-indicator {
+  background-color: var(--text-medium);
+}
+
+.empty-pantry-message {
+  color: var(--text-medium);
+  font-style: italic;
+  margin: 0;
+  text-align: center;
+  padding: 10px;
+}
+
+.no-community-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-medium);
+}
+
+.no-community-title {
+  color: var(--text-dark);
+  margin-bottom: 10px;
+}
+
+/* Mobile Responsive Styles */
+@media (width >= 768px) {
+  .community-container {
+    max-width: 900px;
+  }
+
+  .user-header {
+    align-items: flex-start;
+  }
+
+  .user-name {
+    font-size: 1.4rem;
+  }
+
+  .user-stats {
+    font-size: 1rem;
+  }
+
+  .pantry-preview-title {
+    font-size: 1.1rem;
+  }
+}
+
+@media (width >= 1024px) {
+  .community-container {
+    max-width: 1000px;
+  }
+
+  .user-card {
+    padding: 25px;
+  }
+
+  .user-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 1.4rem;
+  }
+}
+
+/* User Show Page Styles */
+.user-pantry-title {
+  color: var(--text-dark);
+}
+
+.user-pantry-title .username {
+  color: var(--primary-rust);
+}
+
+.back-to-community-btn {
+  padding: 10px 20px;
+  background-color: var(--secondary-sage);
+  color: var(--accent-cream);
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px var(--shadow-warm);
+  font-size: 1rem;
+  display: inline-block;
+
+  &:hover {
+    background-color: var(--secondary-sage-hover);
+    transform: translateY(-1px);
+  }
+}
+
+.pantry-container {
+  width: 90%;
+  max-width: 800px;
+}
+
+.pantry-stats {
+  text-align: center;
+  color: var(--text-medium);
+  font-size: 1.1rem;
+  margin: 0 0 30px 0;
+  font-style: italic;
+}
+
+.food-items-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.food-item-card {
+  background-color: var(--accent-cream);
+  border: 2px solid var(--secondary-sage);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 8px var(--shadow-warm);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px var(--shadow-dark);
+  }
+}
+
+.food-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.food-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.food-item-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.food-item-name {
+  margin: 0 0 5px 0;
+  color: var(--text-dark);
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.food-item-store {
+  margin: 0;
+  color: var(--text-medium);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.status-badge {
+  color: var(--accent-cream);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge.need {
+  background-color: var(--primary-rust);
+}
+
+.status-badge.on-list {
+  background-color: var(--text-medium);
+}
+
+.status-badge.have {
+  background-color: var(--secondary-sage);
+}
+
+.status-badge.out-of-stock {
+  background-color: #888;
+}
+
+.status-badge.stored {
+  background-color: var(--secondary-sage-hover);
+}
+
+.food-notes-section {
+  background-color: var(--accent-warm-white);
+  border: 1px solid var(--secondary-sage);
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 8px;
+}
+
+.food-notes-title {
+  margin: 0 0 8px 0;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.food-notes-text {
+  margin: 0;
+  color: var(--text-dark);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.food-source-link {
+  margin-top: 8px;
+}
+
+.food-source-link a {
+  color: var(--primary-rust);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--primary-rust-hover);
+  }
+}
+
+.empty-pantry-container {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-medium);
+}
+
+.empty-pantry-card {
+  background-color: var(--accent-cream);
+  border: 2px solid var(--secondary-sage);
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 400px;
+  margin: 0 auto;
+  box-shadow: 0 4px 8px var(--shadow-warm);
+}
+
+.empty-pantry-title {
+  color: var(--text-dark);
+  margin-bottom: 15px;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+}
+
+.empty-pantry-message {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}

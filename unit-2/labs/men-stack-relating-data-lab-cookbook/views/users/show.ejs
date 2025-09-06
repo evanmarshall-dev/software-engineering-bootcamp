@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= viewedUser.username %>'s Pantry - CookBook</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/users.css" />
+  </head>
+  <body>
+    <%- include('../partials/_navbar.ejs') %>
+
+    <div class="all-apps-body">
+      <div class="all-apps-header">
+        <h1 class="user-pantry-title">
+          <span class="username">
+            <%= viewedUser.username %>
+          </span>'s Pantry
+        </h1>
+        <a href="/users" class="back-to-community-btn">
+          ← Back to Community
+        </a>
+      </div>
+
+      <% if (viewedUser.foods && viewedUser.foods.length > 0) { %>
+        <div class="pantry-container">
+          <p class="pantry-stats">
+            <%= viewedUser.foods.length %> <%= viewedUser.foods.length === 1 ? 'item' : 'items' %> in pantry
+          </p>
+
+          <div class="food-items-grid">
+            <% viewedUser.foods.forEach(function(food) { %>
+              <div class="food-item-card">
+
+                <div class="food-item-content">
+                  <!-- Food Item Header -->
+                  <div class="food-item-header">
+                    <div class="food-item-info">
+                      <h3 class="food-item-name">
+                        <%= food.item %>
+                      </h3>
+                      <p class="food-item-store">
+                        from <%= food.store %>
+                      </p>
+                    </div>
+
+                    <!-- Status Badge -->
+                    <%
+                      let statusColor;
+                      let statusText;
+                      let statusClass;
+                      switch(food.status) {
+                        case 'need':
+                          statusClass = 'need';
+                          statusText = 'Need to Get';
+                          break;
+                        case 'onList':
+                          statusClass = 'on-list';
+                          statusText = 'On Shopping List';
+                          break;
+                        case 'have':
+                          statusClass = 'have';
+                          statusText = 'Currently Have';
+                          break;
+                        case 'outOfStock':
+                          statusClass = 'out-of-stock';
+                          statusText = 'Used Up';
+                          break;
+                        case 'stored':
+                          statusClass = 'stored';
+                          statusText = 'Stored/Preserved';
+                          break;
+                        default:
+                          statusClass = 'on-list';
+                          statusText = food.status;
+                      }
+                    %>
+                    <div class="status-badge <%= statusClass %>">
+                      <%= statusText %>
+                    </div>
+                  </div>
+
+                  <!-- Notes Section -->
+                  <% if (food.notes && food.notes.trim() !== '') { %>
+                    <div class="food-notes-section">
+                      <h4 class="food-notes-title">
+                        Notes:
+                      </h4>
+                      <p class="food-notes-text">
+                        <%= food.notes %>
+                      </p>
+                    </div>
+                  <% } %>
+
+                  <!-- Source Link -->
+                  <% if (food.source && food.source.trim() !== '') { %>
+                    <div class="food-source-link">
+                      <a href="<%= food.source %>" target="_blank">
+                        🔗 View Source Reference
+                      </a>
+                    </div>
+                  <% } %>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+      <% } else { %>
+        <div class="empty-pantry-container">
+          <div class="empty-pantry-card">
+            <h3 class="empty-pantry-title">
+              Empty Pantry
+            </h3>
+            <p class="empty-pantry-message">
+              <%= viewedUser.username %> hasn't added any pantry items yet.
+            </p>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </body>
+</html>

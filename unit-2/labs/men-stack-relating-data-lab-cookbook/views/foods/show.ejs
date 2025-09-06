@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= food.item %> - CookBook</title>
+    <link rel="stylesheet" href="/stylesheets/show.css" />
+  </head>
+  <body>
+    <%- include('../partials/_navbar.ejs') %>
+    <div class="show-body">
+      <div class="show-header">
+        <h1><%= food.item %> from <%= food.store %></h1>
+        <div class="show-sidebar">
+          <div class="show-actions">
+            <a href="/users/<%= user._id %>/foods/<%= food._id %>/edit">
+              Edit Food Item
+            </a>
+            <form
+              action="/users/<%= user._id %>/foods/<%= food._id %>?_method=DELETE"
+              method="POST"
+            >
+              <button type="submit">Remove Item</button>
+            </form>
+          </div>
+          <p>
+            Status:
+            <%
+              let statusDisplay;
+              switch(food.status) {
+                case 'need':
+                  statusDisplay = 'Need to Get';
+                  break;
+                case 'onList':
+                  statusDisplay = 'On Shopping List';
+                  break;
+                case 'have':
+                  statusDisplay = 'Currently Have';
+                  break;
+                case 'outOfStock':
+                  statusDisplay = 'Used Up';
+                  break;
+                case 'stored':
+                  statusDisplay = 'Stored/Preserved';
+                  break;
+                default:
+                  statusDisplay = food.status;
+              }
+            %>
+            <%= statusDisplay %>
+          </p>
+        </div>
+      </div>
+      <div class="show-notes-container">
+        <% if (food.source) { %>
+        <a href="<%= food.source %>" target="_blank">View Source Reference</a>
+        <% } %> <% if (food.notes) { %>
+        <div class="show-notes">
+          <h2>Notes & Details:</h2>
+          <p><%= food.notes %></p>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </body>
+</html>
