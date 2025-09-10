@@ -6,9 +6,12 @@
     <title>User Page</title>
   </head>
   <body>
-    <h1><%= message %></h1>
-    <% if (showMessage) { %>
-    <p>This is a dynamic message for the users page!</p>
-    <% } %>
+    <%- include('partials/_navbar') %>
+    <main id="maincontent" tabindex="-1">
+      <h1><%= message %></h1>
+      <% if (showMessage) { %>
+        <p>This is a dynamic message for the users page!</p>
+      <% } %>
+    </main>
   </body>
 </html>

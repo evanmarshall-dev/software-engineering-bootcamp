@@ -5,6 +5,8 @@ const userSchema = mongoose.Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, minLength: 6 },
+  // Linked document to Story collection.
+  stories: [{type: mongoose.Schema.Types.ObjectId, ref: "Story"}], // Array of story IDs
 });
 
 const User = mongoose.model("User", userSchema, "users");

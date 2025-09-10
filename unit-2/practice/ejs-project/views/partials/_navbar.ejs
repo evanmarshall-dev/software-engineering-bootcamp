@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="/styles/partials.css">
+
+<header class="site-header" role="banner">
+  <!-- Skip link as the first focusable element -->
+  <a href="#maincontent" class="sr-only">Skip to main</a>
+
+  <div class="nav-container">
+    <a href="/" class="brand" aria-label="Home">My App</a>
+    <nav id="mainNavigation" role="navigation" aria-label="Main navigation" class="nav-panel">
+      <ul id="mainNavList" class="nav-list" role="menubar" aria-label="Main">
+        <li role="none">
+          <a role="menuitem"
+             href="/"
+             class="nav-link"
+             <%= (typeof currentPath !== 'undefined' && currentPath === '/') ? 'aria-current="page"' : '' %>>
+            Home
+          </a>
+        </li>
+        <li role="none">
+          <a role="menuitem"
+             href="/users"
+             class="nav-link"
+             <%= (typeof currentPath !== 'undefined' && currentPath.startsWith('/users')) ? 'aria-current="page"' : '' %>>
+            Users
+          </a>
+        </li>
+        <li role="none">
+          <a role="menuitem"
+             href="/stories"
+             class="nav-link"
+             <%= (typeof currentPath !== 'undefined' && currentPath.startsWith('/stories')) ? 'aria-current="page"' : '' %>>
+            Stories
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
