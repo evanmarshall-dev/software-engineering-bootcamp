@@ -1,0 +1,16 @@
+nav {
+  position: sticky;
+  top: 0;
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 1rem 1.5rem;
+    background-color: #f5f5f5;
+    border-bottom: 2px solid gray;
+    box-shadow: 0 2px 8px rgba(139, 69, 19, 0.2);
+    gap: 1rem;
+  }
+}

@@ -3,18 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-      <% if (typeof title !== 'undefined' && typeof titleTemplate !== 'undefined') { %>
-        <%= titleTemplate.replace('%s', title) %>
-      <% } else if (typeof title !== 'undefined') { %>
-        <%= title %>
-      <% } else { %>
-        LedgerLight
-      <% } %>
-    </title>
+  <title>
+    <% if (typeof title !== 'undefined' && typeof titleTemplate !== 'undefined') { %>
+      <%= titleTemplate.replace('%s', title) %>
+    <% } else if (typeof title !== 'undefined') { %>
+      <%= title %>
+    <% } else { %>
+      LedgerLight
+    <% } %>
+  </title>
+  <link rel="stylesheet" href="/styles/globals.css">
 </head>
 <body>
-  <h1>Welcome to the LedgerLight App</h1>
+  <%- include('partials/_navbar') %>
+  <h2>Welcome to the LedgerLight App</h2>
   <p>Your one-stop solution for all your personal finance needs.</p>
 </body>
 </html>
