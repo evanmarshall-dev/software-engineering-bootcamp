@@ -13,14 +13,14 @@
   "packageManager": "pnpm@10.12.4",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "connect-mongo": "^5.0.0",
     "dotenv": "^17.2.2",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
+    "helmet": "^7.0.0",
     "method-override": "^3.0.0",
     "mongoose": "^8.18.1",
-    "connect-mongo": "^5.0.0",
-    "helmet": "^7.0.0",
     "morgan": "^1.10.0"
   }
 }
