@@ -26,6 +26,20 @@
   gap: 0.5rem;
 }
 
+/* Ensure labels stack above inputs and inputs take full width */
+.auth-card .form label {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.auth-card .form input,
+.auth-card .form textarea,
+.auth-card .form select {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0.75rem;
+}
+
 /* small screens - stack actions */
 @media (width < 520px) {
   .auth-actions {

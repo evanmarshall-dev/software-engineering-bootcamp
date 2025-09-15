@@ -9,7 +9,7 @@
         <% } %>
         <div class="form__row">
           <label for="title">Title</label>
-          <input id="title" name="title" required value="<%= (typeof data !== 'undefined' && data.title) ? data.title : '' %>" />
+          <input id="title" name="title" type="text" required value="<%= (typeof data !== 'undefined' && data.title) ? data.title : '' %>" />
         </div>
         <% if (flash && flash.error) { %> <% flash.error.forEach(msg => { %>
         <div class="field-error" role="alert"><%= msg %></div>
@@ -24,7 +24,14 @@
         </div>
         <div class="form__row">
           <label for="category">Category</label>
-          <input id="category" name="category" value="<%= (typeof data !== 'undefined' && data.category) ? data.category : '' %>" />
+          <select id="category" name="category">
+            <option value="">-- Choose category --</option>
+            <% if (Array.isArray(categories)) { %>
+              <% categories.forEach(cat => { %>
+                <option value="<%= cat %>" <%= (typeof data !== 'undefined' && data.category === cat) ? 'selected' : '' %>><%= cat %></option>
+              <% }) %>
+            <% } %>
+          </select>
         </div>
         <div class="form__row">
           <label for="notes">Notes</label>

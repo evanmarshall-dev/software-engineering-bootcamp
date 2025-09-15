@@ -10,6 +10,14 @@ const userSchema = new Schema(
       lowercase: true,
       trim: true,
     },
+    // optional username for signing in with a human-friendly id
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
     passwordHash: { type: String, required: true },
   },
   { timestamps: true }

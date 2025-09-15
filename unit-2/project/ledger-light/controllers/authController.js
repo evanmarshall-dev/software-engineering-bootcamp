@@ -8,25 +8,42 @@ exports.showRegister = (req, res) => {
 
 exports.register = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, username, password } = req.body;
     const errors = [];
     if (!email) errors.push("Email is required");
+    if (!username) errors.push("Username is required");
     if (!password) errors.push("Password is required");
     if (errors.length) {
       errors.forEach((e) => req.flash("error", e));
       return res
         .status(400)
-        .render("auth/register", { title: "Register", email });
+        .render("auth/register", { title: "Register", email, username });
     }
-    const existing = await User.findOne({ email });
-    if (existing) {
+    // check uniqueness for both email and username
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
       req.flash("error", "Email already registered");
-      return res.status(400).render("auth/register", { title: "Register" });
+      return res
+        .status(400)
+        .render("auth/register", { title: "Register", username });
+    }
+    const existingUser = await User.findOne({
+      username: username.toLowerCase(),
+    });
+    if (existingUser) {
+      req.flash("error", "Username already taken");
+      return res
+        .status(400)
+        .render("auth/register", { title: "Register", email });
     }
 
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
-    const user = await User.create({ email, passwordHash });
+    const user = await User.create({
+      email,
+      username: username.toLowerCase(),
+      passwordHash,
+    });
     // login the user by attaching to session
     req.flash("success", "Account created — you are now signed in");
     login(req, user);
@@ -42,17 +59,26 @@ exports.showLogin = (req, res) => {
 
 exports.loginPost = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { identifier, password } = req.body;
     const errors = [];
-    if (!email) errors.push("Email is required");
+    if (!identifier) errors.push("Email or username is required");
     if (!password) errors.push("Password is required");
     if (errors.length) {
       errors.forEach((e) => req.flash("error", e));
-      return res.status(400).render("auth/login", { title: "Login", email });
+      return res
+        .status(400)
+        .render("auth/login", { title: "Login", email: identifier });
     }
-    const user = await User.findOne({ email });
+    // Find by email or username (username stored lowercase)
+    const query = {
+      $or: [
+        { email: identifier.toLowerCase() },
+        { username: identifier.toLowerCase() },
+      ],
+    };
+    const user = await User.findOne(query);
     if (!user) {
-      req.flash("error", "Invalid email or password");
+      req.flash("error", "Invalid credentials");
       return res.status(400).render("auth/login", { title: "Login" });
     }
 

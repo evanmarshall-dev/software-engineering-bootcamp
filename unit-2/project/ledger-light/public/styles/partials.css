@@ -39,6 +39,40 @@ nav {
     border-radius: 8px;
     transition: background var(--duration) var(--ease),
       color var(--duration) var(--ease);
+    flex-wrap: wrap;
+  }
+
+  /* Ensure navbar links and controls (like logout form) flow inline */
+  .navbar__links {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  /* Style forms inside navbar (logout) to be inline and remove default margin */
+  .navbar__links form {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+  }
+
+  /* Make the logout button fit the navbar style */
+  .navbar__links form button {
+    background: transparent;
+    border: none;
+    color: var(--color-on-surface);
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background var(--duration) var(--ease),
+      color var(--duration) var(--ease);
+  }
+
+  .navbar__links form button:hover,
+  .navbar__links form button:focus {
+    background: var(--surface-hover);
+    color: var(--color-primary-600);
   }
 
   .navbar__links a:hover,

@@ -13,7 +13,11 @@ exports.ensureAuthenticated = (req, res, next) => {
 // Helper to attach user into session after successful auth
 // Use this after regenerating the session to prevent fixation attacks.
 exports.login = (req, user) => {
-  req.session.user = { _id: user._id.toString(), email: user.email };
+  req.session.user = {
+    _id: user._id.toString(),
+    email: user.email,
+    username: user.username || null,
+  };
 };
 
 exports.logout = (req) => {

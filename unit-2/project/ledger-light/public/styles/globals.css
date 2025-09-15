@@ -214,8 +214,11 @@ fieldset {
 .form input[type="email"],
 .form input[type="password"],
 .form input[type="number"],
+.form input[type="date"],
 .form textarea,
-.form select {
+.form select,
+select,
+input[type="month"] {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.04);
   color: var(--color-text);
@@ -223,6 +226,11 @@ fieldset {
   border-radius: 8px;
   transition: box-shadow var(--duration) var(--ease),
     border-color var(--duration) var(--ease);
+
+  option {
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
 }
 
 .form input:focus,

@@ -8,7 +8,7 @@
         <p>Date: <%= transaction.date.toDateString() %></p>
         <p>Category: <%= transaction.category %></p>
         <p>Notes: <%= transaction.notes %></p>
-        <div style="display: flex; gap: 0.5rem; margin-top: 1rem">
+        <div>
           <a class="btn" href="/transactions/<%= transaction._id %>/edit">Edit</a>
           <form action="/transactions/<%= transaction._id %>?_method=DELETE" method="post">
             <% if (csrfToken) { %>
