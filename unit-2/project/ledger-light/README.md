@@ -1,100 +1,253 @@
-# UNIT 2 PROJECT - CRUD APP
+# LedgerLight
 
-## MVP
+![Language: JavaScript](https://img.shields.io/badge/language-JavaScript-F7DF1E?logo=javascript&logoColor=black)
+![Runtime: Node 18+](https://img.shields.io/badge/node-18%2B-339933?logo=node.js&logoColor=white)
+![Express 5](https://img.shields.io/badge/express-5.x-000000?logo=express)
+![EJS 3](https://img.shields.io/badge/ejs-3.x-8a2be2)
+![Mongoose 8](https://img.shields.io/badge/mongoose-8.x-47A248?logo=mongodb&logoColor=white)
+![License: ISC](https://img.shields.io/badge/license-ISC-blue)
 
-- The app utilizes EJS Templates for rendering views to users.
-- The app uses session-based authentication.
-- The app’s files are organized following the conventions taught in lectures.
-- The app has at least one data entity in addition to the User model. At least one entity must have a relationship with the User model.
-- The app has full CRUD functionality.
-- Authorization is implemented in the app. Guest users (those not signed in) should not be able to create, update, or delete data in the application or access functionality allowing those actions.
-- The app is deployed online so that the rest of the world can use it.
+A simple, secure, session‑based personal finance tracker built with the MEN stack (MongoDB, Express, Node) and EJS templates. Track income and expenses, filter by month or category, and manage your transactions with full CRUD—only you can see and modify your own data.
 
-## Code Conventions
+![LedgerLight app screenshot](./public/images/app-screenshot.png "LedgerLight transactions UI with filters and actions")
 
-- The app runs without errors in both the terminal and the browser console.
-- The code in the app adheres to coding conventions covered in lessons, like using plural names for arrays.
-- The app follows RESTful routing conventions for routes.
-- The app does not contain dead code, commented-out sections, or console logs.
-- The app is coded using proper indentation.
+## Overview
 
-## UI/UX
+LedgerLight was built to practice full‑stack fundamentals: secure authentication, authorization, RESTful routing, server‑rendered views, and a clean, accessible UI. It implements per‑user data ownership, CSRF protection, a strict Content Security Policy, and Mongo‑backed sessions so you can deploy with confidence.
 
-- Your app exhibits a visual theme, like a consistent color palette and cohesive layout across pages.
-- CSS Flexbox or Grid is utilized for page layout design.
-- The site is easily navigable by a first-time user. For example, navigation should be done through links instead of having to type in a URL to navigate around the app.
-- Colors used on the site have appropriate contrast, meeting WCAG 2.0 level AA standards.
-- When editing an item, the form is pre-filled with that item’s details.
-- Only the user who created data can see and interact with the UI for editing or deleting that data.
-- All images on the site have alt text.
-- No text is placed on top of an image in a way that makes the text inaccessible.
-- All buttons are styled.
+### Core features
 
-## Git/GitHub
+- Account registration and login with bcrypt password hashing
+- Session‑based auth with MongoDB session store; logout support
+- Transactions: create, read, update, delete (CRUD)
+- Per‑user authorization: only the owner can view/edit/delete their data
+- Filters and sorting on transactions list:
+  - Filter by month (YYYY‑MM) and category
+  - Sort by date or title, ascending/descending
+- CSRF protection and Helmet security headers (including a restrictive CSP)
+- Method override to support PUT/DELETE from HTML forms (`?_method=PUT`)
+- Flash messages and clean, accessible server‑rendered EJS views
 
-- You are shown as the only contributor to the project on GitHub.
-- The GitHub repository used for the project is named appropriately. For example, names like book-binder or wellness-tracker are appropriate names, whereas ga-project or men-stack-project are not. The repo must be publicly accessible. Be sure to create the repo on your personal GitHub account and ensure that it is public.
-- Your repo should have commits that date back to the very beginning of the project. If you start over with a new repo, do not delete the old one.
-- Commit messages should be descriptive of the work done in the commit.
+## Getting started
 
-## README Requirements
+### Deployed app and planning materials
 
-- Screenshot/Logo: A screenshot of your app or a logo.
-- Your app’s name: Include a description of your app and its functionality. Background info about the app and why you built it is a nice touch.
-- Getting started: Include a link to your deployed app and a link to your planning materials.
-- Attributions: This section should include links to any external resources (such as libraries or assets) you used to develop your application that require attribution. You can exclude this section if it does not apply to your application.
-- Technologies used: List of the technologies used, for example: JavaScript and any major frameworks or libraries.
-- Next steps: Planned future enhancements (stretch goals).
+- Deployed app: [https://ledger-light-3d68c6f45346.herokuapp.com](https://ledger-light-3d68c6f45346.herokuapp.com)
+- Trello (planning): [https://trello.com/b/zVqBrZsS/ledger-light](https://trello.com/b/zVqBrZsS/ledger-light)
 
-## Presentation ideas
+If you share those links, we’ll update them here.
 
-You will have a maximum of 5 minutes to present your project. While the structure and content of your presentation are ultimately up to you, here are some potential ideas and topics to cover:
+### Prerequisites
 
-- Discuss the app. Including details about why you chose the app is a nice touch.
-- Use the app! Demo full-CRUD data operations.
-- Briefly show off something unique in your code or a piece of code you’re particularly proud of.
-- Share your experience with the project - what was challenging, what did you gain from building this project?
+- Node.js 18+ (LTS recommended)
+- pnpm (project uses a `pnpm-lock.yaml`)
+- A MongoDB instance/connection string
 
-## Building your planning materials
+### Environment configuration
 
-Use Trello for your project planning work. This [video](https://www.youtube.com/watch?v=l3F3l3psqXY) has some helpful tips to get started using Trello if you’ve never used it before. Check out this [Trello support article](https://support.atlassian.com/trello/docs/changing-the-visibility-of-a-board/) to make your planning materials publicly available.
+Create a `.env` file at the project root with:
 
-### Details
+```ini
+MONGO_URI=mongodb+srv://<user>:<password>@<cluster>/<db>?retryWrites=true&w=majority
+SESSION_SECRET=<a-long-random-string>
+PORT=1986            # optional, defaults to 1986
+NODE_ENV=development # optional
+```
 
-You will submit a public Trello board with these project planning details:
+Required vars are validated on boot. If any are missing, the server will exit with a helpful error.
 
-- MVP user stories, written in the following template: As a [user role], I want [feature], so that [reason]. If the reason is obvious, it can be excluded.
-- Wireframes for your app’s main pages. For example, if you were building a blogging app, you might have wireframes for a landing page, the posts index page, and the add post page.
-- An ERD for your app’s data and the relationships between that data.
+### Install and run
 
-To organize this information, set up the Trello board for your project with the following lists:
+```sh
+pnpm install
+pnpm dev
+```
 
-- **MVP User Stories**: To hold your MVP user stories. Each user story should be an individual card in the list.
-- **Wireframes**: To hold the wireframes for your app. Each wireframe should be an individual card on the list. You may also want to include Wireframes built with your stretch goals in mind. If you do this, ensure that these cards are clearly labeled.
-- **ERD**: To hold the ERD for your project. You may want to include an ERD built with your stretch goals in mind as well. If you do this, ensure it is clearly labeled on a separate card.
+Then open [http://localhost:1986](http://localhost:1986).
 
-![Example Trello Board](./public/images/example-trello.png)
+Available scripts:
 
-## Deployed app deliverable
+- `pnpm dev` – start in watch mode with nodemon
+- `pnpm start` – start the server (production‑style)
 
-During project week, you’ll deploy your project so that others are able to use it on the internet! Follow the [MEN Stack Deployment guide](https://pages.git.generalassemb.ly/modular-curriculum-all-courses/universal-resources/deployment/men-stack-deployment/) to deploy your project.
+### Quick tour
 
-## Submitting your deliverables
+- Home: `/`
+- Register: `/auth/register`
+- Sign in: `/auth/login`
+- Transactions index: `/transactions`
+  - Query params: `?month=YYYY-MM&category=Food&sort=date_desc`
 
-### Submitting your planning materials
+Forms that change state include a CSRF token; when creating your own forms, include:
 
-Submit a link to your publicly visible Trello board below in the following format:
+```ejs
+<% if (csrfToken) { %>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+<% } %>
+```
 
-`Project planning link: <link>`
+HTML forms can use PUT/DELETE via the `method-override` query param:
 
-### Submitting your GitHub repo link
+```html
+<form action="/transactions/<%= tx._id %>?_method=DELETE" method="post">
+  <button type="submit">Delete</button>
+  <!-- include the CSRF hidden input as above -->
+</form>
+```
 
-Submit a link to the public GitHub repo that you are using for your MEN Stack CRUD App Project below in the following format:
+## Data model
 
-`GitHub repo link: <link>`
+User
 
-### Submitting your deployed app link
+- `email` (unique, required)
+- `username` (unique, required, lowercase)
+- `passwordHash` (bcrypt)
 
-Deploy your project by following the guide above. Submit a link to your deployed app below in the following format:
+Transaction
 
-`Deployed project link: <link>`
+- `title` (required)
+- `amount` (Number, required)
+- `date` (Date, defaults to now)
+- `category` (String)
+- `notes` (String)
+- `owner` (ObjectId → User, required)
+
+## Technologies used
+
+- Runtime: Node.js, pnpm
+- Web framework: Express 5
+- Views: EJS templating
+- Database/ODM: MongoDB + Mongoose
+- Sessions: express‑session + connect‑mongo
+- Auth: bcrypt for password hashing
+- Security: Helmet (CSP, headers), custom CSRF middleware, SameSite=strict cookies
+- Utilities: method‑override, morgan
+- Styling: custom CSS with modern variables and accessible focus styles
+
+## Attributions
+
+- Typeface: Inter by Rasmus Andersson — served via Google Fonts, licensed under the SIL Open Font License. [https://fonts.google.com/specimen/Inter](https://fonts.google.com/specimen/Inter)
+
+If you add third‑party icons, images, or other assets that require attribution, list them here with links to the source and license.
+
+## Configuration notes
+
+- Default port is `1986`. Override with `PORT`.
+- The CSP is intentionally strict. If you load external assets (e.g., fonts, analytics), update the Helmet `contentSecurityPolicy` directives in `server.js` accordingly (e.g., add `fontSrc: ["'self'", "https:", "data:"]`).
+- Sessions are stored in MongoDB and cookies are `HttpOnly` and `SameSite=strict`. In production, cookies are marked `Secure`.
+
+## Next steps (stretch goals)
+
+- Budgets and category summaries; charts (e.g., Chart.js) for monthly trends
+- Export/import (CSV), and bulk actions
+- Recurring transactions and reminders
+- Pagination and full‑text search
+- Tags in addition to categories; custom category management
+- Account types (cash, bank, credit) and multi‑currency support
+- Password reset flow, email verification, optional 2FA
+- Rate limiting and login throttling; audit logging
+- API endpoints (JSON) and a small SPA client
+- Dockerfile and one‑click deployment scripts
+
+## Project structure
+
+```text
+.
+├── .env
+├── .gitignore
+├── package.json
+├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
+├── README.md
+├── server.js
+├── config/
+│   └── index.js
+├── controllers/
+│   ├── authController.js
+│   └── transactionsController.js
+├── middleware/
+│   ├── auth.js
+│   ├── csrf.js
+│   └── flash.js
+├── models/
+│   ├── transaction.js
+│   └── user.js
+├── public/
+│   ├── images/
+│   │   ├── app-screenshot.png
+│   │   └── example-trello.png
+│   ├── js/
+│   │   └── main.js
+│   └── styles/
+│       ├── auth.css
+│       ├── globals.css
+│       ├── partials.css
+│       └── transactions.css
+├── routes/
+│   ├── auth.js
+│   ├── index.js
+│   └── transactions.js
+└── views/
+    ├── index.ejs
+    ├── auth/
+    │   ├── login.ejs
+    │   └── register.ejs
+    ├── partials/
+    │   ├── _flash.ejs
+    │   ├── _head.ejs
+    │   └── _navbar.ejs
+    └── transactions/
+        ├── edit.ejs
+        ├── index.ejs
+        ├── new.ejs
+        └── show.ejs
+```
+
+## Deployment (Heroku)
+
+Below is a minimal, production‑safe setup for deploying to Heroku using the official Node.js buildpack.
+
+1. Create the app and set config vars
+
+```sh
+# create an app (or use the Heroku Dashboard GitHub integration)
+heroku create ledger-light
+
+# required configuration
+heroku config:set MONGO_URI="<your-mongodb-uri>"
+heroku config:set SESSION_SECRET="<a-long-random-string>"
+heroku config:set NODE_ENV=production
+```
+
+1. Ensure the web process starts your server
+
+Heroku runs `pnpm start` by default. This project’s start script runs `node server.js`, which is compatible.
+
+Optional: add a Procfile if you prefer explicitness:
+
+```procfile
+web: node server.js
+```
+
+1. Trust proxy for secure cookies (recommended)
+
+Heroku terminates TLS at the router. To allow `secure` cookies to be set correctly behind the proxy, enable trust proxy in production (place before session middleware):
+
+```js
+// server.js
+if (process.env.NODE_ENV === "production") {
+  ledgerApp.set("trust proxy", 1);
+}
+```
+
+1. Deploy
+
+```sh
+# if using git push workflow
+git push heroku main
+
+# then open the app
+heroku open
+```
+
+If you run into CSP issues after adding third‑party assets, update the Helmet `contentSecurityPolicy` directives in `server.js` (e.g., allow external font or script hosts).
