@@ -1,6 +1,6 @@
 # General Assembly: Software Engineering Bootcamp
 
-![Udemy Logo](https://shalomormsby.com/wp-content/uploads/2019/08/GA-logo-800x265px.png)
+![Udemy Logo](https://keystoneacademic-res.cloudinary.com/image/upload/c_limit,w_640/dpr_auto/f_auto/q_auto/v1/element/23/233241_233202_CMYK-Red-Black_Small_GeneralAssembly-Stacked.png)
 
 ![HTML](https://img.shields.io/badge/html-orange?style=plastic)
 ![CSS](https://img.shields.io/badge/css-blue?style=plastic)
