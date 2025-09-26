@@ -1,0 +1,30 @@
+/* Main CSS entry point */
+@import "./styles/reset.css";
+@import "./styles/globals.css";
+
+/* Layout styles specific to the app structure */
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-xl);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Utility classes */
+.text-center {
+  text-align: center;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
