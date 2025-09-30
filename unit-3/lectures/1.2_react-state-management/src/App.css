@@ -1,0 +1,73 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+div {
+  margin-bottom: 2rem;
+}
+
+.light {
+  background-color: #ffffff; /* white background */
+  color: #333333; /* darker text for contrast */
+  border: 3px solid #dddddd; /* light grey borders */
+  font-family: "Arial", sans-serif;
+}
+
+.dark {
+  background-color: #2c3e50; /* dark background */
+  color: #ecf0f1; /* light text for contrast */
+  border: 3px solid #34495e; /* slightly darker border for depth */
+  font-family: "Arial", sans-serif;
+}
+
+.neon {
+  background-color: #0f0f0f; /* Dark background */
+  color: #39ff14; /* Bright neon green text */
+  border: 3px solid #39ff14; /* Neon green border */
+  text-shadow: 0 0 5px #39ff14; /* Glowing text effect */
+}
+
+.night {
+  background-color: #1a1a2e; /* Deep blue night sky background */
+  color: #e0e0e0; /* Soft white text for readability */
+  border: 3px solid #0f3460; /* Dark blue border for depth */
+}
