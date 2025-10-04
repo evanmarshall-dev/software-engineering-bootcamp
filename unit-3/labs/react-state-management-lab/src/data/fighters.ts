@@ -5,7 +5,7 @@ const fighters = [
     price: 12,
     strength: 6,
     agility: 4,
-    img: "../../public/fighters/survivor.png",
+    img: "/fighters/survivor.png",
   },
   {
     id: 2,
@@ -13,7 +13,7 @@ const fighters = [
     price: 10,
     strength: 5,
     agility: 5,
-    img: "../../public/fighters/scavenger.png",
+    img: "/fighters/scavenger.png",
   },
   {
     id: 3,
@@ -21,7 +21,7 @@ const fighters = [
     price: 18,
     strength: 7,
     agility: 8,
-    img: "../../public/fighters/shadow.png",
+    img: "/fighters/shadow.png",
   },
   {
     id: 4,
@@ -29,7 +29,7 @@ const fighters = [
     price: 14,
     strength: 7,
     agility: 6,
-    img: "../../public/fighters/tracker.png",
+    img: "/fighters/tracker.png",
   },
   {
     id: 5,
@@ -37,7 +37,7 @@ const fighters = [
     price: 20,
     strength: 6,
     agility: 8,
-    img: "../../public/fighters/sharpshooter.png",
+    img: "/fighters/sharpshooter.png",
   },
   {
     id: 6,
@@ -45,7 +45,7 @@ const fighters = [
     price: 15,
     strength: 5,
     agility: 7,
-    img: "../../public/fighters/medic.png",
+    img: "/fighters/medic.png",
   },
   {
     id: 7,
@@ -53,7 +53,7 @@ const fighters = [
     price: 16,
     strength: 6,
     agility: 5,
-    img: "../../public/fighters/engineer.png",
+    img: "/fighters/engineer.png",
   },
   {
     id: 8,
@@ -61,7 +61,7 @@ const fighters = [
     price: 11,
     strength: 8,
     agility: 3,
-    img: "../../public/fighters/brawler.png",
+    img: "/fighters/brawler.png",
   },
   {
     id: 9,
@@ -69,7 +69,7 @@ const fighters = [
     price: 17,
     strength: 5,
     agility: 9,
-    img: "../../public/fighters/infiltrator.png",
+    img: "/fighters/infiltrator.png",
   },
   {
     id: 10,
@@ -77,7 +77,7 @@ const fighters = [
     price: 22,
     strength: 7,
     agility: 6,
-    img: "../../public/fighters/leader.png",
+    img: "/fighters/leader.png",
   },
 ];
 export default fighters;
