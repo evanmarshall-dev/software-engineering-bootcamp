@@ -1,7 +1,17 @@
 import { useState } from "react";
+// import styled from "styled-components";
+import styles from "./Form.module.scss";
 
-// export default function Form({ moviesearch }) {
 export default function Form({ getMovie }) {
+  // const StyledButton = styled.button`
+  //   background-color: #86ba8a;
+  //   border-radius: 8px;
+  //   color: #3d3d3d;
+  //   padding: 15px 50px;
+  //   font-size: 24pt;
+  //   width: 300px;
+  // `;
+
   const [formData, setFormData] = useState({ searchterm: "" });
 
   function handleChange(e) {
@@ -10,14 +20,13 @@ export default function Form({ getMovie }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    // moviesearch(formData.searchterm.trim());
     getMovie(formData.searchterm.trim());
   }
 
   return (
-    <form onSubmit={handleSubmit} className='search'>
-      <label htmlFor='searchterm' className='sr-only'>
-        Search
+    <form onSubmit={handleSubmit} className={styles.search}>
+      <label htmlFor='searchterm' className={styles.srOnly}>
+        Search:
       </label>
       <input
         id='searchterm'
@@ -28,6 +37,7 @@ export default function Form({ getMovie }) {
         onChange={handleChange}
         aria-label='Movie title'
       />
+      {/* <StyledButton type='submit'>Search</StyledButton> */}
       <button type='submit'>Search</button>
     </form>
   );

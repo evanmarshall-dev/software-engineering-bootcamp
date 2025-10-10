@@ -1,6 +1,14 @@
 // NOTES:
+// Resource: https://github.com/evanmarshall-dev/react-movie-search
 // State management needs to happen in the parent. Pass from higher scope to lower scope.
 // Both MovieDisplay and Form SHARE data so it will be kept at the nearest common parent (App). This concept is called "lifting state up".
+// Lifting State vs Local State:
+// Input text stays local in Form. Movie data lives in App for sharing.
+// App as the root owning state: movie, loading, error, and getMovie(searchTerm).
+// Form and MovieDisplay as siblings beneath App.
+// Props down / events up: Form receives { moviesearch: getMovie }. On submit it calls the parent. MovieDisplay receives { movie, loading, error }.
+// Fetch & lifecycle: useEffect in App optionally calls getMovie('Clueless') on mount. getMovie sets loading → true, fetches OMDb, sets movie or error, then loading → false.
+// Re-render rule: When Form triggers getMovie and App updates state, App re-renders and any child that consumes changed props re-renders… so MovieDisplay updates automatically.
 
 import { useEffect, useState } from "react";
 import "./App.css";
@@ -17,11 +25,32 @@ function App() {
 
   const apiKey = import.meta.env.VITE_OMDB_KEY;
 
+  // Like an event listener for the component. First argument is a function that runs on the event (render). Second argument is an array of dependencies that when changed will trigger the function to run again. An empty array means it only runs once when the component first renders.
+  // The useEffect MOUNTS (runs once after first render), UPDATE (runs when dependencies change), and UNMOUNTS (cleanup function if you return one) a component.
+  // useEffect will always run once component mounts even if there are dependencies in the array. It will then run again if you put in dependencies and they change (eg. movie, loading, error, etc).
+
+  // MOUNTING
   useEffect(() => {
-    // Load a default movie on first render
-    // You can put in a default movie title here if you want.
-    // getMovie("Inception");
-    getMovie("");
+    console.log("Mounting the component");
+    getMovie("The Boondock Saints");
+  }, []); // Empty array so it only runs once when the component mounts.
+
+  // UPDATE
+  // ? useEffect(() => {
+  // ? console.log("This will run on every render");
+  // ? }); // Never-ending, runs on every render. Do not leave this in your code. If we put in a movie search into the form, it will cause an infinite loop of renders.
+
+  // UNMOUNTING
+  useEffect(() => {
+    console.log("Updating the component");
+  }, [movie]); // Runs when movie state changes. Make sure we are not changing the movie state in this useEffect or it will cause an infinite loop of renders.
+
+  // Cleanup function to run when component unmounts. Return a function from the useEffect. This is useful for cleaning up event listeners, timers, or subscriptions to prevent memory leaks.
+  // Useful for fancy UI actions like parallax scrolling, animations, etc. to unmount those event listeners when the component is no longer needed.
+  useEffect(() => {
+    return () => {
+      console.log("Unmounting the component");
+    };
   }, []);
 
   // Async because we use fetch API to query data from a different source. Could be our own server or a third party API. You can use all HTTP VERBS (GET, POST, PUT, DELETE, etc) with it.
@@ -64,7 +93,7 @@ function App() {
   }
 
   return (
-    <div className='container'>
+    <div className='App'>
       <h1>React Movie Search</h1>
       {/* The name of the prop is what needs to be put inside the Form component. It can be anything you want but it needs to match the prop name in the Form component. Common practice would be to use the same name as the state variable. */}
       {/* <Form moviesearch={getMovie} /> */}

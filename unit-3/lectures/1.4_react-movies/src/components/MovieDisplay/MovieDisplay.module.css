@@ -1,0 +1,19 @@
+.card {
+  display: inline-block;
+  width: auto;
+  max-width: 100%;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  margin-bottom: 1rem;
+  vertical-align: top;
+}
+
+.card img {
+  display: block; /* prevents inline-gap and ensures img determines card width */
+  width: 100%;
+  height: auto;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}
