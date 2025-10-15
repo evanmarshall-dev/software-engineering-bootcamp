@@ -2,6 +2,8 @@
 
 In this lab, you'll be building a burger stacking application. The user will be able to select ingredients to add to their burger, and the ingredients will be displayed in a stack. This will demonstrate how to lift state up in a React application.
 
+![Burger Stacker Preview](./public/burger.png)
+
 ## Objectives
 
 - **App**: The parent component containing `<BurgerStack>` and `<IngredientList>`. It will also contain `stack` state, and two functions for manipulating that state.
@@ -14,3 +16,8 @@ In this lab, you'll be building a burger stacking application. The user will be 
 - As a user, I want to be able to see a stack of the ingredients that make up my burger on the right side of the screen.
 - As a user, I want to click a '+' button on an ingredient to `add it` to my burger stack. This action will place the ingredient on the stack displayed on the right side of the screen, while keeping the original ingredient list on the left unchanged.
 - As a user, I want to click an 'X' button on an ingredient in my burger stack to `remove it`. This will take the ingredient off the stack on the right side of the screen, without changing the ingredient list on the left.
+
+## Level Up: Create a Reusable `Ingredient` Component
+
+1. Create a component called `Ingredient` that can be reused by both `src/components/IngredientList/IngredientList.jsx` and `src/components/BurgerStack/BurgerStack.jsx`. It should display the `name` of a single ingredient, and conditionally render the add or remove button based on its parent.
+2. Apply conditional rendering within `src/components/BurgerStack/BurgerStack.jsx`, so that a message of 'No Ingredients' is displayed if there are no ingredients in the `stack`.

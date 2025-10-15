@@ -1,0 +1,45 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  @media (width >= 768px) {
+    flex: 1;
+  }
+}
+
+.heading {
+  margin: 0 0 16px 0;
+  padding: 8px 12px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+
+  @media (width >= 768px) {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+}
+
+.list {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 200px;
+
+  @media (width >= 768px) {
+    flex: 1;
+    min-height: 400px;
+  }
+
+  @media (width >= 1024px) {
+    min-height: 500px;
+  }
+}

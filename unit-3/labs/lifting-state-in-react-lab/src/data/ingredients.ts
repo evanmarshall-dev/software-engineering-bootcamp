@@ -1,4 +1,4 @@
-const availableIngredients = [
+const ingredients = [
   { name: "Kaiser Bun", color: "saddlebrown" },
   { name: "Sesame Bun", color: "sandybrown" },
   { name: "Gluten Free Bun", color: "peru" },
@@ -15,4 +15,4 @@ const availableIngredients = [
   { name: "Swiss Cheese", color: "#F1E1A8" },
 ];
 
-export default availableIngredients;
+export default ingredients;
