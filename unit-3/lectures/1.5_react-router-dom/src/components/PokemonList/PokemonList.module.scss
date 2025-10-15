@@ -1,0 +1,17 @@
+.pokemonList {
+  list-style: none;
+  padding: 0;
+}
+
+.pokemonList li {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--accent-color, #635bff);
+}
+
+.pokemonList li:last-child {
+  border-bottom: none;
+}
+
+.pokemonList h2 {
+  margin-bottom: 1rem;
+}
