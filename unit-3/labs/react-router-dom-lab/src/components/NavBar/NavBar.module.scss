@@ -1,0 +1,31 @@
+.nav {
+  background-color: var(--primary-color, #425466);
+  padding: 1rem;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 2rem;
+  }
+
+  a {
+    text-decoration: none;
+    color: var(--light-gray, #c2c2c2);
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus {
+      font-weight: bold;
+      color: color-mix(in srgb, var(--light-gray, #c2c2c2) 80%, white 20%);
+    }
+  }
+
+  .activeLink {
+    font-weight: bold;
+    color: color-mix(in srgb, var(--light-gray, #c2c2c2) 80%, white 20%);
+  }
+}
