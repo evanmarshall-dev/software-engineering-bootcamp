@@ -1,0 +1,12 @@
+// -----------------------------
+// components/_cards.scss
+// -----------------------------
+
+// -----------------------------
+// Card-like components
+// -----------------------------
+.card {
+  background-color: rgba(255, 255, 255, 0.02);
+  padding: #{space(3)};
+  border-radius: 0.5rem;
+}

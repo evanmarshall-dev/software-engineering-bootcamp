@@ -1,0 +1,40 @@
+// -----------------------------
+// abstracts/_variables.scss
+// -----------------------------
+
+// -----------------------------
+// Color & typography variables and spacing scale
+// -----------------------------
+$font-stack: system-ui, Avenir, Helvetica, Arial, sans-serif !default;
+$root-line-height: 1.5 !default;
+$root-font-weight: 400 !default;
+$color-default: rgba(255, 255, 255, 0.87) !default;
+$bg-default: #242424 !default;
+$link-color: #646cff !default;
+$link-hover: #535bf2 !default;
+$button-bg: #1a1a1a !default;
+$button-hover-border: #646cff !default;
+$button-bg-light: #f9f9f9 !default;
+$link-hover-light: #747bff !default;
+$color-light: #213547 !default;
+$bg-light: #ffffff !default;
+
+// -----------------------------
+// Rendering / platform hints
+// -----------------------------
+$root-font-synthesis: none !default;
+$root-text-rendering: optimizeLegibility !default;
+$webkit-font-smoothing: antialiased !default;
+$moz-osx-font-smoothing: grayscale !default;
+
+// -----------------------------
+// Spacing scale (small, predictable set)
+// -----------------------------
+$space-scale: (
+  0: 0,
+  1: 0.25rem,
+  2: 0.5rem,
+  3: 1rem,
+  4: 1.5rem,
+  5: 3rem,
+);

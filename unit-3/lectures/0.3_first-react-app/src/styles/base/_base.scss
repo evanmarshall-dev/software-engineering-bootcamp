@@ -1,0 +1,36 @@
+// -----------------------------
+// base/_base.scss
+// -----------------------------
+
+// -----------------------------
+// Global base styles, root and simple element rules
+// -----------------------------
+@use "../abstracts/index" as *;
+
+:root {
+  @extend %root-base;
+}
+
+a {
+  font-weight: 500;
+  color: $link-color;
+  text-decoration: inherit;
+
+  &:hover {
+    color: $link-hover;
+  }
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+h1 {
+  @include resp-type(3.2em);
+  line-height: 1.1;
+}

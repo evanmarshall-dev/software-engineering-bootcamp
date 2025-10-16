@@ -1,0 +1,9 @@
+// -----------------------------
+// abstracts/_index.scss
+// Central forwarding module for abstracts (variables, functions, mixins, placeholders)
+// Use this via: @use "../abstracts/index" as *; or with namespace
+// -----------------------------
+@forward "variables";
+@forward "functions";
+@forward "mixins";
+@forward "placeholders";

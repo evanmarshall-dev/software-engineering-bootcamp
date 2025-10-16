@@ -1,0 +1,14 @@
+// -----------------------------
+// abstracts/_functions.scss
+// -----------------------------
+
+// -----------------------------
+// Utility functions used across the project
+// -----------------------------
+@function space($key) {
+  // Return a spacing value from the scale; fallback to $key if not found
+  @if map-has-key($space-scale, $key) {
+    @return map-get($space-scale, $key);
+  }
+  @return $key;
+}

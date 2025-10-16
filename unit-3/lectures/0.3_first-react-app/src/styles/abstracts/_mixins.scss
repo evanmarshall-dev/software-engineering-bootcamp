@@ -1,0 +1,66 @@
+// -----------------------------
+// NOTES:
+// RESPONSIVE CONTAINER EXPLAINED:
+// - Width of 100% added so the element can shrink below its max-width on small screens.
+// MAX WIDTH STYLES:
+// - Caps element width between 20rem and 80rem.
+// - Scales to 90% of viewport width in between.
+// - Margin inline auto centers the element horizontally using logical properties, which is better for internationalization than left/right.
+// Margin left/right is a legacy fallback for older browsers.
+// PADDING STYLES:
+// - The padding-block controls vertical spacing, while padding-inline controls horizontal spacing.
+// - A minimum of 1rem padding is always applied, scaling up to 3rem vertically and 2rem horizontally on larger screens.
+// CONTAINER STYLES:
+// - The container-type: inline-size declares to the browser that this element is a CSS container and to use the container's inline axis (width) for container queries. This means container queries react to the size of the element itself rather than the viewport.
+// - The container-name: root gives the container an explicit name so that it can be targeted with a @container rule. This allows scoping queries to this specific container rather than all containers.
+// Example usage: @container root (min-width: 40rem) { .card { /* adjust component layout when container is wide enough */ }}
+// - ** All of the container styles reduce the need for media queries, smooth scaling between breakpoints, improves accessibility/readability, and improved internationalization.
+// -----------------------------
+
+// -----------------------------
+// abstracts/_mixins.scss
+// -----------------------------
+
+// -----------------------------
+// Reusable mixins: focus-ring, resp-type, responsive-container
+// -----------------------------
+@mixin focus-ring {
+  &:focus-visible,
+  &:focus {
+    outline: 0.25rem auto -webkit-focus-ring-color;
+  }
+}
+
+@mixin resp-type($size) {
+  // tiny helper: convert px/number to rem-like sizes for future reuse
+  // usage: @include resp-type(1.2em) or @include resp-type(18px)
+  @if type-of($size) == "number" {
+    font-size: $size;
+  } @else {
+    font-size: $size;
+  }
+}
+
+@mixin responsive-container(
+  $min: 20rem,
+  $preferred-vw: 90vw,
+  $max: 80rem,
+  $pad-block-min: 1rem,
+  $pad-block-vw: 4vw,
+  $pad-block-max: 3rem,
+  $pad-inline-min: 1rem,
+  $pad-inline-vw: 5vw,
+  $pad-inline-max: 2rem,
+  $container-name: root
+) {
+  width: 100%;
+  max-width: clamp($min, $preferred-vw, $max);
+  margin-inline: auto;
+  margin-left: auto;
+  margin-right: auto;
+  padding-block: clamp($pad-block-min, $pad-block-vw, $pad-block-max);
+  padding-inline: clamp($pad-inline-min, $pad-inline-vw, $pad-inline-max);
+  container-type: inline-size;
+  container-name: $container-name;
+  text-align: center;
+}

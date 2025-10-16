@@ -1,0 +1,32 @@
+// -----------------------------
+// abstracts/_placeholders.scss
+// -----------------------------
+
+// -----------------------------
+// Sass placeholders for shared groups
+// -----------------------------
+@use "variables" as vars;
+
+%root-base {
+  font-family: vars.$font-stack;
+  line-height: vars.$root-line-height;
+  font-weight: vars.$root-font-weight;
+  color-scheme: light dark;
+  color: vars.$color-default;
+  background-color: vars.$bg-default;
+  font-synthesis: vars.$root-font-synthesis;
+  text-rendering: vars.$root-text-rendering;
+  -webkit-font-smoothing: vars.$webkit-font-smoothing;
+  -moz-osx-font-smoothing: vars.$moz-osx-font-smoothing;
+}
+
+%btn-base {
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
