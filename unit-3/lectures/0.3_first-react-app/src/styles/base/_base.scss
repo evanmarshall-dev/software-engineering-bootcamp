@@ -54,3 +54,11 @@ button {
   @include abs.btn-base();
   @include abs.focus-ring();
 }
+
+ul {
+  list-style: none;
+
+  li {
+    text-decoration: none;
+  }
+}
