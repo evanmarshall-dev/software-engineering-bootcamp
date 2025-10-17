@@ -2,35 +2,55 @@
 // base/_base.scss
 // -----------------------------
 
+@use "../abstracts/index" as abs;
+
 // -----------------------------
 // Global base styles, root and simple element rules
 // -----------------------------
-@use "../abstracts/index" as *;
-
 :root {
-  @extend %root-base;
+  @include abs.root-base();
 }
 
-a {
-  font-weight: 500;
-  color: $link-color;
-  text-decoration: inherit;
-
-  &:hover {
-    color: $link-hover;
-  }
+#root {
+  @include abs.responsive-container();
 }
 
 body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
   min-height: 100vh;
   min-height: 100dvh;
+
+  h1 {
+    font-size: abs.to-rem(3.2em);
+    line-height: 1.1;
+  }
+
+  h2 {
+    font-size: abs.to-rem(2.4em);
+    line-height: 1.15;
+  }
+
+  h3 {
+    font-size: abs.to-rem(2em);
+    line-height: 1.2;
+  }
 }
 
-h1 {
-  @include resp-type(3.2em);
-  line-height: 1.1;
+a {
+  font-weight: 500;
+  color: abs.$link-color;
+  text-decoration: inherit;
+
+  &:hover {
+    color: abs.$link-hover;
+  }
+
+  @include abs.focus-ring();
+}
+
+button {
+  @include abs.btn-base();
+  @include abs.focus-ring();
 }

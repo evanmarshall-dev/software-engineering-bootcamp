@@ -2,22 +2,24 @@
 // themes/_theme.scss
 // -----------------------------
 
+@use "../abstracts/index" as abs;
+
 // -----------------------------
 // Theme-specific overrides (light/dark)
 // -----------------------------
-// @media (prefers-color-scheme: light) {
-//   :root {
-//     color: $color-light;
-//     background-color: $bg-light;
-//   }
+@media (prefers-color-scheme: light) {
+  :root {
+    color: abs.$color-light;
+    background-color: abs.$bg-light;
 
-//   a {
-//     &:hover {
-//       color: $link-hover-light;
-//     }
-//   }
+    a {
+      &:hover {
+        color: abs.$link-hover-light;
+      }
+    }
 
-//   button {
-//     background-color: $button-bg-light;
-//   }
-// }
+    button {
+      background-color: abs.$button-bg-light;
+    }
+  }
+}

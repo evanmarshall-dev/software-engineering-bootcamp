@@ -2,13 +2,96 @@
 // abstracts/_functions.scss
 // -----------------------------
 
+@use "sass:map" as map;
+@use "sass:color" as color;
+@use "sass:math" as math;
+@use "sass:list" as list;
+@use "sass:meta" as meta;
+@use "variables" as vars;
+
 // -----------------------------
-// Utility functions used across the project
+// Helper: space($key)
+// Return a value from the project's $space-scale map. Accepts:
+//  - a key present in the scale (e.g. 3)
+//  - a raw length (e.g. 12px, 1rem)
+// If the key is missing, the original value is returned so callers
+// can pass var(...) or computed values.
 // -----------------------------
 @function space($key) {
-  // Return a spacing value from the scale; fallback to $key if not found
-  @if map-has-key($space-scale, $key) {
-    @return map-get($space-scale, $key);
+  @if map.has-key(vars.$space-scale, $key) {
+    @return map.get(vars.$space-scale, $key);
   }
+
   @return $key;
+}
+
+// -----------------------------
+// Helper: to-rem($value, $base: 16px)
+// Convert a px or unitless number into rems using the provided base.
+// - If $value is unitless or px, convert to rem
+// - If it's already rem (or another length), return as-is
+// -----------------------------
+@function to-rem($value, $base: 16px) {
+  // Use math.unit and an explicit unitless guard to avoid deprecated globals
+  @if is-unitless($value) {
+    @return ($value / $base) * 1rem;
+  }
+
+  @if math.unit($value) == "px" {
+    @return ($value / $base) * 1rem;
+  }
+
+  // already in rem/em/% or other length - return unchanged
+  @return $value;
+}
+
+// ------------------------------------------------------------------
+// Helper: is-unitless($v)
+// Replace deprecated global `unitless()` by checking the number type and
+// using `math.unit()` which is the recommended API in the Sass module system.
+// ------------------------------------------------------------------
+@function is-unitless($v) {
+  @if meta.type-of($v) != "number" {
+    @return false;
+  }
+
+  @return math.unit($v) == "";
+}
+
+// -----------------------------
+// Helper: clamp-fluid($min, $preferred, $max)
+// Small convenience to emit a CSS clamp() expression for fluid sizes.
+// Use values like 1rem, 4vw, 3rem.
+// -----------------------------
+@function clamp-fluid($min, $preferred, $max) {
+  @return unquote("clamp(#{$min}, #{$preferred}, #{$max})");
+}
+
+// -----------------------------
+// Helper: readable-contrast($color, $dark: #000, $light: #fff)
+// Picks a readable foreground (dark or light) based on color lightness.
+// This is a simple heuristic — for strict WCAG contrast checks use a
+// dedicated contrast library or more advanced luminance math.
+// -----------------------------
+@function readable-contrast($color, $dark: #000, $light: #fff) {
+  $l: color.lightness($color);
+  @if $l > 50% {
+    @return $dark;
+  }
+  @return $light;
+}
+
+// -----------------------------
+// Helper: scale-space($key, $factor)
+// Scale a spacing token by a numeric factor. Useful for modifiers.
+// Example: scale-space(3, 0.5) -> half the size of space(3).
+// -----------------------------
+@function scale-space($key, $factor) {
+  $val: space($key);
+  @if meta.type-of($val) == "number" {
+    @return $val * $factor;
+  }
+
+  // If space returned a non-numeric value (like var()), return a calc() wrapper
+  @return unquote("calc(#{$val} * #{$factor})");
 }

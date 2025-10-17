@@ -21,6 +21,9 @@
 // abstracts/_mixins.scss
 // -----------------------------
 
+@use "sass:meta" as meta;
+@use "variables" as vars;
+
 // -----------------------------
 // Reusable mixins: focus-ring, resp-type, responsive-container
 // -----------------------------
@@ -28,16 +31,6 @@
   &:focus-visible,
   &:focus {
     outline: 0.25rem auto -webkit-focus-ring-color;
-  }
-}
-
-@mixin resp-type($size) {
-  // tiny helper: convert px/number to rem-like sizes for future reuse
-  // usage: @include resp-type(1.2em) or @include resp-type(18px)
-  @if type-of($size) == "number" {
-    font-size: $size;
-  } @else {
-    font-size: $size;
   }
 }
 
@@ -63,4 +56,28 @@
   container-type: inline-size;
   container-name: $container-name;
   text-align: center;
+}
+
+@mixin root-base {
+  font-family: vars.$font-stack;
+  line-height: vars.$root-line-height;
+  font-weight: vars.$root-font-weight;
+  color-scheme: light dark;
+  color: vars.$color-default;
+  background-color: vars.$bg-default;
+  font-synthesis: vars.$root-font-synthesis;
+  text-rendering: vars.$root-text-rendering;
+  -webkit-font-smoothing: vars.$webkit-font-smoothing;
+  -moz-osx-font-smoothing: vars.$moz-osx-font-smoothing;
+}
+
+@mixin btn-base {
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.25s;
 }

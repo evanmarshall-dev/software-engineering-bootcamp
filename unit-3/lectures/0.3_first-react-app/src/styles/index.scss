@@ -1,12 +1,2 @@
-// Use the abstracts index to bring variables, mixins, functions and placeholders
-@use "abstracts/index" as *;
-
-// Use other partials (we keep them as partials; they rely on abstracts via @use in their files)
 @use "base/base";
-@use "components/helpers";
-@use "components/buttons";
-@use "components/cards";
-@use "layouts/layout";
-@use "pages/home";
-@use "themes/theme";
-@use "vendors/vendors";
+// @use "themes/theme";
