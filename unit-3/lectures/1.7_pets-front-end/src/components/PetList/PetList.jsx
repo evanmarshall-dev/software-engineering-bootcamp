@@ -35,7 +35,7 @@ const PetList = (props) => {
 
   return (
     <div className={styles.sidebarContainer}>
-      <h2>Pet List</h2>
+      <h1>Pet List</h1>
       <div className={styles.listContainer}>
         {!props.pets.length ? (
           <h2>No Pets Yet!</h2>
@@ -46,12 +46,18 @@ const PetList = (props) => {
               //   ? key={pet._id}
               //   ? style={{ cursor: "pointer", color: "#646CFF" }}
               //   ? onClick={() => console.log(pet)}>
+              // ? <li
+              //   ? key={pet._id}
+              //   ? style={{ cursor: "pointer", color: "#646CFF" }}
+              //   ? onClick={() => props.handleSelect(pet)}>
+              //   ? {`Name: ${pet.name}`} <br /> {`Breed: ${pet.breed}`}
+              //   ? <hr />
+              // ? </li>
               <li
                 key={pet._id}
                 style={{ cursor: "pointer", color: "#646CFF" }}
                 onClick={() => props.handleSelect(pet)}>
-                {`Name: ${pet.name}`} <br /> {`Breed: ${pet.breed}`}
-                <hr />
+                {pet.name}
               </li>
             ))}
           </ul>
