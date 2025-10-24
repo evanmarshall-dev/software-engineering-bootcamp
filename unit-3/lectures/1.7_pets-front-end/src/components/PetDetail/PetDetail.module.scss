@@ -1,0 +1,12 @@
+.detailsContainer {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .buttonContainer {
+    padding: 2rem;
+    outline: 0;
+  }
+}

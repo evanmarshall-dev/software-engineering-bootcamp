@@ -1,0 +1,18 @@
+.sidebarContainer {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(42, 42, 42);
+  min-width: 0;
+
+  .listContainer {
+    display: flex;
+    justify-content: flex-start;
+    overflow-y: overlay;
+    max-height: 700px;
+    scrollbar-color: #ffffff40 #00000000;
+    width: 100%;
+  }
+}
