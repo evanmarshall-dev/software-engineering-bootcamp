@@ -62,5 +62,31 @@ const create = async (formData) => {
   }
 };
 
+const update = async (formData, petId) => {
+  try {
+    const res = await fetch(`${BASE_URL}/${petId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+    return res.json();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const deletePet = async (petId) => {
+  try {
+    const res = await fetch(`${BASE_URL}/${petId}`, {
+      method: "DELETE",
+    });
+    return res.json();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 // Export an object containing index because there will be more service functions later.
-export { index, create };
+export { index, create, update, deletePet };

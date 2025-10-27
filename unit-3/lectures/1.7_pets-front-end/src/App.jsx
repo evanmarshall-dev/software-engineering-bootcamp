@@ -121,7 +121,10 @@ function App() {
     setIsFormOpen(false);
   };
 
-  const handleFormView = () => {
+  const handleFormView = (pet) => {
+    // If the selected pet is not saved, clear selection when toggling form.
+    // If there is a pet in the selected state and the form is opened, check to see if the pet has an _id property.
+    if (!pet._id) setSelected(null);
     setIsFormOpen(!isFormOpen);
   };
 
@@ -146,6 +149,48 @@ function App() {
     }
   };
 
+  const handleUpdatePet = async (formData, petId) => {
+    try {
+      const updatedPet = await petService.update(formData, petId);
+
+      // handle potential errors
+      if (updatedPet.err) {
+        throw new Error(updatedPet.err);
+      }
+
+      const updatedPetList = pets.map((pet) =>
+        // If the _id of the current pet is not the same as the updated pet's _id,
+        // return the existing pet.
+        // If the _id's match, instead return the updated pet.
+        pet._id !== updatedPet._id ? pet : updatedPet
+      );
+      // Set pets state to this updated array
+      setPets(updatedPetList);
+      // If we don't set selected to the updated pet object, the details page will
+      // reference outdated data until the page reloads.
+      setSelected(updatedPet);
+      setIsFormOpen(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDeletePet = async (petId) => {
+    try {
+      const deletedPet = await petService.deletePet(petId);
+
+      if (deletedPet.err) {
+        throw new Error(deletedPet.err);
+      }
+
+      setPets(pets.filter((pet) => pet._id !== deletedPet._id));
+      setSelected(null);
+      setIsFormOpen(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       {/* <h1>Welcome to the Pets App!</h1> */}
@@ -158,9 +203,17 @@ function App() {
       {/* <PetForm />
       <PetDetail selected={selected} /> */}
       {isFormOpen ? (
-        <PetForm handleAddPet={handleAddPet} />
+        <PetForm
+          handleAddPet={handleAddPet}
+          selected={selected}
+          handleUpdatePet={handleUpdatePet}
+        />
       ) : (
-        <PetDetail selected={selected} />
+        <PetDetail
+          selected={selected}
+          handleFormView={handleFormView}
+          handleDeletePet={handleDeletePet}
+        />
       )}
     </>
   );

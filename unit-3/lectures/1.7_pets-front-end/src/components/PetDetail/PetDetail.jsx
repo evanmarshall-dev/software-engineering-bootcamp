@@ -14,32 +14,31 @@
 import styles from "./PetDetail.module.scss";
 
 const PetDetail = (props) => {
-  // Can use an if statement with no ternary in the return or a single ternary like below.
-  // ? if (!props.selected) {
-  //   ? return (
-  //     ? <div>
-  //       ? <h2>NO DETAILS</h2>
-  //     ? </div>
-  //   ? );
-  // ? }
+  // return if props.selected is null
+  if (!props.selected) {
+    return (
+      <div className={styles.detailContainer}>
+        <h1>NO DETAILS</h1>
+      </div>
+    );
+  }
 
+  // return statement if props.selected has a truthy value
   return (
-    <div>
-      {/* <h2>Pet Detail Component</h2> */}
-      {props.selected ? (
-        <div className={styles.detailsContainer}>
-          <h3>{props.selected.name}</h3>
-          <p>Breed: {props.selected.breed}</p>
-          <p>
-            Age: {props.selected.age} year{props.selected.age > 1 ? "s" : ""}{" "}
-            old
-          </p>
-        </div>
-      ) : (
-        <div className={styles.detailsContainer}>
-          <p>Please select a pet to see the details.</p>
-        </div>
-      )}
+    <div className={styles.detailContainer}>
+      <h3>{props.selected.name}</h3>
+      <h4>Breed: {props.selected.breed}</h4>
+      <h4>
+        Age: {props.selected.age} year{props.selected.age > 1 ? "s" : ""} old
+      </h4>
+      <div className={styles.buttonContainer}>
+        <button onClick={() => props.handleFormView(props.selected)}>
+          Edit Pet
+        </button>
+        <button onClick={() => props.handleDeletePet(props.selected._id)}>
+          Delete Pet
+        </button>
+      </div>
     </div>
   );
 };

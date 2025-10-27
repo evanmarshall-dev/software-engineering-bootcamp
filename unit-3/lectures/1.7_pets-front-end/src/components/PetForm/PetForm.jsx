@@ -33,22 +33,44 @@ import styles from "./PetForm.module.scss";
 
 const PetForm = (props) => {
   // formData state to control the form.
-  const [formData, setFormData] = useState({
+  // ? const [formData, setFormData] = useState({
+  //   ? name: "",
+  //   ? age: "",
+  //   ? breed: "",
+  // ? });
+  const initialState = {
     name: "",
     age: "",
     breed: "",
-  });
+  };
+  // If pet data has been passed as props, we set formData as that pet object.
+  // Otherwise, we can assume this is a new pet form and use the empty
+  // initialState object.
+  // ? const [formData, setFormData] = useState(initialState);
+  const [formData, setFormData] = useState(
+    props.selected ? props.selected : initialState
+  );
 
   // handleChange function to update formData state.
   const handleChange = (evt) => {
     setFormData({ ...formData, [evt.target.name]: evt.target.value });
   };
 
+  // ? const handleSubmit = (evt) => {
+  // ? evt.preventDefault();
+  // ? props.handleAddPet(formData);
+  // Right now, if you add a pet and submit the form,
+  // the data entered will stay on the page. We'll fix this soon.
+  // ? };
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    props.handleAddPet(formData);
-    // Right now, if you add a pet and submit the form,
-    // the data entered will stay on the page. We'll fix this soon.
+    if (props.selected) {
+      // Don't forget to pass both formData and the ._id!
+      props.handleUpdatePet(formData, props.selected._id);
+    } else {
+      props.handleAddPet(formData);
+    }
   };
 
   return (
@@ -80,7 +102,10 @@ const PetForm = (props) => {
           value={formData.breed}
           onChange={handleChange}
         />
-        <button type='submit'>Add New Pet</button>
+        {/* <button type='submit'>Add New Pet</button> */}
+        <button type='submit'>
+          {props.selected ? "Update Pet" : "Add New Pet"}
+        </button>
       </form>
     </div>
   );
