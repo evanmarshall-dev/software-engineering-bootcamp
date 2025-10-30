@@ -42,7 +42,7 @@ router.post("/sign-up", async (req, res) => {
     };
 
     // Send off token to client.
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
       expiresIn: "7 days",
     });
 

@@ -23,6 +23,8 @@ const signUp = async (formData) => {
       throw new Error(data.err);
     }
 
+    console.log(data.token);
+
     // If there is a token, store it in local storage and return the payload.
     if (data.token) {
       localStorage.setItem("token", data.token);
@@ -32,6 +34,8 @@ const signUp = async (formData) => {
       // - 3. Parse the stringified JSON into a JavaScript object. // ? const payload = JSON.parse(decodedMiddle).payload;
       // - 4. Return the payload. // ? return payload;
       // - If everything goes well, an object that looks like { username: 'user', _id: '6785cc89a998cb8ea1d14725' } will be returned from this function.
+      console.log(JSON.parse(atob(data.token.split(".")[1])).payload);
+
       return JSON.parse(atob(data.token.split(".")[1])).payload;
     }
 
