@@ -1,35 +1,37 @@
-// npm
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 dotenv.config();
-const express = require('express');
+const express = require("express");
 const app = express();
-const mongoose = require('mongoose');
-const cors = require('cors');
-const logger = require('morgan');
+const mongoose = require("mongoose");
+const cors = require("cors");
+const logger = require("morgan");
 
-// Import routers
-const authRouter = require('./controllers/auth');
-const testJwtRouter = require('./controllers/test-jwt');
-const usersRouter = require('./controllers/users');
+// IMPORT ROUTERS
+const authRouter = require("./controllers/auth");
+const testJwtRouter = require("./controllers/test-jwt");
+const usersRouter = require("./controllers/users");
+const hootsRouter = require("./controllers/hoots.js");
 
-// Connect to MongoDB
+// CONNECT TO MONGOOSE
 mongoose.connect(process.env.MONGODB_URI);
-
-mongoose.connection.on('connected', () => {
+mongoose.connection.on("connected", () => {
   console.log(`Connected to MongoDB ${mongoose.connection.name}.`);
 });
 
-// Middleware
+// MIDDLEWARE
 app.use(cors());
 app.use(express.json());
-app.use(logger('dev'));
+app.use(logger("dev"));
 
-// Routes
-app.use('/auth', authRouter);
-app.use('/test-jwt', testJwtRouter);
-app.use('/users', usersRouter);
+// ROUTES
+// - You’ll notice that the authRouter is mounted with a base path of /auth. This means all routes within authRouter will begin with /auth. This includes our sign-up and sign-in routes.
+app.use("/auth", authRouter);
+app.use("/test-jwt", testJwtRouter);
+app.use("/users", usersRouter);
+// - We set the base path for our hootsRouter as /hoots. This means that when defining the router above, we only need to specify the path as /. This path will automatically be appended to the base path /hoots defined in server.js.
+app.use("/hoots", hootsRouter);
 
-// Start the server and listen on port 3000
+// START SERVER AND LISTEN ON PORT 3000
 app.listen(3000, () => {
-  console.log('The express app is ready!');
+  console.log("The express app is ready!");
 });

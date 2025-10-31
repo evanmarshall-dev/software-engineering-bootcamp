@@ -9,6 +9,7 @@ const commentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    // REFERENCE to the user who created the comment.
     author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
@@ -31,9 +32,9 @@ const hootSchema = new mongoose.Schema(
       // Enum for predefined categories. You cannot create document if not one of these values.
       enum: ["News", "Sports", "Games", "Movies", "Music", "Television"],
     },
-    // Reference to the user who created the hoot.
+    // REFERENCE to the user who created the hoot.
     author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    // Embed comments as an array of comment subdocuments.
+    // EMBED comments as an array of comment subdocuments.
     comments: [commentSchema],
   },
   { timestamps: true }

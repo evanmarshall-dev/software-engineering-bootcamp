@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -11,10 +11,11 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.set('toJSON', {
+// - Removing hashedPassword when returning user object as JSON when we query for users. We only need hashedPassword for authentication, so we don’t want to expose it in API responses.
+userSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     delete returnedObject.hashedPassword;
-  }
+  },
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);
