@@ -5,6 +5,7 @@
 ### References
 
 - [Data Types in Python](https://docs.python.org/3/library/stdtypes.html)
+- [String Methods in Python](https://docs.python.org/3/library/stdtypes.html#string-methods)
 
 ### Overview
 
@@ -131,3 +132,170 @@ print(type(None))              # Output: <class 'NoneType'>
 ```
 
 ### Converting Between Data Types
+
+JavaScript uses implicit type conversion (coercion) to convert between data types, while Python is more explicit about type conversion.
+
+```python
+num_tacos = 25
+msg = "There are " + num_tacos + " tacos."
+# TypeError: can only concatenate str (not "int") to str
+```
+
+When the time comes to convert one data type into another, Python provides us with several global functions or predefined classes to do so:
+
+```python
+str(item)        # Converts `item` to a string
+int(item, base)  # Converts `item` to an integer with the provided `base`
+float(item)      # Converts `item` to a floating-point number
+hex(int)         # Converts `int` to a hexadecimal string
+oct(int)         # Converts `int` to an octal string
+tuple(item)      # Converts `item` to a tuple
+list(item)       # Converts `item` to a list
+dict(item)       # Converts `item` to a dictionary
+```
+
+## Performing Operations in Python
+
+Python has the normal math operators that you are used to from JavaScript:
+
+- Addition (+)
+- Subtraction (-)
+- Multiplication (\*)
+- Division (/)
+- Modulo (remainder) (%)
+- Exponentiation (\*\*)
+
+All work as you would expect. However, there are a few special operations worth mentioning.
+
+### Integer Division
+
+By default, when you divide two numbers (whether they are ints, floats, or a combination of the two), the result is a float, even if there is no remainder:
+
+```python
+result = 4 / 2
+print(result)
+# prints: 2.0
+print(type(result))
+# prints: <class 'float'>
+```
+
+You’re able to force the result of division to an integer by using `//` instead of `/`:
+
+```python
+result = 4 // 2
+print(result)
+# prints: 2 because the decimal ".0" is truncated
+```
+
+This will always round down - everything after the decimal is removed, similar to using the `Math.floor()` method in JavaScript.
+
+### Shortcut Assignment Operators
+
+As we saw in JavaScript, reassigning the result of an operation on a variable to the same variable is common. It is so common that several shortcut operators exist to make these types of operations easier to write.
+
+Python has the same operators:
+
+```python
+# this line of code:
+num = num + 1
+# can be written with this shortcut operator:
+num += 1
+
+# it also works for any of the other math operations:
+num = num / 5
+# can be rewritten like this:
+num /= 5
+
+# and this line:
+num = num * 3
+# can be written as this:
+num *= 3
+# and so on with the other operators
+```
+
+> [!NOTE]
+> A couple of our favorite operators in JavaScript, increment (`++`) and decrement (`--`), do not exist in Python. Use `+= 1` and `-= 1` instead.
+
+## Working with Strings in Python
+
+Like JavaScript, Python has strings for holding text. You can also create multiline strings using triple quotes (`"""` or `'''`).
+
+### Concatenating Strings
+
+One or more strings can be combined into a single string in the same way we do it in JavaScript by using the + operator:
+
+```python
+little_string = "bad"
+medium_string = "super"
+long_string = medium_string + little_string
+print(long_string)
+# prints: superbad
+```
+
+### String Interpolation
+
+You might recall using string template literals in JavaScript, which allow embedding expressions in strings using backticks and `${}`.
+
+Python’s approach is similar but has a key difference: you must prefix the string with an `f` to indicate it’s an f-string (formatted string literal).
+
+```python
+state = "Hawaii"
+year = 1959
+message = f"{state} was the last state to join the U.S. in {year}."
+print(message)
+# prints: Hawaii was the last state to join the U.S. in 1959.
+```
+
+### Useful String Methods
+
+Like JavaScript, Python has several string methods we can use for string manipulation.
+
+Some are familiar, like split(), but others have different names:
+
+```python
+print("ace of spades".split(" "))
+# prints: ['ace', 'of', 'spades']
+
+# however, this won't work:
+print("abcd".split(""))
+# ValueError: empty separator
+
+# instead, use the list() function like this:
+print(list("abcd"))
+# prints: ['a', 'b', 'c', 'd']
+
+# get the index of a substring:
+print("abcd".index("c"))
+# prints: 2
+# this method raises an error if the substring is not found:
+print("abcd".index("e"))
+# ValueError: substring not found
+
+# .find() is similar to .index() but returns -1 if the substring is not found
+# this behavior may be preferable to raising an error:
+print("abcd".find("e"))
+# prints: -1
+
+print("boo".upper())
+# prints: 'BOO'
+
+print("WHY???".lower())
+# prints: 'why???'
+
+print("Then I went to the store I like".replace("I", "you"))
+# prints: 'Then you went to the store you like'
+```
+
+Want to know if a string contains a substring? You don’t even need a method for that! You can use the in operator to quickly find out if one string appears in another.
+
+```python
+print("eggs" in "green eggs and ham")
+# prints: True
+```
+
+Use the built-in global len() function on a string to find its length.
+
+```python
+print(len("Tacos"))
+# prints: 5
+```
