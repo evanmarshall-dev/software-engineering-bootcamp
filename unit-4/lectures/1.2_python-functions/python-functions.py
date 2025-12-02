@@ -1,32 +1,29 @@
-# -----------------------------
-# NOTES
-# - *args is similar to rest parameters in JavaScript.
-# - It allows a function to accept an arbitrary number of positional arguments.
-# - Inside the function, args is treated as a tuple.
+# Lambda Function
+nums = [1, 3, 6, 7, 8, 10]
+odds = list(filter(lambda num: num % 2, nums))
+print(odds)
 
-# - **kwargs allows a function to accept an arbitrary number of keyword arguments.
-# - Inside the function, kwargs is treated as a dictionary.
-# -----------------------------
+# Variable and Required Argument Function
+def sum(greeting, *args):
+    print(type(args))
+    print(greeting)
 
-# -----------------------------
-# PYTHON FUNCTIONS
-# - Define a function that takes a variable number of arguments.
-# - Use the *args syntax to accept any number of positional arguments.
-# - Start with a total of 0.
-# - For each argument passed to the function:
-#   - Print the type of args to show it's a tuple.
-#   - Add the argument to the total.
-#   - Return the total after the loop.
-# -----------------------------
-
-def sum(*args):
-  print(type(args)) # prints: <class 'tuple'>
-
-  total = 0
-  for arg in args:
-    total += arg
+    total = 0
+    for arg in args:
+        total += arg
 
     return total
 
-print(sum(1, 2, 3, 4, 5)) # prints: 15
-print(sum(10, 20))        # prints: 30
+print(sum("Hello, friend", 1, 5, 10))
+
+# Positional and Keyword Argument Function
+def arg_demo(pos1, pos2, *args, **kwargs):
+    print(f'Positional params: {pos1}, {pos2}')
+    print('*args:')
+    for arg in args:
+        print(' ', arg)
+    print('**kwargs:')
+    for keyword, value in kwargs.items():
+        print(f'  {keyword}: {value}')
+
+arg_demo('A', 'B', 1, 2, 3, color='purple', shape='circle')
