@@ -50,3 +50,31 @@ where_my_things_are = {
 
 for thing, location in where_my_things_are.items():
     print(f"My {thing} is kept in {location}")
+
+colors = ['red', 'green', 'blue']
+print(colors[0])
+print(colors[-1])
+
+# colors[10] = 'yellow'
+
+colors.append('purple')
+print(colors)
+
+colors.extend(['orange', 'black'])
+print(colors)
+
+colors.insert(1, 'yellow')
+print(colors)
+
+green = colors.pop(2)
+print(colors)
+
+colors.remove('orange')
+print(colors)
+
+# colors.clear()
+# print(colors)
+
+colors = ['red', 'green', 'blue']
+for idx, color in enumerate(colors):
+    print(idx, color)
