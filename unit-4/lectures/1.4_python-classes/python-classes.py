@@ -1,51 +1,15 @@
-# ------------------------------------
-# PYTHON CLASSES
-
-## Object Oriented Programming (OOP)
-# - One of the most used programming paradigms with functional programming coming a close second for large scale apps.
-# - Encapsulation, inheritance, abstraction, and polymorphism are the three main principles of OOP:
-#   - Encapsulation is the bundling of data with the methods that operate on that data.
-#   - Inheritance is a way to form new classes using classes that have already been defined.
-#   - Abstraction is the concept of hiding the complex reality while exposing only the necessary parts.
-#   - Polymorphism is the provision of a single interface to entities of different types (eg. You have a dog class and a cat class that one barks and one meows but they both have a method called make_sound(), therefore they have the same method name, but different implementations).
-
-## Classes
-# - We will use the class to create an instance of the class, which is called an object (eg. A car class can have multiple instances of the class such as color, make, model, etc.).
-# - An object in JS allows us to group related data and functions together, but this is more difficult with the Python dictionary so we will use classes to create objects and keep it encapsulated.
-# - self is similar to this in JS, it refers to the current instance of the class. In JS this is an actual keyword that has to be named this, but in Python it is just a convention to use self as the first parameter of methods in a class.
-# - With the print method you get an output that shows the memory location of the object, but you can override this by defining a __str__ method in the class.
-
-## Class vs Instance Members
-# - Class members are shared across all instances of the class, while instance members are unique to each instance.
-# - Class members are defined within the class but outside of any methods, while instance members are defined within the __init__ method using self.
-# - The @classmethod decorator is used to define class methods that operate on class members, while instance methods operate on instance members.
-# - If you follow the OOP principles, you should access class variables through the class itself and not through instances.
-# - It is also best practice to use a getter method to access class variables rather than accessing them directly (eg. Dog.num_dogs() instead of Dog.next_id).
-
-## Inheritance
-# - Inheritance allows a class to inherit properties and methods from another class.
-# - The class that is inherited from is called the parent class or base class, and the class that inherits is called the child class or derived class.
-# - Inheritance promotes code reuse and establishes a hierarchical relationship between classes.
-# - In Python, inheritance is implemented by passing the parent class as a parameter to the child class definition.
-# - The child class can override methods from the parent class to provide specific implementations.
-# ------------------------------------
-
-# Defining a class
+# Python Classes Example
 class Dog:
-    # Constructor method to initialize the object
-    # Every Dog has these properties within it = encapsulation.
-    next_id = 0  # Class variable to keep track of the next ID
+    next_id = 0
     def __init__(self, name, age=0):
-        self.name = name       # Instance variable for the dog's name
-        self.age = age         # Instance variable for the dog's age
-        self.id = Dog.next_id  # Assign a unique ID to the dog
-        Dog.next_id += 1       # Increment the next ID for the next dog
+        self.name = name
+        self.age = age
+        self.id = Dog.next_id
+        Dog.next_id += 1
 
-    # Method to make the dog bark
     def bark(self):
         print(f"{self.name} says Woof!")
 
-    # String representation of the object
     def __str__(self):
         return f"Dog(Name: {self.name}, Age: {self.age})"
 
@@ -53,27 +17,21 @@ class Dog:
     def num_dogs(cls):
         return cls.next_id
 
-ruby = Dog("Ruby", 3)       # Creating an instance of the Dog class
-jane = Dog("Jane", 5)       # Creating another instance of the Dog class, this will still increment next_id
+ruby = Dog("Ruby", 3)
+jane = Dog("Jane", 5)
 print(ruby)
-print(ruby.name, ruby.age)  # Accessing instance variables
-ruby.bark()                 # Calling the bark method
-print(dir(ruby))            # Listing all attributes and methods of the ruby object. They are already defined within the class and we are adding to them. We can override them as well within string method above (__str__).
-print(Dog.num_dogs())       # Calling the class method to get the number of dogs created
-# I cannot do ruby.next_id because next_id is a class variable, not an instance variable.
+print(ruby.name, ruby.age)
+ruby.bark()
+print(dir(ruby))
+print(Dog.num_dogs())
 # ? print(ruby.next_id)
 print(Dog.next_id)
 
-# Example of inheritance
-class showDog(Dog):  # Inheriting from the Dog class
-    # Add additional parameters AFTER those in the superclass
+class showDog(Dog):
     def __init__(self, name, age=0, total_earnings=0):
-        # Always call the superclass's __init__() method to initialize inherited properties
         Dog.__init__(self, name, age)
-        self.total_earnings = total_earnings  # New instance variable for showDog
-        # TODO: Go to course notes and finish this example.
 
-# Make a vehicle class with make, model, running, __init__(), start(), stop(), and override the __str__() method.
+# Another Class Example
 class Vehicle:
     def __init__(self, make, model, running=False):
         self.make = make
