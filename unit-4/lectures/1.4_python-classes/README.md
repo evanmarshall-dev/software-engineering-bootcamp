@@ -68,3 +68,5 @@ In Python, `self` functions similarly but with a key difference - `self` is _not
 
 > [!NOTE]
 > When defining methods on Python classes, such as `__init__()` or `bark()`, the first parameter is typically named `self`. This parameter refers to the instance on which the method is being called.
+
+## Instantiating Objects from Classes
