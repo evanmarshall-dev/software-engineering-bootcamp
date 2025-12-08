@@ -70,3 +70,193 @@ In Python, `self` functions similarly but with a key difference - `self` is _not
 > When defining methods on Python classes, such as `__init__()` or `bark()`, the first parameter is typically named `self`. This parameter refers to the instance on which the method is being called.
 
 ## Instantiating Objects from Classes
+
+In programming, classes are the blueprints for objects. They define the properties and behaviors the objects will have, but they are not objects themselves. To create objects from classes, we use the term _instantiate_ (_"I am instantiating an object from this class."_).
+
+Let’s instantiate a new dog object:
+
+```python
+ruby = Dog('Ruby', 3)
+
+print(ruby)
+# prints: something like <__main__.Dog object at 0x1031c0f90>
+
+# print the `name` and `age` attributes of the ruby object
+print(ruby.name, ruby.age)
+# prints: Ruby 3
+
+# invoke the ruby object's bark instance method
+ruby.bark()
+# prints: Ruby says woof!
+
+# don't pass a second argument
+liam = Dog('Liam')
+
+print(liam.name, liam.age)
+# prints: Liam 0
+```
+
+> [!NOTE]
+> Recall that Python dictionaries use square bracket notation to access and set the value of an item. Objects instantiated by our Python classes use **_dot_** notation instead.
+
+## Overriding Methods
+
+Previously, when we used `print(ruby)` to print the `ruby` object, we got an unfriendly output similar to `<__main__.Dog object at 0x1031c0f90>`. We can change this behavior by overriding the `__str__()` method that the print function calls automatically to obtain the string to print out.
+
+Let’s modify the `Dog` class to override the `__str__()` method:
+
+```python
+class Dog():
+    def __init__(self, name, age=0):
+        self.name = name
+        self.age = age
+
+    def bark(self):
+        print(f'{self.name} says woof!')
+
+    def __str__(self):
+        return f'The dog named {self.name} is {self.age} years old.'
+
+ruby = Dog('Ruby', 3)
+
+print(ruby)
+# prints: The dog named Ruby is 3 years old.
+```
+
+Data and variables in Python have attributes and methods based on their data type. For example, here’s how you can see the attributes and methods associated with a list object:
+
+```python
+# Create a list
+nums = [1, 2, 3]
+# Use the dir() function to list all attributes and methods of the list
+print(dir(nums))
+```
+
+These methods exist on our `ruby` object by default, but they won’t be used directly by us. For example, the `__init__()` method is called when an object is created, and `__str__()` is called when an object is converted to a string such as when we wrote `print(ruby)`.
+
+Just because we don’t call them directly doesn’t mean we can’t override their behavior though. Overriding the `__str__()` method is an example of **_polymorphism_**.
+
+> [!NOTE]
+> Polymorphism is a principle in OOP that is literally defined as “having many forms”. In OOP this means that instantiated objects are treated as instances of a class, rather than the actual class. They can be modified without also modifying the class.
+> For example, our `Dog` class modified the default behavior of the `__str__()` method, but that default behavior still exists. If we created another class, the behavior of that class’ `__str__()` method would be the default behavior.
+
+## Class vs Instance Members
+
+In Python, attributes and methods (members) are categorized into two types based on whether they belong to instances of the class or the class itself:
+
+- **Instance Attributes and Methods**: These are linked to individual instances of a class. Each object created from the class has its own copy of instance attributes. For example, in a `Dog` class, each `dog` object might have its own `name` and `age` attributes.
+- **Class Attributes and Methods**: These belong to the class as a whole, not to any individual instance. All instances of the class share the same class attributes. This means that if one instance changes a class attribute, the change is reflected across all other instances. These are intended to be accessed on the class only, not an instance (although accessing them on the instance is technically possible).
+
+To demonstrate class attributes, let’s add a `next_id` class attribute to the `Dog` class that can be used to assign an `id` to each dog instance:
+
+```python
+class Dog():
+    next_id = 1
+
+    def __init__(self, name, age=0):
+        self.name = name
+        self.age = age
+        # assign the current value of `next_id` to this instance
+        self.id = Dog.next_id
+        # increment the class attribute `next_id` so the next dog gets a new ID
+        # Note how the Dog.next_id class attribute is being accessed within the __init__ method.
+        Dog.next_id += 1
+
+    def bark(self):
+        print(f'{self.name} says woof!')
+
+    def __str__(self):
+        return f'Dog #{self.id} named {self.name} is {self.age} years old.'
+
+harry = Dog('Harry', 2)
+print(harry)
+
+maggie = Dog('Maggie')
+print(maggie)
+```
+
+Cool, now let’s see how class methods are created by adding a `get_total_dogs` method. Add this to the bottom of the `Dog` class:
+
+```python
+    def __str__(self):
+        return f'Dog #{self.id} named {self.name} is {self.age} years old.'
+
+# new code below
+
+    @classmethod
+    def get_total_dogs(cls):
+        # cls represents the Dog class
+        return cls.next_id - 1
+
+spot = Dog('Spot', 2)
+diogee = Dog('Diogee')
+
+# class methods are called on the class, not an instance
+print(Dog.get_total_dogs())
+# prints: an integer representing however many dogs you've created!
+```
+
+There are only two differences when defining a class method:
+
+1. The `@classmethod` decorator.
+2. The naming convention of the first parameter is to use `cls` instead of `self`.
+
+> [!NOTE]
+> Decorators in programming are used to implement metaprogramming (when a program has knowledge or manipulates itself). In Python, [decorators](https://www.programiz.com/python-programming/decorator) are used to modify the behavior of a function or class.
+
+## Inheritance
+
+Inheritance is a powerful feature in object-oriented programming that allows a class (known as a _subclass_) to inherit attributes and methods from another class (called a _superclass_). This enables the subclass to reuse code from the superclass without having to rewrite it. The subclass can then add its own unique attributes and methods, making it more specialized than the superclass.
+
+![Inheritance](./public/inheritance.png)
+
+**_For Example_**:
+
+```python
+class ShowDog(Dog):
+    # add additional parameters AFTER those in the superclass
+    def __init__(self, name, age=0, total_earnings=0):
+        # always call the superclass's __init__ first
+        Dog.__init__(self, name, age)
+        # then add any new attributes
+        self.total_earnings = total_earnings
+
+    # add additional methods
+    def add_prize_money(self, amount):
+        self.total_earnings += amount
+        print(f'{self.name}\'s new total earnings are ${self.total_earnings}')
+```
+
+> [!NOTE]
+> If not specified, the default superclass is Python’s `object` class. This is how we get methods like `__str__()`.
+
+```python
+winky = ShowDog('Winky', 3, 1000)
+
+print(winky)
+# prints: Dog #3 named Winky is 3 years old.
+
+winky.bark()
+# prints: Winky says woof!
+# the `ShowDog` class inherited the `Dog` class' `__str__()` and `bark()` method
+
+print(winky.total_earnings)
+# prints: 1000
+
+winky.add_prize_money(500)
+# a new method that instances of the 'Dog' class don't have
+
+print(winky.total_earnings)
+# prints: 1500
+# go Winky go!
+```
+
+Inheritance is critical to OOP languages. They even have their own _object hierarchies_.
+
+![Type Hierarchies](./public/type-hierarchy.png)
+
+Frameworks like Django have elaborate object hierarchies of their own. For example in Django, Models are defined by inheriting from a Django class like this:
+
+```python
+class Person(models.Model):
+```
