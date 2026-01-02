@@ -2427,3 +2427,531 @@ def cat_detail(request, cat_id):
 
 <p>This is the Django way!
 <!--  --></p>
+
+<h1>
+  <span class="headline">Cat Collector</span>
+  <span class="subhead">Django Class-Based Views</span>
+</h1>
+
+<!--  -->
+
+<p><strong>Learning objective:</strong> By the end of this lesson, students will be able to create new pages using Django’s built in Class-based Views.</p>
+
+<h2 id="what-are-class-based-views">What are class-based views?</h2>
+
+<p><strong><a href="https://docs.djangoproject.com/en/5.1/topics/class-based-views/intro/#introduction-to-class-based-views">Class-based Views (CBVs) in Django</a></strong> provide a structured approach to creating views by using <em>classes</em> rather than <em>functions</em>. These classes are built into Django’s views module, enabling you to organize your views and reuse code by <em>extending</em> Django’s predefined base classes. Let’s step away from cat collector for a moment and think about an application performing CRUD on a <code>Book</code> resource.</p>
+
+<p>For example, let’s say we wanted to implement <em>index</em> (view all) functionality using class-based views. First, we would import and extend the built in <code>ListView</code> class:</p>
+
+<pre><code class="language-python">from django.views.generic import ListView
+
+class BookList(ListView):
+    model = Book
+</code></pre>
+
+<p>Here, <code>ListView</code> is a predefined generic class-based view that abstracts common patterns into a reusable format. We extend <code>ListView</code> to create our own <code>BookList</code> class, and tell it which model to use:</p>
+
+<pre><code class="language-python">    model = Book
+</code></pre>
+
+<p>This tells <code>BookList</code> to fetch all records from the <code>Book</code> model.</p>
+
+<p>Next, we connect this class-based view to a URL in <code>urls.py</code> using the <code>as_view()</code> method of the CBV (which returns a view function) and connect it to a route as usual:</p>
+
+<pre><code class="language-python">from django.urls import path
+from books.views import BookList
+
+urlpatterns = [
+    path('books/', BookList.as_view(), name='book-index'),
+]
+</code></pre>
+
+<p>Notice that there’s no call to render? Unlike function-based views, CBVs don’t require explicit render calls. By default, <code>ListView</code> will look for a template named <code>templates/&lt;app_name&gt;/book_list.html</code>, but this can be customized with additional attributes.</p>
+
+<h3 id="types-of-class-based-views">Types of class-based views</h3>
+
+<p>In addition to the <code>ListView</code> used to display the index page for a Model, there are also:</p>
+
+<ul>
+  <li><code>DetailView</code> - used to implement the “detail” page for an instance of a Model</li>
+  <li><code>CreateView</code> - used to create an instance of a Model</li>
+  <li><code>DeleteView</code> - used to delete an instance of a Model</li>
+  <li><code>UpdateView</code> - used to update an instance of a Model</li>
+</ul>
+
+<p>Everything you would need to perform full crud on a resource!</p>
+
+<p>In this lesson, we will be utilizing the <code>CreateView</code>, <code>UpdateView</code> and <code>DeleteView</code> CBVs to complete our our <code>C U D</code> functionality on cats! We could also replace the existing <code>cat_index</code> and <code>cat_detail</code> view functions with Class-based Views (CBVs). However, we will keep these as function-based views to serve as examples of their structure and functionality.</p>
+
+<h2 id="why-use-class-based-views">Why use Class-based Views?</h2>
+
+<p>Django developed class-based views to minimize the redundancy of common view patterns found in web applications, effectively DRYing up our code base. You can read more about the rationale from <strong><a href="https://docs.djangoproject.com/en/5.1/topics/class-based-views/intro/#introduction-to-class-based-views">Django’s documentation on class-based views</a></strong>. Much of the code we write in CRUD applications repeats certain patterns again and again. As you saw in the above example, we can leverage CBVs to avoid having to write the same repeating code.</p>
+
+<p>CBVs can save time, making us more productive developers. CBVs are also highly configurable by adding class attributes or overriding methods and using decorators.</p>
+
+<p>For example, to change the default template for a list view, set the <code>template_name</code> attribute:</p>
+
+<pre><code class="language-python">class BookList(ListView):
+    model = Book
+    template_name = 'books/index.html'
+</code></pre>
+
+<h2 id="creating-data-using-a-cbv">Creating Data Using a CBV</h2>
+
+<p>Let’s explore class-based views as we add <code>create</code> functionality for cats!</p>
+
+<p>In Django, the naming convention for class-based views (CBVs) that handle creating objects typically involves using the name of the model followed by the type of action the view handles. For creating objects, the common practice is to append “Create” to the model name. For a model called <code>Cat</code> the convention would be <code>CatCreate</code>.</p>
+
+<h2 id="add-the-route">Add the Route</h2>
+
+<p>In an Express application, you typically need to define two separate routes and their corresponding controller actions to handle a form:</p>
+
+<ol>
+  <li>A <code>GET</code> route (<code>cats/new</code>) to serve the form page.</li>
+  <li>A <code>POST</code> route (<code>/cats</code>) to process the form data and add a new cat to the database.</li>
+</ol>
+
+<p>In Django, using the class-based view <code>CreateView</code> simplifies this process by combining these steps:</p>
+
+<ul>
+  <li><strong>Automatically handles form creation:</strong> Django uses a ModelForm to automatically generate form inputs based on the Model.</li>
+  <li><strong>Renders the form template on a <code>GET</code> request:</strong> When accessed via a <code>GET</code> request, it displays a template containing the <code>&lt;form&gt;</code>.</li>
+  <li><strong>Processes the form on a <code>POST</code> request:</strong> On a <code>POST</code> request, it automatically captures the form data to create a new database entry and then redirects to a specified URL.</li>
+</ul>
+
+<p>Let’s add a new URL pattern to <code>main_app/urls.py</code> for this classed-based view:</p>
+
+<pre><code class="language-python">urlpatterns = [
+    path('', views.home, name='home'),
+    path('about/', views.about, name='about'),
+    path('cats/', views.cat_index, name='cat-index'),
+    path('cats/&lt;int:cat_id&gt;/', views.cat_detail, name='cat-detail'),
+    # new route used to create a cat
+    path('cats/create/', views.CatCreate.as_view(), name='cat-create'),
+]
+</code></pre>
+
+<blockquote>
+  <p>The <code>path()</code> function still needs a view <strong>function</strong> as its second argument, not a class, and that’s what a CBV’s <code>as_view()</code> method returns.</p>
+</blockquote>
+
+<blockquote>
+  <p>💡 Did you notice that we didn’t have to put that route above the <code>cats/&lt;int:cat_id&gt;/</code>? Unlike Express, Django won’t match that route unless there’s something that looks like an integer in the second segment, therefore it ignores <code>cats/create/</code></p>
+</blockquote>
+
+<p>Now we need to add the <code>views.CatCreate</code> CBV to make the server happy, but first let’s add a link to the nav for adding a cat…</p>
+
+<h2 id="update-the-ui">Update the UI</h2>
+
+<p>Now that we know the path used to <em>both</em>:</p>
+
+<ul>
+  <li>View a form for entering cat info; and</li>
+  <li>Create the cat when the form is submitted</li>
+</ul>
+
+<p>Let’s update <code>base.html</code> to add a link to the nav:</p>
+
+<pre><code class="language-html">&lt;ul&gt;
+  &lt;li&gt;&lt;a href="{% url 'cat-index' %}"&gt;All Cats&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="{% url 'cat-create' %}"&gt;Add a Cat&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="{% url 'about' %}"&gt;About&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+
+<p>On to the view!</p>
+
+<h2 id="extending-the-generic-createview">Extending the generic <code>CreateView</code></h2>
+
+<p>First, to use any class-based view in Django, it needs to be imported:</p>
+
+<pre><code class="language-python">from django.shortcuts import render
+# Add the following import
+from django.views.generic.edit import CreateView
+from .models import Cat
+</code></pre>
+
+<p>Now we can inherit from <code>CreateView</code> to create our own CBV used to create cats:</p>
+
+<pre><code class="language-python"># main-app/views.py
+
+class CatCreate(CreateView):
+    model = Cat
+    fields = '__all__'
+</code></pre>
+
+<p>The <code>fields</code> attribute is required and can be used to limit or change the ordering of the attributes from the <code>Cat</code> model are generated in the <code>ModelForm</code> passed to the template.</p>
+
+<p>We’ve taken advantage of the special <code>'__all__'</code> value to specify that the form should contain all of the <code>Cat</code> Model’s attributes. Alternatively, we could have listed the fields in a list like this:</p>
+
+<pre><code class="language-python"># main-app/views.py
+
+class CatCreate(CreateView):
+    model = Cat
+    fields = ['name', 'breed', 'description', 'age']
+</code></pre>
+
+<p>This is all the code necessary to display a template containing a form that’s automatically provided, and to create a Cat when the form is submitted (when the request is a <code>POST</code> rather than a <code>GET</code>).</p>
+
+<p>On to the template!</p>
+
+<h2 id="create-the-template-for-creating-cats">Create the template for creating cats</h2>
+
+<p>Consider the following wireframe:</p>
+
+<p><img src="./public/form-wireframe-1.png" alt="Add a Cat wireframe" /></p>
+
+<p>By convention, the <code>CatCreate</code> CBV will look to render a template named <code>templates/main_app/cat_form.html</code>.</p>
+
+<p>All CBVs by default will use a folder inside of the <code>templates</code> folder with a name the same as the app, in our case <code>main_app</code>.</p>
+
+<p>Let’s give <code>CatCreate</code> the template it wants by first creating the <code>templates/main_app</code> folder in the terminal:</p>
+
+<pre><code class="language-bash">mkdir main_app/templates/main_app
+</code></pre>
+
+<p>Now create the template file in the terminal:</p>
+
+<pre><code class="language-bash">touch main_app/templates/main_app/cat_form.html
+</code></pre>
+
+<p>The <code>CreateView</code> expects a template named <code>&lt;model_name&gt;_form.html</code> by default, where <code>&lt;model_name&gt;</code> is the lowercase name of the model. This convention is suggested in the <strong><a href="https://docs.djangoproject.com/en/5.1/topics/class-based-views/generic-editing/#model-forms">Django documentation</a></strong> to standardize form templates. You can customize this by explicitly setting template_name in your view class.</p>
+
+<p>We’ll discuss the following code as we type it:</p>
+
+<pre><code class="language-html">{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+&lt;link rel="stylesheet" href="{% static 'css/form.css' %}" /&gt;
+{% endblock %}
+{% block content %}
+
+&lt;div class="page-header"&gt;
+  &lt;h1&gt;Add a Cat&lt;/h1&gt;
+  &lt;img src="{% static 'images/nerd-cat.svg' %}" alt="A cat using a computer" /&gt;
+&lt;/div&gt;
+
+&lt;form action="" method="post" class="form-container"&gt;
+  {% csrf_token %}
+  &lt;table&gt;
+    {{ form.as_table }}
+  &lt;/table&gt;
+  &lt;button type="submit" class="btn submit"&gt;Submit!&lt;/button&gt;
+&lt;/form&gt;
+
+{% endblock %}
+</code></pre>
+
+<ol>
+  <li>
+    <p>Setting the action attribute to an empty string (<code>action=""</code>) means the form will submit to the same URL that served it. This is typical for <code>CreateView</code>, which handles both displaying the form (on GET requests) and processing the form submission (on POST requests).</p>
+  </li>
+  <li>
+    <p>The <code>{% csrf_token %}</code> template tag is a security measure that makes it difficult to perform a <a href="https://en.wikipedia.org/wiki/Cross-site_request_forgery"><strong>cross-site-request-forgery</strong></a> by writing a CSRF (pronounced “see-surf”) token that is validated on the server.</p>
+  </li>
+  <li>
+    <p>The <code>form</code> variable represents a Django <code>ModelForm</code> instance that is automatically created by <code>CreateView</code>. This form is linked directly to your model and includes all the fields specified in the form’s Meta class or passed explicitly to the view. <code>{{ form.as_table }}</code> renders the form fields within a table layout. This method is one of several Django provides for rendering forms (others include <code>as_p</code> for paragraph tags and <code>as_ul</code> for unordered lists).</p>
+  </li>
+</ol>
+
+<h2 id="add-page-styles">Add page styles</h2>
+
+<p>A new page means new CSS! We’ll be using this same form CSS throughout this app, so we’re just going to put it in the main <code>css</code> directory for this application. Run the following command in the terminal:</p>
+
+<pre><code class="language-bash">touch main_app/static/css/form.css
+</code></pre>
+
+<p>Add the following styles to that file:</p>
+
+<pre><code class="language-css">.form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+table {
+  padding: 0 40px;
+  width: 100%;
+  border-spacing: 0 20px;
+}
+
+th {
+  text-align: left;
+  padding: 6px 20px 0 0;
+  font-weight: normal;
+  vertical-align: top;
+  font-size: var(--font-reg);
+}
+
+td {
+  max-width: 60%;
+}
+
+td &gt; * {
+  width: 100%;
+  padding: 2px 4px;
+  font-size: var(--font-l);
+}
+
+td &gt; textarea {
+  height: calc(4 * var(--font-l) + 8px);
+  font-family: inherit;
+}
+
+.btn {
+  align-self: flex-end;
+  margin-right: 40px;
+}
+</code></pre>
+
+<p>Let’s refresh the browser and click the <strong><code>Add a Cat</code></strong> link.</p>
+
+<p>Looks great!</p>
+
+<p><img src="./public/create-page.png" alt="Create Page UI" /></p>
+
+<p>Use the devtools to explore the DOM. You’ll see how Django’s ModelForm wrote the inputs in table rows and columns because we used <code>{{ form.as_table }}</code>.</p>
+
+<p>Other options include:</p>
+
+<ul>
+  <li><code>{{ form }}</code> - No wrapper around the <code>&lt;label&gt;</code> &amp; <code>&lt;input&gt;</code> tags</li>
+  <li><code>{{ form.as_p }}</code> - Wraps a <code>&lt;p&gt;</code> tag around the <code>&lt;label&gt;</code> &amp; <code>&lt;input&gt;</code> tags</li>
+  <li><code>{{ form.as_ul }}</code> - Wraps an <code>&lt;li&gt;</code> tag around the <code>&lt;label&gt;</code> &amp; <code>&lt;input&gt;</code> tags</li>
+</ul>
+
+<blockquote>
+  <p>Note: To ease custom styling, you can add an id or class to your<code>&lt;table&gt;</code> and/or <code>&lt;form&gt;</code> tags. Also note how Django automatically assigns an id to each input.</p>
+</blockquote>
+
+<h2 id="redirecting">Redirecting</h2>
+
+<p>Currently, if you submit the form to create a new cat, while the cat will be successfully created, you will encounter an error. This error occurs because Django does not know where to redirect the user after the form submission.</p>
+
+<p>To resolve this, you need to specify a <code>success_url</code> attribute in your class-based view (CBV). This attribute tells Django the URL to redirect to once the form has been successfully processed.</p>
+
+<pre><code class="language-python">class CatCreate(CreateView):
+    model = Cat
+    fields = '__all__'
+    success_url = '/cats/'
+</code></pre>
+
+<p>However, this approach always redirects users to the general <code>/cats/</code> page after a cat is created. Instead, it is often more useful to redirect to the specific page of the cat that was just created.</p>
+
+<h3 id="redirecting-to-a-newly-created-cat-object">Redirecting to a newly created cat object</h3>
+
+<p>Rather than redirecting to a static page, Django allows us to dynamically redirect to the newly created object using the <code>get_absolute_url</code> method on the model.</p>
+
+<p>Let’s update the <code>Cat</code> model to include this method:</p>
+
+<pre><code class="language-python">from django.db import models
+from django.urls import reverse
+
+class Cat(models.Model):
+    name = models.CharField(max_length=100)
+    breed = models.CharField(max_length=100)
+    description = models.TextField(max_length=250)
+    age = models.IntegerField()
+
+    def __str__(self):
+        return self.name
+
+    # Define a method to get the URL for this particular cat instance
+    def get_absolute_url(self):
+        # Use the 'reverse' function to dynamically find the URL for viewing this cat's details
+        return reverse('cat-detail', kwargs={'cat_id': self.id})
+</code></pre>
+
+<p>The <strong><a href="https://docs.djangoproject.com/en/5.1/ref/urlresolvers/#reverse">reverse</a></strong> method above will return the correct path for the <code>cat-detail</code> named route. However, since that route requires a <code>cat_id</code> route parameter, its value must be provided as an argument.</p>
+
+<p>Don’t forget to import <code>reverse</code> in <code>models.py</code>:</p>
+
+<pre><code class="language-python">from django.db import models
+# Import the reverse function
+from django.urls import reverse
+</code></pre>
+
+<p>Since <code>CreateView</code> automatically calls <code>get_absolute_url</code> on the model instance if <code>success_url</code> is <strong>not explicitly set</strong>, we must <strong>remove</strong> the previously added <code>success_url</code> from the <code>CatCreate</code> view:</p>
+
+<pre><code class="language-python">class CatCreate(CreateView):
+    model = Cat
+    fields = '__all__'
+    # Remove success_url so Django uses get_absolute_url from Cat
+</code></pre>
+
+<p>By removing <code>success_url</code>, Django will now use the <code>get_absolute_url</code> method defined in the <code>Cat</code> model, ensuring the user is redirected to the newly created cat’s detail page.</p>
+
+<h2 id="updating--deleting-cats-with-class-based-views">Updating &amp; deleting cats with class-based views</h2>
+
+<p>Let’s implement the following user stories using class-based view:</p>
+
+<ul>
+  <li><em>AAU, when viewing a cat’s detail page, I want to click EDIT to update that cat’s information.</em></li>
+  <li><em>AAU, when viewing a cat’s detail page, I want to click DELETE to remove that cat from the database.</em></li>
+</ul>
+
+<h2 id="add-the-routes">Add the routes</h2>
+
+<p>Let’s add two new routes for update and delete in <code>main_app/urls.py</code>:</p>
+
+<pre><code class="language-python">    path('cats/create/', views.CatCreate.as_view(), name='cat-create'),
+    # Add the new routes below
+    path('cats/&lt;int:pk&gt;/update/', views.CatUpdate.as_view(), name='cat-update'),
+    path('cats/&lt;int:pk&gt;/delete/', views.CatDelete.as_view(), name='cat-delete'),
+</code></pre>
+
+<blockquote>
+  <p>By convention, CBVs that work with individual model instances will expect to find a named parameter of <code>pk</code> for “primary key”. This is why we didn’t use <code>cat_id</code> as we did in the <em>detail</em> entry.</p>
+</blockquote>
+
+<h2 id="update-the-ui-1">Update the UI</h2>
+
+<p>Now we need to add <code>EDIT</code> and <code>DELETE</code> links on a cat’s details page.</p>
+
+<p>Let’s update <code>templates/cats/detail.html</code> by adding a new <code>&lt;div&gt;</code> we’ll label with the class <code>"cat-actions"</code>. This will contain our link buttons to <code>Edit</code> and <code>Delete</code> routes.</p>
+
+<p>Add the new <em>“cat-actions”</em> <code>&lt;div&gt;</code> inside the <code>detail.html</code> template:</p>
+
+<pre><code class="language-html">&lt;div class="cat-details"&gt;
+  &lt;h1&gt;{{ cat.name }}&lt;/h1&gt;
+  {% if cat.age &gt; 0 %}
+    &lt;h2&gt;A {{ cat.age }} year old {{ cat.breed }}&lt;/h2&gt;
+  {% else %}
+    &lt;h2&gt;A {{ cat.breed }} kitten.&lt;/h2&gt;
+  {% endif %}
+  &lt;p&gt;{{ cat.description }}&lt;/p&gt;
+
+  &lt;div class="cat-actions"&gt;
+    &lt;a href="{% url 'cat-update' cat.id %}" class="btn warn"&gt;Edit&lt;/a&gt;
+    &lt;a href="{% url 'cat-delete' cat.id %}" class="btn danger"&gt;Delete&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>Now for the views!</p>
+
+<h2 id="create-subclasses-from-djangos-updateview--deleteview">Create subclasses from Django’s <code>UpdateView</code> &amp; <code>DeleteView</code></h2>
+
+<p>We’ve referenced new <code>CatUpdate</code> and <code>CatDelete</code> views in the routes so we need to create them in <code>views.py</code>.</p>
+
+<p>First, import Django’s <code>UpdateView</code> and <code>DeleteView</code> CBVs to extend from:</p>
+
+<pre><code class="language-python"># Add UdpateView &amp; DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+</code></pre>
+
+<p>Now we can utilize these minimal view classes:</p>
+
+<pre><code class="language-python">class CatUpdate(UpdateView):
+    model = Cat
+    # Let's disallow the renaming of a cat by excluding the name field!
+    fields = ['breed', 'description', 'age']
+
+class CatDelete(DeleteView):
+    model = Cat
+    success_url = '/cats/'
+</code></pre>
+
+<blockquote>
+  <p>Note that when we delete a cat, we’ll need to redirect to the cats <em>index</em> page since that cat doesn’t exist anymore.</p>
+</blockquote>
+
+<p>Now we should be able to refresh the page and see our buttons rendered.</p>
+
+<p><img src="./public/edit-delete-buttons.png" alt="Edit and Delete Buttons UI" /></p>
+
+<h2 id="adding-the-templates">Adding the templates</h2>
+
+<p>At this point, the UPDATE functionality is ready for testing, but to fully implement the DELETE functionality, we need to take a few more steps. For both UPDATE and DELETE actions, if we want to introduce customizations or confirmations, modifications to existing templates are necessary.</p>
+
+<p>Instead of creating a new template for the UPDATE action, we will edit the existing <code>cat_form.html</code> template to add custom UI elements. This ensures consistency across different actions like UPDATE and DELETE, where DELETE will require a separate confirmation template to safeguard against accidental deletions.</p>
+
+<h3 id="customize-the-cat_formhtml-template">Customize the <code>cat_form.html</code> Template</h3>
+
+<p>Since we didn’t include <code>'name'</code> in the fields list in <code>CatUpdate</code>, the <code>name</code> attribute isn’t listed in the form.</p>
+
+<p>We’re going to customize <code>cat_form.html</code> to show the name of the Cat being edited, and learn a little more about Django in the process:</p>
+
+<ul>
+  <li>
+    <p>When using Django’s <code>UpdateView</code> for editing model instances, like a <code>cat</code>, certain context variables are automatically available in the template. These variables help determine whether you’re creating a new instance or editing an existing one.</p>
+  </li>
+  <li>
+    <p>Django passes the model instance being edited as <code>object</code> and also by the lowercase name of the model, which in this case is <code>cat</code>.</p>
+  </li>
+  <li>
+    <p>When using <code>CreateView</code>, these variables (object or cat) will be <code>None</code> because there’s no existing instance to edit.</p>
+  </li>
+</ul>
+
+<p>Let’s leverage this new knowledge to modify <code>templates/main_app/cat_form.html</code> to show the cat’s name only when we are editing, not creating, a cat:</p>
+
+<pre><code class="language-html">&lt;div class="page-header"&gt;
+  &lt;!-- Check if a cat object exists to determine if we're editing --&gt;
+  {% if cat %}
+    &lt;h1&gt;Edit {{ cat.name }}&lt;/h1&gt;
+  {% else %}
+    &lt;h1&gt;Add a Cat&lt;/h1&gt;
+  {% endif %}
+&lt;/div&gt;
+</code></pre>
+
+<p>We could also do:</p>
+
+<pre><code class="language-html">&lt;div class="page-header"&gt;
+  &lt;!-- Using the generic 'object' variable --&gt;
+  {% if object %}
+    &lt;h1&gt;Edit {{ object.name }}&lt;/h1&gt;
+  {% else %}
+    &lt;h1&gt;Add a Cat&lt;/h1&gt;
+  {% endif %}
+&lt;/div&gt;
+</code></pre>
+
+<p>These two blocks are functionally equivalent and we could use either.</p>
+
+<p>Refresh the browser to see your changes. Looks great!</p>
+
+<p><img src="./public/edit-page.png" alt="Edit Page UI" /></p>
+
+<h3 id="creating-a-confirmation-template-for-deleting-a-cat">Creating a confirmation template for deleting a cat</h3>
+
+<p>When you want to delete data, it’s best practice to ask for confirmation to prevent accidental deletions. Django simplifies this process in its class-based <code>DeleteView</code> by looking for a specific confirmation template.</p>
+
+<p>First, create the necessary confirmation template. By default, <strong><a href="https://docs.djangoproject.com/en/5.1/topics/class-based-views/generic-editing/#model-forms">Django expects this template to be named following a particular convention</a></strong>. For a model named Cat, the template should be named cat_confirm_delete.html.</p>
+
+<p>Run the following in the terminal:</p>
+
+<pre><code class="language-bash">touch main_app/templates/main_app/cat_confirm_delete.html
+</code></pre>
+
+<p>Next, define the contents of the template. This template will extend your base layout and include a confirmation form:</p>
+
+<pre><code class="language-html">{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+&lt;div class="page-header"&gt;
+  &lt;h1&gt;Delete Cat?&lt;/h1&gt;
+  &lt;img src="{% static 'images/nerd-cat.svg' %}" alt="A cat using a computer" /&gt;
+&lt;/div&gt;
+
+&lt;h2&gt;Are you sure you want to delete {{ cat.name }}?&lt;/h2&gt;
+
+&lt;form action="" method="post" class="form"&gt;
+  {% csrf_token %}
+  &lt;a href="{% url 'cat-detail' cat.id %}" class="btn secondary"&gt;Cancel&lt;/a&gt;
+  &lt;button type="submit" class="btn danger"&gt;Yes - Delete!&lt;/button&gt;
+&lt;/form&gt;
+
+{% endblock %}
+</code></pre>
+
+<p>Note how we are allowing the user to cancel the delete by providing a link back to the <em>detail</em> page.</p>
+
+<p>Let’s check our progress by refreshing the browser and hitting the delete button.</p>
+
+<p><img src="./public/delete-confirm.png" alt="Delete Confirm Page" /></p>
+
+<p><strong>🎉 Congrats, you have implemented full CRUD for cats!</strong>
+<!--  --></p>
