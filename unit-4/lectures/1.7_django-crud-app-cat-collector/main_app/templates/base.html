@@ -22,14 +22,17 @@
         <a href="{% url 'home' %}">
           <img src="{% static 'images/header-logo.svg' %}"
                alt="The Cat Collector Logo"
-               height="50"
-               width="50" />
+               height="20"
+               width="200" />
         </a>
       </div>
       <nav>
         <ul>
           <li>
             <a href="{% url 'cat-index' %}">All Cats</a>
+          </li>
+          <li>
+            <a href="{% url 'cat-create' %}">Add a Cat</a>
           </li>
           <li>
             <a href="{% url 'about' %}">About</a>

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" href="{% static "css/form.css" %}" />
+{% endblock head %}
+{% block content %}
+    <div class="page-header">
+        <!-- Check if a cat object exists to determine if we're editing -->
+        {% if cat %}
+            <h1>Edit {{ cat.name }}</h1>
+        {% else %}
+            <h1>Add a Cat</h1>
+        {% endif %}
+        <!-- Using the generic 'object' variable -->
+        <!-- {% if object %}
+            <h1>Edit {{ object.name }}</h1>
+        {% else %}
+            <h1>Add a Cat</h1>
+        {% endif %} -->
+        <img src="{% static "images/nerd-cat.svg" %}"
+             alt="A cat using a computer"
+             height="50"
+             width="90" />
+    </div>
+    <form action="" method="post" class="form-container">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <button type="submit" class="btn submit">Submit!</button>
+    </form>
+{% endblock content %}

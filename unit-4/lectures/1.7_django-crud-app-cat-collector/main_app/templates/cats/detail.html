@@ -8,8 +8,8 @@
     <div class="cat-img">
       <img src="{% static 'images/sk8r-boi-cat.svg' %}"
            alt="A skater boy cat"
-           width="200"
-           height="200" />
+           width="130"
+           height="150" />
     </div>
     <div class="cat-details">
       <h1>{{ cat.name }}</h1>
@@ -19,6 +19,10 @@
         <h2>A {{ cat.breed }} kitten.</h2>
       {% endif %}
       <p>{{ cat.description }}</p>
+      <div class="cat-actions">
+        <a href="{% url 'cat-update' cat.id %}" class="btn warn">Edit</a>
+        <a href="{% url 'cat-delete' cat.id %}" class="btn danger">Delete</a>
+      </div>
     </div>
   </section>
 {% endblock content %}
