@@ -1,37 +1,45 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="shortcut icon"
-      type="image/png"
-      href="{% static 'images/splash.svg' %}"
-    />
+    <meta name="description"
+          content="Collect and manage your favorite cats with Cat Collector." />
+    <meta name="keywords" content="cats, collector, pet management" />
+    <link rel="shortcut icon"
+          type="image/png"
+          href="{% static 'images/splash.svg' %}" />
     <title>Cat Collector</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
-    {% block head %} {% endblock %}
+    {% block head %}
+    {% endblock head %}
   </head>
   <body>
     <header>
       <div class="header-logo-container">
-        <a href="/">
-          <img
-            src="{% static 'images/header-logo.svg' %}"
-            alt="The Cat Collector Logo"
-          />
+        <a href="{% url 'home' %}">
+          <img src="{% static 'images/header-logo.svg' %}"
+               alt="The Cat Collector Logo"
+               height="50"
+               width="50" />
         </a>
       </div>
       <nav>
         <ul>
-          <li><a href="/cats">All Cats</a></li>
-          <li><a href="/about">About</a></li>
+          <li>
+            <a href="{% url 'cat-index' %}">All Cats</a>
+          </li>
+          <li>
+            <a href="{% url 'about' %}">About</a>
+          </li>
         </ul>
       </nav>
     </header>
-    <main>{% block content %} {% endblock %}</main>
+    <main>
+      {% block content %}
+      {% endblock content %}
+    </main>
   </body>
 </html>
