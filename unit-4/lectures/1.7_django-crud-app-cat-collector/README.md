@@ -4309,3 +4309,833 @@ Give a cat a couple toys and head to the admin portal!</p>
 
   </li>
 </ol>
+
+<h1>
+  <span class="headline">Cat Collector</span>
+  <span class="subhead">Django Authentication</span>
+</h1>
+
+<!--  -->
+
+<p><strong>Learning objective:</strong> By the end of this lesson, students will be able enable authentication and authorization in a Django app.</p>
+
+<h2 id="authentication-in-django">Authentication in Django</h2>
+
+<p>By default, Django creates projects with authentication and authorization capabilities pre-installed!</p>
+
+<p>Django’s built-in authentication functionality is provided by the <code>'django.contrib.auth'</code> app included within the <code>INSTALLED_APPS</code> list in <code>settings.py</code>:</p>
+
+<pre><code class="language-python">INSTALLED_APPS = [
+    'main_app',
+    'django.contrib.admin',
+    'django.contrib.auth',         # Thank You Django!
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+</code></pre>
+
+<p>Django provides the common <strong>user</strong> authentication where the user signs up and logs in with a <strong>username</strong> and <strong>password</strong>.</p>
+
+<p>Django relies on server-side sessions, implemented by the <code>'django.contrib.sessions'</code> app, to track when a user is logged in or out.</p>
+
+<h2 id="the-user-model">The <code>User</code> Model</h2>
+
+<p>At the core of Django’s authentication, is the provided <code>User</code> Model which by default has the following attributes:</p>
+
+<ul>
+  <li><code>username</code></li>
+  <li><code>password</code></li>
+  <li><code>email</code></li>
+  <li><code>first_name</code></li>
+  <li><code>last_name</code></li>
+</ul>
+
+<p>Although these attributes are fine for the Cat Collector, some projects may need additional attributes such as <code>birth_date</code>, <code>favorite_color</code>, etc.</p>
+
+<h2 id="creating-the-user---cat-relationship">Creating the <code>User -&lt; Cat</code> relationship</h2>
+
+<p>Currently, our application treats all cats as if they don’t belong to any specific user— free-roaming cats! By the end of this lesson, we will have implemented user authentication, ensuring that each cat is linked to a specific user who “owns” them, the <em>cat collector</em>.</p>
+
+<blockquote>
+  <p>Ideally, authentication should be set up early in the development process to simplify code management. However, for educational purposes, we’re integrating it at the end of our project to highlight the changes it requires.</p>
+</blockquote>
+
+<h2 id="update-the-cat-model">Update the <code>Cat</code> model</h2>
+
+<p>Adding the relationship of <strong><em>A User has many Cats; and a Cat belongs to a User</em></strong> is much the same as with creating any other one-to-many relationship.</p>
+
+<p>The <code>User</code> Model lives in the <code>django.contrib.auth</code> app, so the first thing we need to do is import it into <code>models.py</code>:</p>
+
+<pre><code class="language-python">from django.db import models
+from django.urls import reverse
+from datetime import date
+# Import the User
+from django.contrib.auth.models import User
+</code></pre>
+
+<p>One of the Models needs a <em>Foreign Key</em> - <code>User</code> or <code>Cat</code>… Which one makes sense?</p>
+
+<p><strong>Since the <code>Cat</code> Model belongs to another entity, it’s the one to hold the Foreign Key.</strong></p>
+
+<p>Now let’s add the field linking a <code>Cat</code> to a <code>User</code>:</p>
+
+<pre><code class="language-python">class Cat(models.Model):
+    # Other Cat class items above
+    toys = models.ManyToManyField(Toy)
+    # Add the foreign key linking to a user instance
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+</code></pre>
+
+<h2 id="migrate-the-change">Migrate the change</h2>
+
+<p>Now that we’ve made a change to a Model that impacts the database, we need to migrate that change.</p>
+
+<p>However, there will now be a <code>FK</code> constraint on cats, which means that every cat record must hold the PK of a user record and because there are existing cats, Django will prompt us with two options.</p>
+
+<p>In your terminal enter the following:</p>
+
+<pre><code class="language-bash">python3 manage.py makemigrations
+</code></pre>
+
+<p>Which then presents us with this message:</p>
+
+<pre><code class="language-plaintext">You are trying to add a non-nullable field 'user' to cat without a default;
+we can't do that (the database needs something to populate existing rows).
+Please select a fix:
+ 1) Provide a one-off default now (will be set on all existing rows with a null value for this column)
+ 2) Quit, and let me add a default in models.py
+Select an option:
+</code></pre>
+
+<p>Option <code>1)</code> is our best option because it will allow us to enter the <code>id</code> of a user, which we created in an earlier lesson (the superuser).</p>
+
+<p>Press <code>1</code> and <code>[enter]</code>, which will then prompt us to enter that value:</p>
+
+<pre><code class="language-plaintext">Please enter the default value now, as valid Python
+The datetime and django.utils.timezone modules are available,
+so you can do e.g. timezone.now
+Type 'exit' to exit this prompt
+&gt;&gt;&gt;
+</code></pre>
+
+<p>Our superuser’s <code>id</code> should be <code>1</code>, so type <code>1</code> and press <code>[enter]</code>.</p>
+
+<p>The migration file will then be created. Let’s migrate the changes. In your terminal enter the following:</p>
+
+<pre><code class="language-bash">python3 manage.py migrate
+</code></pre>
+
+<p>Congrats, the one-to-many relationship between <code>User</code> and <code>Cat</code> has been established and all existing cats have been collected by the superuser!</p>
+
+<h2 id="adding-urls-for-authentication">Adding URLs for authentication</h2>
+
+<p>Excluding login, we’re going to use Django’s built-in authentication features and default settings.</p>
+
+<p>Django provides several class-based views that we can use for handling logging in and logging out.</p>
+
+<p>However, before we can use those views, we’ll need URLs to map to them.</p>
+
+<p>Lucky for us, the <code>django.contrib.auth</code> module contains predefined URLS that we can simply <code>include</code> like this in <strong><code>catcollector/urls.py</code></strong>.</p>
+
+<p>Let’s do so now:</p>
+
+<pre><code class="language-python">    # Other paths above
+    path('admin/', admin.site.urls),
+    path('', include('main_app.urls')),
+    # include the built-in auth urls for the built-in views
+    path('accounts/', include('django.contrib.auth.urls')),
+</code></pre>
+
+<p>We don’t need to import <code>django.contrib.auth.urls</code> because it’s just a string.</p>
+
+<p>Including the built-in URLs has added the following URL patterns to the app:</p>
+
+<pre><code class="language-python">accounts/login/ [name='login']
+accounts/logout/ [name='logout']
+accounts/password_change/ [name='password_change']
+accounts/password_change/done/ [name='password_change_done']
+accounts/password_reset/ [name='password_reset']
+accounts/password_reset/done/ [name='password_reset_done']
+accounts/reset/&lt;uidb64&gt;/&lt;token&gt;/ [name='password_reset_confirm']
+accounts/reset/done/ [name='password_reset_complete']
+</code></pre>
+
+<p>Thankfully, not all of these are required. We are able to choose which ones to implement.</p>
+
+<h2 id="logging-in">Logging in</h2>
+
+<h3 id="modifying-the-homehtml-template">Modifying the <code>home.html</code> template</h3>
+
+<p>We’re going to convert the existing <code>home</code> view function to a CBV that inherits from the <code>LoginView</code> class.</p>
+
+<p>First import this class into <code>main_app/views.py</code>:</p>
+
+<pre><code class="language-python">from django.contrib.auth.views import LoginView
+</code></pre>
+
+<p>And use it in a class based view that <strong><em>replaces</em></strong> the current home view function.</p>
+
+<pre><code class="language-python">class Home(LoginView):
+    template_name = 'home.html'
+</code></pre>
+
+<p>Don’t forget to update <code>main_app/urls.py</code> to use the new CBV.</p>
+
+<pre><code class="language-python">path('', views.Home.as_view(), name='home'),
+</code></pre>
+
+<p>When <code>LoginView</code> renders the <code>home.html</code> template, it passes in the context a default <code>form</code> object we can display in <code>home.html</code>.</p>
+
+<p>Add it after the existing section:</p>
+
+<pre><code class="language-html">&lt;section&gt;
+  &lt;form action="{% url 'home' %}" method="post" class="login"&gt;
+    &lt;h1&gt;Login&lt;/h1&gt;
+    {% csrf_token %} {{ form.as_p }}
+    &lt;input type="hidden" name="next" value="{{ next }}" /&gt;
+    &lt;button type="submit" class="btn submit"&gt;Login&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/section&gt;
+
+{% endblock %}
+</code></pre>
+
+<p>One interesting feature in the above code is the following input:</p>
+
+<pre><code class="language-html">&lt;input type="hidden" name="next" value="{{ next }}" /&gt;
+</code></pre>
+
+<p>This is a feature of Django’s authentication that will automatically redirect a user that tries to access a protected route back to that route after they log in!</p>
+
+<p>Here’s our new home page!</p>
+
+<p><img src="./public/home-login.png" alt="Home Login" /></p>
+
+<p>You can log in now, but you’ll get an error because by default, the login view redirects to <code>/accounts/profile</code>, but we can change this…</p>
+
+<h2 id="specifying-the-default-redirect-after-logging-in">Specifying the default redirect after logging in</h2>
+
+<p>In Cat Collector, when a user logs in, we want them to see their cat <em>index</em> page.</p>
+
+<p>The most straight forward way to make this happen is to add a new variable at the bottom of <code>settings.py</code>:</p>
+
+<pre><code class="language-python">STATIC_URL = 'static/'
+
+# Add this variable to specify where successful logins should redirect to
+LOGIN_REDIRECT_URL = 'cat-index'
+</code></pre>
+
+<p>The <code>django.contrib.auth</code> app uses that value of the <code>LOGIN_REDIRECT_URL</code> variable, if it exists, to redirect to after the user logs in.</p>
+
+<p>Test it out!</p>
+
+<h2 id="updating-the-nav-bar-dynamically">Updating the nav bar dynamically</h2>
+
+<p>In most applications, many of the links displayed in a nav bar usually depend upon whether there is a logged in user or not.</p>
+
+<p>In Cat Collector, if there’s no user logged in, all we want is to show the following links:</p>
+
+<ul>
+  <li>About</li>
+  <li>Sign Up</li>
+  <li>Log In</li>
+</ul>
+
+<p>Then, when there is a logged in user, we want to see:</p>
+
+<ul>
+  <li>About</li>
+  <li>Add a Toy</li>
+  <li>View All Toys</li>
+  <li>Add a Cat</li>
+  <li>View All My Cats</li>
+  <li>Log Out</li>
+</ul>
+
+<p>Thanks again to the built-in auth, we automatically have a <code>user</code> variable available in every template!</p>
+
+<p>To check if the user is logged in, we simply use <code>user.is_authenticated</code>, which returns <code>True</code> when logged in and <code>False</code> otherwise.</p>
+
+<p>With this knowledge, let’s make the nav bar dynamic in <code>base.html</code>:</p>
+
+<pre><code class="language-html">&lt;nav&gt;
+  &lt;ul&gt;
+    {% if user.is_authenticated %}
+      &lt;li&gt;&lt;a href="{% url 'cat-index' %}"&gt;All Cats&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="{% url 'toy-index' %}"&gt;All Toys&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="{% url 'cat-create' %}"&gt;Add a Cat&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="{% url 'toy-create' %}"&gt;Add a Toy&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="{% url 'about' %}"&gt;About&lt;/a&gt;&lt;/li&gt;
+    {% else %}
+      &lt;li&gt;&lt;a href="{% url 'about' %}"&gt;About&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="{% url 'home' %}"&gt;Login&lt;/a&gt;&lt;/li&gt;
+    {% endif %}
+  &lt;/ul&gt;
+&lt;/nav&gt;
+</code></pre>
+
+<p>Note how the <strong>Log In</strong> link uses the <code>url</code> template tag along with the built-in named URL patterns (listed above).</p>
+
+<p>However, we’re skipping the <strong>Sign Up</strong> and <strong>Log Out</strong> links for now, because Django requires a bit of extra configuration for these actions.</p>
+
+<p>Now we should see the following nav if not logged in:</p>
+
+<p><img src="./public/nav-not-logged-in.png" alt="Not Logged in" /></p>
+
+<p>When you log in, you’ll see this nav:</p>
+
+<p><img src="./public/nav-logged-in.png" alt="Logged in" /></p>
+
+<p>Nice!</p>
+
+<p>We also want to prevent the login form from being shown when there is a user logged in. A simple <code>if</code> template tag in <code>home.html</code> will accomplish this:</p>
+
+<pre><code class="language-html">{% if not user.is_authenticated %}
+  &lt;section&gt;
+    &lt;form action="{% url 'home' %}" method="post" class="login"&gt;
+      &lt;h1&gt;Login&lt;/h1&gt;
+      {% csrf_token %} {{ form.as_p }}
+      &lt;input type="hidden" name="next" value="{{ next }}" /&gt;
+      &lt;button type="submit" class="btn submit"&gt;Login&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/section&gt;
+{% endif %}
+</code></pre>
+
+<h2 id="logging-out">Logging out</h2>
+
+<p>Django’s authentication framework provides built-in support for logging out, but <a href="https://docs.djangoproject.com/en/5.1/releases/4.1/#log-out-via-get">recent security practices</a> require that <code>logout</code> actions be submitted via a <code>POST</code> request instead of a <code>GET</code> request. This means we can’t use a simple link to log out; instead, we need a form.</p>
+
+<p>First, we need to integrate a <code>logout</code> form into your existing navbar. Here’s how to place the form in the navbar using an <code>&lt;li&gt;</code> element:</p>
+
+<pre><code class="language-html">  &lt;li&gt;&lt;a href="{% url 'cat-index' %}"&gt;All Cats&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="{% url 'toy-index' %}"&gt;All Toys&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="{% url 'cat-create' %}"&gt;Add a Cat&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="{% url 'toy-create' %}"&gt;Add a Toy&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="{% url 'about' %}"&gt;About&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;form id="logout-form" method="post" action="{% url 'logout' %}"&gt;
+      {% csrf_token %}
+      &lt;button type="submit"&gt;Log out&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/li&gt;
+{% else %}
+  &lt;li&gt;&lt;a href="{% url 'about' %}"&gt;About&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="{% url 'home' %}"&gt;Login&lt;/a&gt;&lt;/li&gt;
+</code></pre>
+
+<p>Check it out:</p>
+
+<p><img src="./public/logout-button.png" alt="LogOut Button" /></p>
+
+<h3 id="style-the-form-button">Style the form button</h3>
+
+<p>The new form button kinda ruins the aesthetic, but with a bit of styling, we can make these links appear uniform!</p>
+
+<p>Add the following at the bottom of <code>base.css</code>:</p>
+
+<pre><code class="language-css">#logout-form button {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+}
+
+#logout-form button:hover {
+  color: var(--link-hover-color);
+}
+</code></pre>
+
+<p>These styles remove default button styling and make the logout button look like a part of the navigation links. Much better!</p>
+
+<p><img src="./public/logout-in-nav.png" alt="Logout Styled in Nav" /></p>
+
+<h3 id="redirect-after-logging-out">Redirect after logging out</h3>
+
+<p>Finally, specify a redirection path for after users log out. By default, Django redirects to <code>http://127.0.0.1:8000/admin/logout/</code> for the admin, but you can customize this for all users in <code>settings.py</code>:</p>
+
+<pre><code class="language-python">STATIC_URL = 'static/'
+
+LOGIN_REDIRECT_URL = 'cat-index'
+
+# Add this variable to specify where logging out redirects to
+LOGOUT_REDIRECT_URL = 'home'
+</code></pre>
+
+<p>Logout is complete!</p>
+
+<h2 id="update-the-catcreate-view-to-assign-a-new-cat-to-the-logged-in-user">Update the <code>CatCreate</code> view to assign a new cat to the logged in user</h2>
+
+<p>Since cats belong to a user, before a new cat can be added to the database, its “owner” is going to have to be assigned to the <code>user</code> attribute we added to the model earlier.</p>
+
+<p>To do this, we’re going to have to add some additional code to the <code>CatCreate</code> view as follows:</p>
+
+<pre><code class="language-python">class CatCreate(CreateView):
+    model = Cat
+    fields = ['name', 'breed', 'description', 'age']
+
+    # This inherited method is called when a
+    # valid cat form is being submitted
+    def form_valid(self, form):
+        # Assign the logged in user (self.request.user)
+        form.instance.user = self.request.user  # form.instance is the cat
+        # Let the CreateView do its job as usual
+        return super().form_valid(form)
+</code></pre>
+
+<p>We’re overriding the <code>CreateView</code>’s <code>form_valid</code> method to assign the logged in user, <code>self.request.user</code>. Yes, the built-in auth automatically assigns the user to the <code>request</code> object similarly our middleware in Express.</p>
+
+<p>In Python, methods inherited by the superclass can be invoked by prefacing the method name with <code>super()</code>. Accordingly, after updating the form to include the user, we’re calling <code>super().form_valid(form)</code> to let the <code>CreateView</code> do its usual job of creating the model in the database and redirecting.</p>
+
+<p>Okay, let’s test the refactor by:</p>
+
+<ul>
+  <li>Navigating to the <code>/admin</code> route in a separate tab in your browser</li>
+  <li>Click on <strong>Cats</strong></li>
+  <li>Select a cat and verify the user is assigned to it</li>
+  <li>Leave the admin app open, and add a new cat from the “Add a Cat” page</li>
+  <li>Back in the admin app, view all cats, select the cat you just added, and verify that the user’s been assigned</li>
+</ul>
+
+<p>Nice work!</p>
+
+<h2 id="signing-up-new-users">Signing up new users</h2>
+
+<p>Unfortunately, Django’s built-in auth does not provide a URL or view for signing up new users. We will add this custom functionality ourselves.</p>
+
+<h3 id="add-a-url">Add a URL</h3>
+
+<p>First we’ll add the last URL pattern to this application, which will implement the sign up functionality in <code>main_app/urls.py</code>:</p>
+
+<pre><code class="language-python">path('accounts/signup/', views.signup, name='signup'),
+</code></pre>
+
+<p>To stay consistent with Django’s auth-related URLs, we’ll preface the pattern with <code>accounts/</code>.</p>
+
+<p>There’s no generic view available for this function, so we’re going to write a new view function named <code>signup</code>.</p>
+
+<h2 id="add-the-signup-view-function">Add the <code>signup</code> view function</h2>
+
+<p>The <code>signup</code> view function will be the first view we’ve coded that performs two different behaviors based upon whether it was called via a <code>GET</code> or <code>POST</code> request:</p>
+
+<ul>
+  <li>If it’s a <strong>GET request</strong>: The view function should render a template with a form for the user to enter their info.</li>
+  <li>If it’s a <strong>POST request</strong>: The user has submitted their info and the function should create the user and redirect.</li>
+</ul>
+
+<p>Although Django does not include a default URL or view, it <strong>does</strong> include a <code>UserCreationForm</code> that we can use in a template to generate all of the form inputs for a <code>User</code> model.</p>
+
+<p>In addition, we’re also going to use the <code>login</code> function to automatically log in a user when they sign up - users hate signing up and then having to turn around and log in!</p>
+
+<p>Let’s import these methods near the top of <strong><code>views.py</code></strong>:</p>
+
+<pre><code class="language-python"># Other imports above
+from django.views.generic import ListView, DetailView
+# Add the two imports below
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
+# Other code below
+</code></pre>
+
+<p>Now let’s create the <code>signup</code> view function:</p>
+
+<pre><code class="language-python">def signup(request):
+    error_message = ''
+    if request.method == 'POST':
+        # This is how to create a 'user' form object
+        # that includes the data from the browser
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            # This will add the user to the database
+            user = form.save()
+            # This is how we log a user in
+            login(request, user)
+            return redirect('cat-index')
+        else:
+            error_message = 'Invalid sign up - try again'
+    # A bad POST or a GET request, so render signup.html with an empty form
+    form = UserCreationForm()
+    context = {'form': form, 'error_message': error_message}
+    return render(request, 'signup.html', context)
+    # Same as:
+    # return render(
+    #     request,
+    #     'signup.html',
+    #     {'form': form, 'error_message': error_message}
+    # )
+</code></pre>
+
+<blockquote>
+  <p>When building future projects in Django you can always refer back to this function or Django’s documentation on how to implement this functionality.</p>
+</blockquote>
+
+<h2 id="add-the-sign-up-link-to-the-nav">Add the <strong>Sign Up</strong> link to the nav</h2>
+
+<p>Now that we know the URL, we can add a <strong>Sign Up</strong> link to the nav in <code>base.html</code>:</p>
+
+<pre><code class="language-html">{% else %}
+  &lt;li&gt;&lt;a href="{% url 'about' %}"&gt;About&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="{% url 'home' %}"&gt;Login&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="{% url 'signup' %}"&gt;Sign Up&lt;/a&gt;&lt;/li&gt;
+{% endif %}
+</code></pre>
+
+<h2 id="create-the-signuphtml-template">Create the <strong><code>signup.html</code></strong> template</h2>
+
+<p>Run the following in the terminal:</p>
+
+<pre><code class="language-bash">touch main_app/templates/signup.html
+</code></pre>
+
+<p>Add the following to <code>signup.html</code>:</p>
+
+<pre><code class="language-html">{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+&lt;link rel="stylesheet" href="{% static 'css/form.css' %}" /&gt;
+{% endblock %}
+{% block content %}
+&lt;div class="page-header"&gt;
+  &lt;h1&gt;Sign Up&lt;/h1&gt;
+  &lt;img src="{% static 'images/nerd-cat.svg' %}" alt="A cat using a computer" /&gt;
+&lt;/div&gt;
+{% if error_message %}
+  &lt;p class="red-text"&gt;{{ error_message }}&lt;/p&gt;
+{% endif %}
+&lt;form action="" method="post" class="form-container" autocomplete="off"&gt;
+  {% csrf_token %}
+  &lt;table&gt;
+    {{ form.as_table }}
+  &lt;/table&gt;
+  &lt;button type="submit" class="btn submit"&gt;Submit!&lt;/button&gt;
+&lt;/form&gt;
+
+{% endblock %}
+</code></pre>
+
+<p>With the above template, clicking the Sign Up in the nav should render the following UI:</p>
+
+<p><img src="./public/signup.png" alt="Sign Up Page" /></p>
+
+<p>By using the the <code>UserCreationForm</code>, you get helpful messages with all of the validations.</p>
+
+<p>However, notice that the form does not include inputs for the user’s:</p>
+
+<ul>
+  <li><code>email</code></li>
+  <li><code>first_name</code></li>
+  <li><code>last_name</code></li>
+</ul>
+
+<p>To include these, you’ll have to create your own <code>ModelForm</code> based upon the <code>User</code> Model.</p>
+
+<p>If you want to remove some of the password validations, you can comment them out or remove them from the <code>AUTH_PASSWORD_VALIDATORS</code> list in <code>settings.py</code>.</p>
+
+<p>You should now be able to sign up!</p>
+
+<h2 id="displaying-only-the-users-cats">Displaying only the user’s cats</h2>
+
+<p>If you sign up or log in with a different user, you’ll notice that all of the cats in the database are still showing up on the <em>index</em> page.</p>
+
+<p>If we take a look at the <code>cat_index</code> view, we’ll see why:</p>
+
+<pre><code class="language-python">def cat_index(request):
+    # This reads ALL cats, not just the logged in user's cats
+    cats = Cat.objects.all()
+    return render(request, 'cats/index.html', { 'cats': cats })
+</code></pre>
+
+<p>To display just the logged in user’s cats, we just need to change the query to this:</p>
+
+<pre><code class="language-python">def cat_index(request):
+    cats = Cat.objects.filter(user=request.user)
+    # You could also retrieve the logged in user's cats like this
+    # cats = request.user.cat_set.all()
+    return render(request, 'cats/index.html', { 'cats': cats })
+</code></pre>
+
+<p>Last step, coming up!</p>
+
+<h2 id="implement-authorization">Implement Authorization</h2>
+
+<p>Now that authentication has been implemented, the last step is to protect the routes that are dependent upon a user being logged in.</p>
+
+<p>Yes, the dynamic nav bar helps prevent access, but users can still type something like <code>http://127.0.0.1:8000/cats</code> in the address bar when nobody is logged in, which will raise an error.</p>
+
+<p>Django provides an easy way to protect both function and class-based views.</p>
+
+<h2 id="implement-authorization-on-view-functions">Implement Authorization on view functions</h2>
+
+<p>To protect view functions, we will use the <code>login_required</code> decorator.</p>
+
+<p>First we need to import it near the top of <code>views.py</code>:</p>
+
+<pre><code class="language-python"># Other imports above
+from django.contrib.auth.forms import UserCreationForm
+# Import the login_required decorator
+from django.contrib.auth.decorators import login_required
+</code></pre>
+
+<p>Now we can simply “decorate” any view function that requires a user to be logged in like this:</p>
+
+<pre><code class="language-python">@login_required
+def cat_index(request):
+    # cat_index function code here
+</code></pre>
+
+<p>Trying to browse to <a href="http://127.0.0.1:8000/cats">http://127.0.0.1:8000/cats</a> while logged out - it throws an error!</p>
+
+<p>To complete this, we need to tell Django where we want these decorators and mixins to redirect to. We just need to add a <code>LOGIN_URL</code> to our <code>settings.py</code> file and have it redirect to the <code>'home'</code> URL:</p>
+
+<pre><code class="language-python">STATIC_URL = '/static/'
+
+# Add this variable to specify where decorators and mixins should redirect to
+LOGIN_URL = 'home'
+
+LOGIN_REDIRECT_URL = 'cat-index'
+
+LOGOUT_REDIRECT_URL = 'home'
+</code></pre>
+
+<p>You’ll now be navigated to the login page if you try to navigate to a protected URL without signing in.</p>
+
+<p>Be sure to add the <code>@login_required</code> to these remaining view functions:</p>
+
+<ul>
+  <li><code>cat_detail</code></li>
+  <li><code>add_feeding</code></li>
+  <li><code>associate_toy</code></li>
+  <li><code>remove_toy</code></li>
+</ul>
+
+<h2 id="implement-authorization-on-class-based-views">Implement Authorization on class-based views</h2>
+
+<p>Protecting class-based views is slightly different, it uses what’s called a <code>mixin</code>, which is another class to inherit from - in OOP, we call this <em>multiple inheritance</em>.</p>
+
+<p>As usual, we’ll need to import it:</p>
+
+<pre><code class="language-python"># Other imports above
+from django.contrib.auth.decorators import login_required
+# Import the mixin for class-based views
+from django.contrib.auth.mixins import LoginRequiredMixin
+</code></pre>
+
+<p>Finally, we can protect class-based views like this:</p>
+
+<pre><code class="language-python">class CatCreate(LoginRequiredMixin, CreateView):
+    # CatCreate class code here
+</code></pre>
+
+<p>Not all OOP languages support the concept of multiple inheritance, but Python does.</p>
+
+<p>Be sure to add <code>LoginRequiredMixin</code> to these remaining classes:</p>
+
+<ul>
+  <li><code>CatUpdate</code></li>
+  <li><code>CatDelete</code></li>
+  <li><code>ToyCreate</code></li>
+  <li><code>ToyList</code></li>
+  <li><code>ToyDetail</code></li>
+  <li><code>ToyUpdate</code></li>
+  <li><code>ToyDelete</code></li>
+</ul>
+
+<h2 id="summary">Summary</h2>
+
+<p>Authentication is a crucial component of most applications, as it determines user access to various features.</p>
+
+<p>Understanding who is using your app is essential for delivering personalized and secure experiences. That’s why it’s best practice to implement authentication early in the development process. Typically, this should follow the initial user story for anonymous visitors:</p>
+
+<p><em>As a Visitor, when I browse to the application, I want [insert feature here].</em></p>
+
+<p>Congrats! You have completed <em>Cat Collector</em>!
+<!--  --></p>
+
+<h1>
+  <span class="headline">Cat Collector</span>
+  <span class="subhead">Adding a Custom Date Picker</span>
+</h1>
+
+<!--  -->
+
+<p><strong>Learning objective:</strong> By the end of this lesson, learners will be able to integrate a custom date picker into a Django form using MCDatepicker.</p>
+
+<h2 id="integrating-mcdatepicker-for-a-custom-date-picker">Integrating <code>MCDatepicker</code> for a custom date picker</h2>
+
+<p>We’re enhancing the user experience on the cat details page by incorporating the <a href="https://mcdatepicker.netlify.app/"><strong>MCDatepicker</strong></a>, a feature-rich date picker. This tool will allow users to easily select dates through a visually appealing interface. Start by including its necessary files through their CDN links in the HTML head of the detail page. Place these links before your existing CSS to ensure styles load correctly.</p>
+
+<p>In <code>detail.html</code>:</p>
+
+<pre><code class="language-html">{% block head %}
+&lt;!-- New MCDatepicker CSS --&gt;
+&lt;link
+  href="https://cdn.jsdelivr.net/npm/mc-datepicker/dist/mc-calendar.min.css"
+  rel="stylesheet"
+/&gt;
+&lt;link rel="stylesheet" href="{% static 'css/mcdp.css' %}"&gt;
+&lt;!-- MCDatepicker JS --&gt;
+&lt;script
+  src="https://cdn.jsdelivr.net/npm/mc-datepicker/dist/mc-calendar.min.js"
+&gt;
+&lt;/script&gt;
+&lt;!-- Existing CSS --&gt;
+&lt;link rel="stylesheet" href="{% static 'css/cats/cat-detail.css' %}" /&gt;
+{% endblock %}
+</code></pre>
+
+<p>Next, create a new CSS file specifically for styling the MCDatepicker elements:</p>
+
+<pre><code class="language-bash">touch main_app/static/css/mcdp.css
+</code></pre>
+
+<p>In this new CSS file, adjust the sizing and spacing of the MCDatepicker’s display elements to better fit the theme of your application:</p>
+
+<pre><code class="language-css">.mc-display__day,
+.mc-display__date,
+.mc-display__month,
+.mc-display__year,
+.mc-select__data,
+.mc-btn--danger,
+.mc-btn--success,
+.mc-date,
+.mc-table__weekday,
+.mc-picker__footer {
+  font-size: 1.6rem;
+  padding: .5rem;
+}
+
+.mc-display__date {
+  font-size: clamp(8rem, 40vw, 11.2rem);
+}
+
+.mc-select__data--month,
+.mc-select__data--month span,
+.mc-select__data--year,
+.mc-select__data--year span {
+  width: auto;
+  min-width: 8rem;
+  max-width: 10rem;
+}
+</code></pre>
+
+<h3 id="setting-up-javascript-for-mcdatepicker">Setting up javaScript for MCDatepicker</h3>
+
+<p>For JavaScript functionality, create a new directory for scripts and add a new script file:</p>
+
+<pre><code class="language-bash">mkdir main_app/static/js
+touch main_app/static/js/cat-detail.js
+</code></pre>
+
+<p>Inside this new script file, initialize the MCDatepicker on the feeding date input field. Make sure the script loads after the DOM is ready by using the <code>defer</code> attribute:</p>
+
+<pre><code class="language-html">&lt;script defer src="{% static 'js/cat-detail.js' %}"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>Implement the MCDatepicker setup in the <code>cat-detail.js</code>:</p>
+
+<pre><code class="language-jsx">const dateInput = document.getElementById('id_date'); // Select the date input by ID
+
+// Create a date picker instance
+const picker = MCDatepicker.create({
+  el: '#id_date',
+  dateFormat: 'yyyy-mm-dd', // Set the desired date format
+  closeOnBlur: true, // Close picker when clicking outside
+  selectedDate: new Date() // Default to today's date
+});
+
+// Open the date picker when the input is clicked
+dateInput.addEventListener("click", () =&gt; {
+  picker.open();
+});
+</code></pre>
+
+<p>With these steps, you’ve not only improved the functionality of your application but also made the date selection process more intuitive and visually pleasing. Test the new date picker by interacting with the Feeding Date input on the cat detail page. You should see a modern, easy-to-use calendar pop up, making date selection smoother and more integrated with your site’s design.</p>
+
+<p>Refresh and test it out by clicking inside of Feeding date input - you should see an awesome date-picker pop up like this:</p>
+
+<p><img src="./public/calendar-wireframe.png" alt="Custom Date Picker" /></p>
+
+<h1>
+  <span class="headline">Cat Collector</span>
+  <span class="subhead">Adding Custom Model Methods</span>
+</h1>
+
+<!--  -->
+
+<p><strong>Learning objective:</strong> By the end of this lesson, learners will be able to implement custom methods within Django models to manage and display business logic, specifically to check and display a cat’s daily feeding status.</p>
+
+<p>In this lesson, we’re enhancing our cat feedings by adding notifications that indicate whether a cat has been fed for the day.</p>
+
+<h2 id="adding-a-custom-method-to-check-the-feeding-status">Adding a custom method to check the feeding status</h2>
+
+<p>A good practice in application development is to place business logic within the models, a concept known as “fat models / skinny views.” This practice helps keep your code clean and avoids repetition.</p>
+
+<blockquote>
+  <p>“Business logic” is a set of rules that determine how data can be created, stored, and changed. This logic includes any calculations or decisions that the application needs to make according to what the business requires. In the business of feeding cats, this includes messages to the user about whether their cats have been fed or not.</p>
+</blockquote>
+
+<p>We will add a method to the <code>Cat</code> Model that determines if the cat has received enough feedings for the day, matching the number of <code>MEALS</code> defined.</p>
+
+<h3 id="visual-indicators-for-feeding-status">Visual indicators for feeding status</h3>
+
+<p>When a cat has not been fully fed for the day, we’ll show:</p>
+
+<p><img src="./public/cat-not-fed.png" alt="Cat Not Fed" /></p>
+
+<p>When the cat has received all its meals for the day:</p>
+
+<p><img src="./public/cat-fed.png" alt="Cat Fed" /></p>
+
+<h2 id="the-fed_for_today-custom-model-method">The <code>fed_for_today</code> Custom Model Method</h2>
+
+<p>Now, we’ll implement a method in the Cat Model to check if the cat is fed enough for the day:</p>
+
+<pre><code class="language-python">from django.db import models
+from django.urls import reverse
+from datetime import date  # Import date at the top of the models file
+
+class Cat(models.Model):
+    # Other class items here
+
+    # add this new method
+    def fed_for_today(self):
+        return self.feeding_set.filter(date=date.today()).count() &gt;= len(MEALS)
+</code></pre>
+
+<p>This method uses <code>filter()</code> to gather today’s feedings into a <code>&lt;QuerySet&gt;</code>, then uses <code>count()</code> to determine if the count meets or exceeds the number of meals. This method is more efficient than fetching all objects just to count them, as it avoids unnecessary data transfer from the database.</p>
+
+<h2 id="update-the-detailhtml-template">Update the <code>detail.html</code> Template</h2>
+
+<p>Lastly, we update the <code>detail.html</code> template to display the feeding status:</p>
+
+<pre><code class="language-html">&lt;form
+  action="{% url 'add-feeding' cat.id %}"
+  method="post"
+  class="subsection-content"
+&gt;
+  {% if cat.fed_for_today %}
+  &lt;p class="fed"&gt;{{cat.name}} has been fed all their meals for today!&lt;/p&gt;
+  {% else %}
+  &lt;p class="unfed"&gt;{{cat.name}} might be hungry!&lt;/p&gt;
+  {% endif %}
+  {% csrf_token %}
+  {{ feeding_form.as_p }}
+  &lt;button type="submit" class="btn submit"&gt;Add Feeding&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+<blockquote>
+  <p>Notice the classes to change the color of the text to <code>red</code> or <code>green</code> based on the feeding status.</p>
+</blockquote>
+
+<p>This template now dynamically displays a message based on whether the cat has been fully fed for the day.</p>
+
+<p>Congrats on using a custom Model method to implement business logic!
+<!--  --></p>

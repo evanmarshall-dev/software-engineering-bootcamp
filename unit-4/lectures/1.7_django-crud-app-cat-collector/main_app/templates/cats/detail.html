@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 {% block head %}
+  <!-- New MCDatepicker CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/mc-datepicker/dist/mc-calendar.min.css"
+        rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/mcdp.css' %}">
+  <!-- MCDatepicker JS -->
+  <script src="https://cdn.jsdelivr.net/npm/mc-datepicker/dist/mc-calendar.min.js"></script>
+  <script defer src="{% static 'js/cat-detail.js' %}"></script>;
   <link rel="stylesheet" href="{% static 'css/cats/cat-detail.css' %}" />
 {% endblock head %}
 {% block content %}
@@ -47,6 +54,11 @@
             method="post"
             class="subsection-content"
             autocomplete="off">
+        {% if cat.fed_for_today %}
+          <p class="fed">{{ cat.name }} has been fed all their meals for today!</p>
+        {% else %}
+          <p class="unfed">{{ cat.name }} might be hungry!</p>
+        {% endif %}
         {% csrf_token %}
         {{ feeding_form.as_p }}
         <button type="submit" class="btn submit">Add Feeding</button>

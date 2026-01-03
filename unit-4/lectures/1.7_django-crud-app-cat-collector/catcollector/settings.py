@@ -85,6 +85,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+# If you want to remove some of the password validations, you can comment them out or remove them from the AUTH_PASSWORD_VALIDATORS list in settings.py.
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -118,6 +119,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Add this variable to specify where decorators and mixins should redirect to
+LOGIN_URL = 'home'
+
+# Add this variable to specify where successful logins should redirect to
+LOGIN_REDIRECT_URL = 'cat-index'
+
+# Add this variable to specify where logging out redirects to
+LOGOUT_REDIRECT_URL = 'home'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
