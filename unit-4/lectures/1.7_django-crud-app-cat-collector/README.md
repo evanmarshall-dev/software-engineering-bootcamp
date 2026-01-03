@@ -2955,3 +2955,1357 @@ class CatDelete(DeleteView):
 
 <p><strong>🎉 Congrats, you have implemented full CRUD for cats!</strong>
 <!--  --></p>
+
+<h1>
+  <span class="headline">Cat Collector</span>
+  <span class="subhead">Django One-to-Many Relationships</span>
+</h1>
+
+<!--  -->
+
+<p><strong>Learning objective:</strong> By the end of this lesson, learners will be able to implement and manage one-to-many relationships in Django by adding a Feeding model related to the Cat model.</p>
+
+<h1 id="a-cats-got-to-eat">A cat’s got to eat!</h1>
+
+<p>In this lesson, we’ll explore how to add another model in Django to demonstrate working with <strong>one-to-many</strong> relationships.</p>
+
+<p>We’ll use an Entity-Relationship Diagram (ERD) to illustrate this relationship:</p>
+
+<p><img src="./public/one-to-many-erd.png" alt="ERD" /></p>
+
+<p>In this relationship, each cat will have many feedings, and each feeding will belong to a specific cat.</p>
+
+<h2 id="adding-a-new-feeding-model">Adding a new <code>Feeding</code> Model</h2>
+
+<p>Using the ERD above as a guide, let’s add a new <code>Feeding</code> Model (below the current <code>Cat</code> Model) in our <code>models.py</code>:</p>
+
+<pre><code class="language-python"># Add new Feeding model below Cat model
+
+class Feeding(models.Model):
+    date = models.DateField()
+    meal = models.CharField(max_length=1)
+</code></pre>
+
+<blockquote>
+  <p>Note that we’re going to use just a single-character to represent what meal the feeding is for: <strong><em>B</em></strong>reakfast, <strong><em>L</em></strong>unch or <strong><em>D</em></strong>inner.</p>
+</blockquote>
+
+<h2 id="fieldchoices">Field.choices</h2>
+
+<p>Django has a feature, <strong><a href="https://docs.djangoproject.com/en/5.1/ref/models/fields/#choices">Field.choices</a></strong>, that will make the single-characters more user-friendly by automatically generating a select dropdown in the form using descriptions that we define.</p>
+
+<p>The first step is to define a tuple of 2-tuples. Because we might need to access this tuple within the <code>Cat</code> class also, let’s define it above both of the Model classes:</p>
+
+<pre><code class="language-python"># A tuple of 2-tuples added above our models
+MEALS = (
+    ('B', 'Breakfast'),
+    ('L', 'Lunch'),
+    ('D', 'Dinner')
+)
+
+
+class Cat(models.Model):
+</code></pre>
+
+<p>As you can see, the first item in each 2-tuple represents the value that will be stored in the database, e.g. <code>B</code>.</p>
+
+<p>The second item represents the human-friendly “display” value, e.g., <code>Breakfast</code>.</p>
+
+<p>Now let’s enhance the <code>meal</code> field as follows:</p>
+
+<pre><code class="language-python">class Feeding(models.Model):
+    date = models.DateField()
+    meal = models.CharField(
+        max_length=1,
+        # add the 'choices' field option
+        choices=MEALS,
+        # set the default value for meal to be 'B'
+        default=MEALS[0][0]
+    )
+</code></pre>
+
+<h2 id="override-the-__str__-method">Override the <code>__str__</code> Method</h2>
+
+<p>As is common in python classes, we can override the <code>__str__</code> method in Models so that they provide more meaningful output when they are printed:</p>
+
+<pre><code class="language-python">class Feeding(models.Model):
+    # Other Feeding class fields here
+
+    def __str__(self):
+        # Nice method for obtaining the friendly value of a Field.choice
+        return f"{self.get_meal_display()} on {self.date}"
+</code></pre>
+
+<p>Check out the convenient <code>get_meal_display()</code> method Django <em>automagically</em> creates to access the human-friendly value of a <code>Field.choice</code> like we have on <code>meal</code>.</p>
+
+<h2 id="add-the-foreign-key">Add the Foreign Key</h2>
+
+<p>Since a <code>Feeding</code> <strong>belongs to</strong> a <code>Cat</code>, it must hold the <code>id</code> of the cat object it belongs to - it needs a <strong>foreign key</strong>!</p>
+
+<p>Here’s how it’s done - Django style:</p>
+
+<pre><code class="language-python">class Feeding(models.Model):
+    date = models.DateField()
+    meal = models.CharField(
+        max_length=1,
+        choices=MEALS,
+        default=MEALS[0][0]
+    )
+    # Create a cat_id column for each feeding in the database
+    cat = models.ForeignKey(Cat, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.get_meal_display()} on {self.date}"
+</code></pre>
+
+<p>As you can see, the <code>ForeignKey</code> field-type is used to create a one-to-many relationship.</p>
+
+<ul>
+  <li>The first argument provides the parent Model, <code>Cat</code>.</li>
+  <li>In a one-to-many relationship, the <code>on_delete=models.CASCADE</code> is required. It ensures that if a <code>Cat</code> record is deleted, all of the child <code>Feedings</code> will be deleted automatically as well - thus avoiding <em>orphan</em> records for feedings that are no longer tied to an existing Cat.</li>
+</ul>
+
+<blockquote>
+  <p>🧠 In the database, the column in the feedings table for the FK will actually be called <code>cat_id</code> because Django by default appends <code>_id</code> to the name of the attribute used in the Model.</p>
+</blockquote>
+
+<h2 id="make-and-run-the-migration">Make and Run the Migration</h2>
+
+<p>We changed our <code>models.py</code> file, so it’s that time again! Open your terminal and run:</p>
+
+<pre><code class="language-bash">python3 manage.py makemigrations
+</code></pre>
+
+<p>Then run:</p>
+
+<pre><code class="language-bash">python3 manage.py migrate
+</code></pre>
+
+<h2 id="use-the-admin-portal-to-create-some-new-feedings">Use the Admin Portal to create some new feedings</h2>
+
+<p>Before we start building the user interface (UI) for our new feedings model, let’s practice adding a few feedings using the Django admin portal. This will give us some data to display and allow us to create our feedings’ index UI first.</p>
+
+<h3 id="registering-the-model">Registering the Model</h3>
+
+<p>To use the built-in Django admin portal for CRUD operations, we must first register the model. Update <code>main_app/admin.py</code> to include the <code>Feeding</code> model:</p>
+
+<pre><code class="language-python">from django.contrib import admin
+# Add Feeding to the import
+from .models import Cat, Feeding
+
+admin.site.register(Cat)
+# Register the new Feeding model
+admin.site.register(Feeding)
+</code></pre>
+
+<p>Now, navigate to <a href="http://127.0.0.1:8000/admin">http://127.0.0.1:8000/admin</a> and click on the <strong>Feeding +Add</strong> link.</p>
+
+<p><img src="./public/django-admin-add.png" alt="Django Admin UI Add Feeding" /></p>
+
+<p>Notice the select drop-downs for assigning both the Meal and the Cat!</p>
+
+<h2 id="custom-field-labels">Custom field labels</h2>
+
+<p>Let’s say though, that you would like a less vague label than <strong>Date</strong>.</p>
+
+<p>If you want to use a more descriptive label than <strong>Date</strong>, you can customize field labels directly in the model. Since <strong><em>Django models are the single source of truth about your data</em></strong>, this is where you should add customizations.</p>
+
+<p>In <code>main_app/models.py</code>, update the <code>Feeding</code> model to include a user-friendly label for the <code>date</code> field:</p>
+
+<pre><code class="language-python">class Feeding(models.Model):
+    # The first optional positional argument overrides the label
+    date = models.DateField('Feeding date')
+    # Other fields below
+</code></pre>
+
+<p>After making this change, refresh the admin portal page to see the updated label.</p>
+
+<p><img src="./public/update-date-label.png" alt="Feeding Label Update" /></p>
+
+<p>These custom labels will also be used in all of Django’s <code>ModelForms</code>.</p>
+
+<h3 id="add-a-few-feedings">Add a few feedings</h3>
+
+<p>Now, go ahead and add a few feedings for each of your cats using the admin portal. This will populate your database with initial data, which will be useful for building and testing your UI.</p>
+
+<h2 id="displaying-a-cats-feedings">Displaying a Cat’s Feedings</h2>
+
+<p>The cat’s detail page is the perfect place to display a cat’s feedings because it provides a comprehensive view of all the important information about that specific cat in one place. This is similar to how you would see a list of all tasks on a project detail page. By showing feedings on the cat’s detail page, users can easily see the feeding history along with other details about the cat, making the information more accessible and organized.</p>
+
+<p>No additional views or templates are necessary. We only need to update the <code>detail.html</code> template.</p>
+
+<h3 id="update-the-detailhtml-template">Update the <code>detail.html</code> template</h3>
+
+<p>Here’s the new content for <code>detail.html</code>. Copy and paste this markup, and then we’ll review it:</p>
+
+<pre><code class="language-html">&lt;!-- Existing cat-container above --&gt;
+&lt;div class="feedings-toy-container"&gt;
+  &lt;section class="feedings"&gt;
+    &lt;div class="subsection-title"&gt;
+      &lt;h2&gt;Feedings&lt;/h2&gt;
+      &lt;img
+        src="{% static 'images/cat-cone.svg' %}"
+        alt="An ice cream cone cat"
+      /&gt;
+      &lt;img src="{% static 'images/cat-onigiri.svg' %}" alt="A cat as onigiri" /&gt;
+      &lt;img
+        src="{% static 'images/kitty-kabob.svg' %}"
+        alt="A kabob of kittens"
+      /&gt;
+    &lt;/div&gt;
+    &lt;table&gt;
+      &lt;thead&gt;
+        &lt;tr&gt;
+          &lt;th&gt;Date&lt;/th&gt;
+          &lt;th&gt;Meal&lt;/th&gt;
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        {% for feeding in cat.feeding_set.all %}
+          &lt;tr&gt;
+            &lt;td&gt;{{feeding.date}}&lt;/td&gt;
+            &lt;td&gt;{{feeding.get_meal_display}}&lt;/td&gt;
+          &lt;/tr&gt;
+        {% endfor %}
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/section&gt;
+&lt;/div&gt;
+
+{% endblock %}
+</code></pre>
+
+<ul>
+  <li>In this code we have added an html table to present the feeding data in an more structured way.</li>
+  <li>The table body (<code>&lt;tbody&gt;</code>) dynamically lists each feeding associated with the cat. This is done through a loop (<code>{% for feeding in cat.feeding_set.all %}</code>) that iterates over each feeding related to the cat.</li>
+  <li>For each feeding, the date is displayed, and the meal type is shown using Django’s <code>get_meal_display</code> method, which translates a database value into a more user-friendly format (such as converting a single character like ‘B’ into “Breakfast”).</li>
+</ul>
+
+<p>Refresh your browser and select a cat to see their feedings!</p>
+
+<p><img src="./public/feedings-ui.png" alt="Feedings UI" /></p>
+
+<h2 id="adding-new-feedings-from-the-detail-page">Adding new feedings from the Detail page</h2>
+
+<p>As developers, we can add feedings easily from the admin portal, but this helpful dashboard is not available to users of our application.</p>
+
+<p>Next, we will add functionality for users to add feedings directly from a cat’s detail page. This requires integrating a form on the page that can handle the creation of new feedings linked to that specific cat.</p>
+
+<p>In previous sections, we’ve utilized Django’s class-based views to manage create and update operations. These CBVs automatically handle form generation and data submission by using a <code>ModelForm</code> tied to a specific model behind the scenes.</p>
+
+<p>For adding feedings through the cat’s detail page, we’ll need to add a custom <code>ModelForm</code>. This form will allow us to embed feeding-related inputs within a custom <code>&lt;form&gt;</code> tag, manage form validation, and save new feeding entries to the database.</p>
+
+<h2 id="create-the-modelform-for-the-feeding-model">Create the <code>ModelForm</code> for the <code>Feeding</code> Model</h2>
+
+<p>We could define the <code>ModelForm</code> inside of the <code>models.py</code> module, but we’re going to follow a best practice of defining it inside of a <code>forms.py</code> module instead. Run the following in the terminal:</p>
+
+<pre><code class="language-bash">touch main_app/forms.py
+</code></pre>
+
+<p>Let’s open it and add this code:</p>
+
+<pre><code class="language-python">from django import forms
+from .models import Feeding
+
+class FeedingForm(forms.ModelForm):
+    class Meta:
+        model = Feeding
+        fields = ['date', 'meal']
+</code></pre>
+
+<p>Note that our custom form inherits from <code>ModelForm</code>.</p>
+
+<blockquote>
+  <p>Many of the attributes in the <code>Meta</code> class are in common with CBVs because the CBV was using them behind the scenes to create a ModelForm as previously mentioned.</p>
+</blockquote>
+
+<p>For more options, check out the <strong><a href="https://docs.djangoproject.com/en/5.1/topics/forms/modelforms/#modelform">Django ModelForms documentation</a></strong>.</p>
+
+<h2 id="passing-an-instance-of-feedingform">Passing an instance of <code>FeedingForm</code></h2>
+
+<p><code>FeedingForm</code> is a class that needs to be instantiated in the <code>cat_detail</code> view function so that it can be rendered inside of <code>detail.html</code>.</p>
+
+<p>Here’s the updated <code>cat_detail</code> view function in <code>main_app/views.py</code>:</p>
+
+<pre><code class="language-python">from .models import Cat
+# Import the FeedingForm
+from .forms import FeedingForm
+
+# Other view functions above
+
+# update this view function
+def cat_detail(request, cat_id):
+    cat = Cat.objects.get(id=cat_id)
+    # instantiate FeedingForm to be rendered in the template
+    feeding_form = FeedingForm()
+    return render(request, 'cats/detail.html', {
+        # include the cat and feeding_form in the context
+        'cat': cat, 'feeding_form': feeding_form
+    })
+</code></pre>
+
+<p><code>feeding_form</code> is set to an instance of <code>FeedingForm</code> and then it’s passed to <code>detail.html</code> just like <code>cat</code>.</p>
+
+<h2 id="displaying-feedingform-inside-of-detailhtml">Displaying <code>FeedingForm</code> inside of <strong><code>detail.html</code></strong></h2>
+
+<p>Okay, so we’re going to need a form used to submit a new feeding.</p>
+
+<p>We’re going to display a <code>&lt;form&gt;</code> at the top of the feedings column in <strong><code>detail.html</code></strong>.</p>
+
+<p>This is how we can “render” the <code>ModelForm</code>’s inputs within <code>&lt;form&gt;</code> tags. Add this section in <code>templates/cats/detail.html</code> just above the <code>&lt;table&gt;</code> for displaying feedings:</p>
+
+<pre><code class="language-html">&lt;h3&gt;Add a Feeding&lt;/h3&gt;
+&lt;!-- Add just above the feedings table --&gt;
+&lt;form method="post" class="subsection-content" autocomplete="off"&gt;
+  {% csrf_token %}
+  {{ feeding_form.as_p }}
+  &lt;button type="submit" class="btn submit"&gt;Add Feeding&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+<p>As before, we need to include the <code>{% csrf_token %}</code> for security purposes.</p>
+
+<p>A form’s <code>action</code> attribute determines the URL that a form is submitted to. For now, we’ll leave it out and come back to it in a bit.</p>
+
+<p>The <code>{{ feeding_form.as_p }}</code> will generate the <code>&lt;input&gt;</code> tags wrapped in <code>&lt;p&gt;</code> tags for each field we specified in <code>FeedingForm</code>.</p>
+
+<p>Let’s see what it looks like - not perfect but it’s a start:</p>
+
+<p><img src="./public/feeding-form.png" alt="Feeding Form" /></p>
+
+<p>Unfortunately, you may have noticed that the <em>Feeding Date</em> field is just a basic text input. This is what Django uses by default for <code>DateField</code>s. Let’s make it a date picker instead.</p>
+
+<h2 id="use-djangos-dateinput">Use Django’s <code>DateInput</code></h2>
+
+<p>To improve user experience and maintain consistent date formatting, we’ll be adding a “date picker”—a user interface component that lets users easily select dates. This feature is supported by HTML5 and is common in web forms. Django supports this with a built in <code>DateInput</code> widget, which is built on top of the standard HTML date picker to integrate smoothly with Django’s <code>DateField</code>.</p>
+
+<p>For our <code>Feeding</code> model’s form, we specify Django’s built-in date picker as a widget for the date field. This creates a visually pleasing date selection process on the frontend and ensures that date data remains consistent on the backend.</p>
+
+<blockquote>
+  <p>In Django forms, the <code>widgets</code> attribute is used to customize how form fields are rendered in the HTML and to add specific HTML attributes to those fields.</p>
+</blockquote>
+
+<p>Update the <code>FeedingForm</code> in <code>forms.py</code> to include a new property called <code>widgets</code>:</p>
+
+<pre><code class="language-python">class FeedingForm(forms.ModelForm):
+    class Meta:
+        model = Feeding
+        fields = ['date', 'meal']
+        widgets = {
+            'date': forms.DateInput(
+                format=('%Y-%m-%d'),
+                attrs={
+                    'placeholder': 'Select a date',
+                    'type': 'date'
+                }
+            ),
+        }
+</code></pre>
+
+<p>By specifying these attributes and using a <code>DateInput</code> widget, the date field in the form will render as an HTML date input. This allows users to select a date using a mini calendar-style date picker, which is much more user-friendly.</p>
+
+<p>Refresh the page to see your DateInput widget in action:</p>
+
+<p><img src="./public/date-widget.png" alt="Date input widget" /></p>
+
+<h2 id="create-new-path-for-feedings">Create new <code>path</code> for feedings</h2>
+
+<p>Its time to complete our form functionality by enabling the route we’ll use as the form action for new <code>Feedings</code>.</p>
+
+<p>Every <code>Feeding</code> object needs a <code>cat_id</code> that holds the primary key of the cat object that it belongs to. Therefore, we need to ensure that the route <code>path</code> includes a <em>URL parameter</em> for capturing the cat’s <code>id</code> like we’ve done in other routes.</p>
+
+<p>Add a route to the <code>urlpatterns</code> list in <strong><code>urls.py</code></strong> like this:</p>
+
+<pre><code class="language-python">urlpatterns = [
+    # Existing URL patterns above
+    path(
+        'cats/&lt;int:cat_id&gt;/add-feeding/',
+        views.add_feeding,
+        name='add-feeding'
+    ),
+]
+</code></pre>
+
+<p>The above route specifies that the <code>&lt;form&gt;</code>’s <strong>action</strong> attribute will need to look something like <code>/cats/2/add-feeding</code>. Let’s update the form now.</p>
+
+<h2 id="add-the-action-attribute-to-the-form">Add the <code>action</code> Attribute to the <code>&lt;form&gt;</code></h2>
+
+<p>Now that we have a <em>named URL</em>, let’s add the <code>action</code> attribute to the <code>&lt;form&gt;</code> in <code>detail.html</code>:</p>
+
+<pre><code class="language-html">&lt;h3&gt;Add a Feeding&lt;/h3&gt;
+&lt;form
+  action="{% url 'add-feeding' cat.id %}"
+  method="post"
+  class="subsection-content"
+  autocomplete="off"
+&gt;
+  {% csrf_token %}
+  {{ feeding_form.as_p }}
+  &lt;button type="submit" class="btn submit"&gt;Add Feeding&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+<blockquote>
+  <p>Note that arguments provided to template tags are always separated using a space, not a comma.</p>
+</blockquote>
+
+<p>Once again, we’re using best practice of using the <code>url</code> template tag <code>{% url 'add-feeding' cat.id %}</code> to write out the correct the URL for a route.</p>
+
+<p>Our form is now complete, but before we can test, we need to add the <code>views.add_feeding</code> function.</p>
+
+<h2 id="add-the-view-function">Add the View function</h2>
+
+<p>This view is designed to handle the submission of a feeding form associated with a specific cat.</p>
+
+<p>This form will capture the feeding data entered by the user, but will be missing one key piece of information that we will need to add manually before sending the data to the database- <code>cat_id</code>.</p>
+
+<p>Let’s create an <code>add_feeding</code> view function in <code>main_app/views.py</code> :</p>
+
+<pre><code class="language-python">def add_feeding(request, cat_id):
+    # create a ModelForm instance using the data in request.POST
+    form = FeedingForm(request.POST)
+    # validate the form
+    if form.is_valid():
+        # don't save the form to the db until it
+        # has the cat_id assigned
+        new_feeding = form.save(commit=False)
+        new_feeding.cat_id = cat_id
+        new_feeding.save()
+    return redirect('cat-detail', cat_id=cat_id)
+</code></pre>
+
+<ol>
+  <li>First we capture data from the user via the <code>FeedingForm(request.POST)</code> and prepare it for the database.</li>
+  <li>The method <code>form.is_valid()</code> checks if the submitted form data is valid according to the form’s specifications, such as required fields being filled and data types matching the model’s requirements.</li>
+  <li>After ensuring that the form contains valid data, we save the form with the <code>commit=False</code> option, which returns an in-memory model object so that we can assign the <code>cat_id</code> before actually saving to the database.</li>
+  <li>Finally we will <code>redirect</code> instead of <code>render</code> since data has been changed in the database.</li>
+</ol>
+
+<p>Lastly, remember to import <code>redirect</code> at the top of <code>views.py</code>:</p>
+
+<pre><code class="language-python">from django.shortcuts import render, redirect
+</code></pre>
+
+<p>With our view complete we can test our form.</p>
+
+<p><img src="./public/save-feedings.png" alt="Saved Feedings" /></p>
+
+<p>Nice Job!</p>
+
+<h2 id="adjust-the-order-of-feedings">Adjust the order of feedings</h2>
+
+<p>Now we have the ability to add feedings, great! But as our list of feedings grows we’ll need to scroll to the bottom to see the latest information. This is not a great user experience. How can we fix this?</p>
+
+<p>We can use a feature in Django that sorts the feedings automatically. This is done by setting an <code>ordering</code> option inside the <code>Feeding</code> model’s <code>class Meta</code>.</p>
+
+<p>Let’s add this to our <code>Feeding</code> model:</p>
+
+<pre><code class="language-python">class Feeding(models.Model):
+    # Other Feeding model items above
+
+    def __str__(self):
+        # Nice method for obtaining the friendly value of a Field.choice
+        return f"{self.get_meal_display()} on {self.date}"
+
+    # Define the default order of feedings
+    class Meta:
+        ordering = ['-date']  # This line makes the newest feedings appear first
+</code></pre>
+
+<p>This <code>ordering</code> option in Django allows us to specify how lists of entries, like our feedings, should be sorted by default. The prefix ‘-‘ before ‘date’ means it sorts the dates in descending order, so the newest feedings appear first.</p>
+
+<h3 id="what-if-there-are-no-feedings-yet">What if there are no feedings yet?</h3>
+
+<p>We can also add some conditional logic in our markup that tells the user whether or not a cat has been fed.</p>
+
+<p>Replace the existing feedings table with the following:</p>
+
+<pre><code class="language-html">&lt;h3&gt;Past Feedings&lt;/h3&gt;
+{% if cat.feeding_set.all.count %}
+  &lt;table&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;Date&lt;/th&gt;
+        &lt;th&gt;Meal&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      {% for feeding in cat.feeding_set.all %}
+      &lt;tr&gt;
+        &lt;td&gt;{{feeding.date}}&lt;/td&gt;
+        &lt;td&gt;{{feeding.get_meal_display}}&lt;/td&gt;
+      &lt;/tr&gt;
+      {% endfor %}
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+{% else %}
+  &lt;div class="subsection-content"&gt;
+    &lt;p&gt;⚠️ {{cat.name}} has not been fed!&lt;/p&gt;
+  &lt;/div&gt;
+{% endif %}
+</code></pre>
+
+<p>Now if a cat has a feeding count of <code>0</code> in the database, you’ll see a warning message.</p>
+
+<p>Feed your cats!
+<!--  --></p>
+
+<h1>
+  <span class="headline">Cat Collector</span>
+  <span class="subhead">Adding a Third Model</span>
+</h1>
+
+<!--  -->
+
+<p><strong>Learning objective:</strong> By the end of this lesson, learners will be able to implement a new model in Django, and perform CRUD operations using class-based views.</p>
+
+<p>Now it’s time to introduce the third and final model for this application: Toys! We’ll establish a complete set of class-based views to enable full CRUD operations on this new model. Then, we’ll link <code>Cats</code> to <code>Toys</code> using a many-to-many relationship.</p>
+
+<h2 id="toy-model">Toy model</h2>
+
+<p>Let’s start by adding the <code>Toy</code> model to our project.</p>
+
+<p>Add the following at the bottom of <code>models.py</code>:</p>
+
+<pre><code class="language-python"># Add the Toy model
+class Toy(models.Model):
+    name = models.CharField(max_length=50)
+    color = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('toy-detail', kwargs={'pk': self.id})
+</code></pre>
+
+<p>This new model with have only two properties for toys <code>name</code> and <code>color</code>.</p>
+
+<p>We’ll also include <code>get_absolute_url(self)</code>. This method uses Django’s reverse function to generate a URL for the specific instance of the Toy model. This URL is meant to point to a detailed view of the toy, identified by its primary key (pk). This is useful in redirecting users to the toy’s detail page after operations such as creating or updating a toy.</p>
+
+<h2 id="register-the-new-toy-model">Register the new toy model</h2>
+
+<p>A new model means a new entry in <code>admin.py</code>. Add the toy model below <code>Cat</code> and <code>Feeding</code>.</p>
+
+<pre><code class="language-python">from django.contrib import admin
+
+from .models import Cat, Feeding, Toy  # import the model
+
+admin.site.register(Cat)
+admin.site.register(Feeding)
+# Add the Toy model
+admin.site.register(Toy)
+</code></pre>
+
+<p>A new model also means we need to make migrations and migrate in our terminal:</p>
+
+<pre><code class="language-bash">python3 manage.py makemigrations
+python3 manage.py migrate
+</code></pre>
+
+<h2 id="adding-toys">Adding Toys</h2>
+
+<p>Lets’ create our first Class-Based View for adding new toys.</p>
+
+<p>Start by adding the URL path for <code>create</code> in <code>main_app/urls.py</code>.</p>
+
+<pre><code class="language-python">path('toys/create/', views.ToyCreate.as_view(), name='toy-create'),
+</code></pre>
+
+<blockquote>
+  <p>This will cause an error with our server temporarily, because we have not created the view for this new path.</p>
+</blockquote>
+
+<p>Add the CBV to create a <code>Toy</code> in <code>main_app/views.py</code>. Make sure you import the <code>Toy</code> model at the top!</p>
+
+<pre><code class="language-python">from .models import Cat, Toy
+
+# Other view functions above
+
+class ToyCreate(CreateView):
+    model = Toy
+    fields = '__all__'
+</code></pre>
+
+<p>And finally create a new template <code>toy_form.html</code> and add the model form:</p>
+
+<pre><code class="language-bash">touch main_app/templates/main_app/toy_form.html
+</code></pre>
+
+<p>To save time, we’ll add some conditional logic to set this form up for edit functionality as well, so we don’t need to return to it later.</p>
+
+<pre><code class="language-html">{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+  &lt;link rel="stylesheet" href="{% static 'css/form.css' %}" /&gt;
+{% endblock %}
+{% block content %}
+  &lt;div class="page-header"&gt;
+    {% if object %}
+      &lt;h1&gt;Edit {{object.name}}&lt;/h1&gt;
+    {% else %}
+      &lt;h1&gt;Add a Toy&lt;/h1&gt;
+    {% endif %}
+    &lt;img src="{% static 'images/nerd-cat.svg' %}" alt="A cat using a computer" /&gt;
+  &lt;/div&gt;
+  &lt;form action="" method="post" class="form-container" autocomplete="off"&gt;
+    {% csrf_token %}
+    &lt;table&gt;
+      {{ form.as_table }}
+    &lt;/table&gt;
+    &lt;button type="submit" class="btn submit"&gt;Submit!&lt;/button&gt;
+  &lt;/form&gt;
+
+{% endblock %}
+</code></pre>
+
+<p>Finally let’s update the <code>base.html</code> with a new link so that we can get to our new page.</p>
+
+<pre><code class="language-html">&lt;ul&gt;
+  &lt;li&gt;&lt;a href="{% url 'cat-index' %}"&gt;All Cats&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="{% url 'cat-create' %}"&gt;Add a Cat&lt;/a&gt;&lt;/li&gt;
+  &lt;!-- Add a new link --&gt;
+  &lt;li&gt;&lt;a href="{% url 'toy-create' %}"&gt;Add a Toy&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="{% url 'about' %}"&gt;About&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+
+<p>Test it out!</p>
+
+<p><img src="./public/toy-new.png" alt="New Toy Page" /></p>
+
+<p>Got an error? Not a problem. Our create operation was successful, but our view function has a redirect to a page that doesn’t exist yet.</p>
+
+<p>You can confirm the creation of new toys in the Admin dashboard.</p>
+
+<p><a href="http://127.0.0.1:8000/admin/">http://127.0.0.1:8000/admin/</a></p>
+
+<p>The next step is to create a place in our UI to view toys and give the server a proper place to redirect.</p>
+
+<h2 id="viewing-toys">Viewing Toys</h2>
+
+<p>We have prepared two wireframes for the toy sections of our application: one for the index page, which lists all toys, and another for the detailed view page of each toy.</p>
+
+<p>Here are some wireframes for what we will build in the next sections.</p>
+
+<h3 id="toy-index-page">Toy Index Page</h3>
+
+<p><img src="./public/toy-index-wireframe.png" alt="Toy Index Page Wireframe" /></p>
+
+<h3 id="toy-detail-page">Toy Detail Page</h3>
+
+<p><img src="./public/toy-detail-wireframe.png" alt="Toy Detail Page Wireframe" /></p>
+
+<p>Let’s start by setting up the URLs needed for these views:</p>
+
+<pre><code class="language-python">path('toys/&lt;int:pk&gt;/', views.ToyDetail.as_view(), name='toy-detail'),
+path('toys/', views.ToyList.as_view(), name='toy-index'),
+</code></pre>
+
+<blockquote>
+  <p>This will cause an error with our server temporarily, because we have not created the views for these new paths.</p>
+</blockquote>
+
+<p>Now, let’s create the views that will render the list of toys and the details of each toy. These views are defined using Django’s class-based views:</p>
+
+<pre><code class="language-python">from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView # add these
+
+# Other view functions above
+
+class ToyList(ListView):
+    model = Toy
+
+class ToyDetail(DetailView):
+    model = Toy
+</code></pre>
+
+<p>Next, let’s add a link to our “All Toys” index view in the nav bar so we can easily browse all toys:</p>
+
+<pre><code class="language-html">&lt;ul&gt;
+  &lt;li&gt;&lt;a href="{% url 'cat-index' %}"&gt;All Cats&lt;/a&gt;&lt;/li&gt;
+  &lt;!-- Add new link --&gt;
+  &lt;li&gt;&lt;a href="{% url 'toy-index' %}"&gt;All Toys&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="{% url 'cat-create' %}"&gt;Add a Cat&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="{% url 'toy-create' %}"&gt;Add a Toy&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="{% url 'about' %}"&gt;About&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+
+<p>Lastly, we need templates for these views. Create the template files by running the following commands in the terminal:</p>
+
+<pre><code class="language-bash">touch main_app/templates/main_app/toy_list.html main_app/templates/main_app/toy_detail.html
+</code></pre>
+
+<p>Next we’ll add some markup to our <code>toy_list</code> template</p>
+
+<h2 id="all-toys-index-page">All <code>Toys</code> index page</h2>
+
+<p>Add the following markup in <code>toy_list.html</code>:</p>
+
+<pre><code class="language-html">{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+&lt;link rel="stylesheet" href="{% static 'css/toys/toy-index.css' %}" /&gt;
+{% endblock %}
+{% block content %}
+
+&lt;section class="page-header"&gt;
+  &lt;h1&gt;All Cat Toys&lt;/h1&gt;
+  &lt;img src="{% static 'images/string.svg' %}" alt="A ball of string" /&gt;
+  &lt;img src="{% static 'images/mouse.svg' %}" alt="A mouse" /&gt;
+  &lt;img src="{% static 'images/post.svg' %}" alt="A scratching post" /&gt;
+  &lt;img src="{% static 'images/fish.svg' %}" alt="A fishy toy" /&gt;
+&lt;/section&gt;
+
+&lt;section class="card-container"&gt;
+  {% for toy in toy_list %}
+    &lt;div class="card" style="border-color: {{ toy.color }}"&gt;
+      &lt;div class="card-bg" style="background-color: {{ toy.color }}"&gt;&lt;/div&gt;
+      &lt;a href="{% url 'toy-detail' toy.id %}"&gt;
+        &lt;div class="card-content"&gt;
+          &lt;h2&gt;{{ toy.name }}&lt;/h2&gt;
+          &lt;p&gt;A {{ toy.color }} toy&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+  {% endfor %}
+&lt;/section&gt;
+
+{% endblock %}
+</code></pre>
+
+<p>This markup includes a cute page header with some cat toy images, as well as a programmatically rendered list of toys from our database.</p>
+
+<p>Test the link in the nav to see the new page.</p>
+
+<h3 id="toy-index-css">Toy <code>index</code> CSS</h3>
+
+<p>Let’s also create a custom CSS directory for this new Model and a file for its index page:</p>
+
+<pre><code class="language-bash">mkdir main_app/static/css/toys
+touch main_app/static/css/toys/toy-index.css
+</code></pre>
+
+<p>add the following styles in <code>toy-index.css</code>:</p>
+
+<pre><code class="language-css">.card-container {
+  padding: 0 40px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 224px;
+  height: 224px;
+  margin: 10px;
+  border: solid 2px;
+  box-shadow: var(--card-box-shadow);
+  position: relative;
+}
+
+.card-bg {
+  opacity: 0.4;
+  position: absolute;
+  display: inline-flex;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.card-content {
+  padding: 15px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+
+.card &gt; a {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+.card h2 {
+  margin: 7px 0;
+  font-size: var(--font-xl);
+}
+
+.card p {
+  margin: 0;
+  font-size: var(--font-reg);
+}
+
+.page-header &gt; img {
+  margin-left: 10px;
+}
+
+.page-header &gt; img:first-of-type {
+  margin-left: 15px;
+}
+</code></pre>
+
+<p>Refresh to see the final index page!</p>
+
+<p><img src="./public/toy-index.png" alt="Toy Index Page" /></p>
+
+<h2 id="one-toy-detail-page">One <code>Toy</code> detail page</h2>
+
+<p>Now let’s add the markdown for the <code>toy_detail.html</code> page:</p>
+
+<pre><code class="language-html">{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+&lt;link rel="stylesheet" href="{% static 'css/toys/toy-detail.css' %}" /&gt;
+{% endblock %}
+{% block content %}
+
+&lt;div class="card" style="border-color: {{ toy.color }}"&gt;
+  &lt;div class="card-bg" style="background-color: {{ toy.color }}"&gt;&lt;/div&gt;
+  &lt;div class="card-content"&gt;
+    &lt;h2&gt;{{ toy.name }}&lt;/h2&gt;
+    &lt;p&gt;A {{ toy.color }} toy&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;a href="" class="btn warn"&gt;Edit&lt;/a&gt;
+&lt;a href="" class="btn danger"&gt;Delete&lt;/a&gt;
+
+{% endblock %}
+</code></pre>
+
+<p>This markdown contains specific details about one toy, as well as buttons to edit and delete a toy. We’ll connect update and delete functionality to those later.</p>
+
+<blockquote>
+  <p>Notice also how we use properties of the toy model to set styles in our CSS. Neat.</p>
+</blockquote>
+
+<h3 id="toy-detail-css">Toy <code>detail</code> CSS</h3>
+
+<p>Let’s add another custom CSS file for our details page:</p>
+
+<pre><code class="language-bash">touch main_app/static/css/toys/toy-detail.css
+</code></pre>
+
+<p>Add the following styles to your new CSS file:</p>
+
+<pre><code class="language-css">main {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  min-height: auto;
+}
+
+.card {
+  width: 224px;
+  height: 224px;
+  margin: 25px 25px 15px 40px;
+  border: solid 2px;
+  box-shadow: var(--card-box-shadow);
+  position: relative;
+}
+
+.card-bg {
+  opacity: 0.4;
+  position: absolute;
+  display: inline-flex;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.card-content {
+  padding: 15px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-direction: column;
+  color: var(--text-color);
+}
+
+.btn {
+  margin-bottom: 15px;
+}
+
+.card h2 {
+  margin: 7px 0;
+  font-size: var(--font-xl);
+  z-index: 1;
+}
+
+.card p {
+  margin: 0;
+  font-size: var(--font-reg);
+  z-index: 1;
+}
+</code></pre>
+
+<p>Refresh to see your styled details page.</p>
+
+<p><img src="./public/toy-detail.png" alt="toy detail" /></p>
+
+<p>Nice work!</p>
+
+<h2 id="update-and-delete-toys">Update and Delete Toys</h2>
+
+<p>We’re almost finished with our CBV’s, we just need to add the final update and delete functionality for individual toys.</p>
+
+<p>First we’ll create the paths:</p>
+
+<p>In <code>urls.py</code>:</p>
+
+<pre><code class="language-python">    #Existing urls above
+    path('toys/&lt;int:pk&gt;/update/', views.ToyUpdate.as_view(), name='toy-update'),
+    path('toys/&lt;int:pk&gt;/delete/', views.ToyDelete.as_view(), name='toy-delete'),
+</code></pre>
+
+<p>Now we add the views in <code>views.py</code>:</p>
+
+<pre><code class="language-python">class ToyUpdate(UpdateView):
+    model = Toy
+    fields = ['name', 'color']
+
+class ToyDelete(DeleteView):
+    model = Toy
+    success_url = '/toys/'
+</code></pre>
+
+<p>Update the Edit and Delete buttons on the <code>toy-detail.html</code> page with their new URLs:</p>
+
+<pre><code class="language-html">&lt;a href="{% url 'toy-update' toy.id %}" class="btn warn"&gt;Edit&lt;/a&gt;
+&lt;a href="{% url 'toy-delete' toy.id %}" class="btn danger"&gt;Delete&lt;/a&gt;
+</code></pre>
+
+<p>Update is now complete. You can test this functionality now. Our delete functionality needs one final step.</p>
+
+<h3 id="create-delete-confirmation-page">Create delete confirmation page</h3>
+
+<p>Let’s make a template that will confirm the delete.</p>
+
+<p>Run the following in the terminal:</p>
+
+<pre><code class="language-bash">touch main_app/templates/main_app/toy_confirm_delete.html
+</code></pre>
+
+<p>And add the following markdown:</p>
+
+<pre><code class="language-html">{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+&lt;div class="page-header"&gt;
+  &lt;h1&gt;Delete Toy?&lt;/h1&gt;
+  &lt;img src="{% static 'images/nerd-cat.svg' %}" alt="A cat using a computer" /&gt;
+&lt;/div&gt;
+&lt;h2&gt;Are you sure you want to delete {{ object.name }}?&lt;/h2&gt;
+
+&lt;form action="" method="post" class="form"&gt;
+  {% csrf_token %}
+  &lt;a href="{% url 'toy-detail' toy.id %}" class="btn secondary"&gt; Cancel &lt;/a&gt;
+  &lt;button type="submit" class="btn danger"&gt;Yes - Delete!&lt;/button&gt;
+&lt;/form&gt;
+
+{% endblock %}
+</code></pre>
+
+<p>Test your new delete confirmation page.</p>
+
+<p><img src="./public/toy-delete.png" alt="Delete Confirmation Page" /></p>
+
+<p>Great job!</p>
+
+<h1>
+  <span class="headline">Cat Collector</span>
+  <span class="subhead">Django Many-to-Many Relationships</span>
+</h1>
+
+<!--  -->
+
+<p><strong>Learning objective:</strong> By the end of this lesson, students will be able to create and manage a many-to-many relationship between Cats and Toys using Django’s built-in features.</p>
+
+<h2 id="many-to-many-relationships-in-relational-databases">Many-to-Many Relationships in Relational Databases</h2>
+
+<p>In relational databases like those used by Django, creating many-to-many relationships between two entities requires an intermediary or join table. This join table, unlike in document-based databases like MongoDB, is essential for managing <code>M:M</code> relationships in SQL databases.</p>
+
+<h3 id="the-role-of-a-join-table">The role of a join table</h3>
+
+<p>A join table acts as a bridge connecting two other tables by storing foreign keys that reference the primary keys of these tables. Each row in a join table represents a link between one entry in each of the connected tables.</p>
+
+<p>For instance, if a <code>Cat</code> can play with many <code>Toys</code>, and each <code>Toy</code> can be used by many <code>Cats</code>, the join table will store pairs of foreign keys pointing to the respective entries in the <code>Cats</code> and <code>Toys</code> tables.</p>
+
+<p><img src="./public/relational-db.png" alt="Join Table" /></p>
+
+<h3 id="associating-cats-with-toys">Associating <code>Cats</code> with <code>Toys</code></h3>
+
+<p>Now that we have set up full CRUD capabilities for the <code>Toy</code> model, our next step is to define a many-to-many relationship between <code>Cats</code> and <code>Toys</code>. This allows multiple cats to interact with multiple toys interchangeably.</p>
+
+<p>When you associate a <code>Cat</code> with a <code>Toy</code>, you add a row to the join table containing the foreign keys of the cat and toy involved. In reverse, dissociating a <code>Cat</code> from a <code>Toy</code> simply involves removing the corresponding row from the join table, without deleting any records from the <code>Cat</code> or <code>Toy</code> tables themselves.</p>
+
+<h2 id="many-to-many-relationship-in-django">Many-to-Many Relationship in Django</h2>
+
+<p>As usual, the Django framework handles a lot of the heavy lifting when it comes to working with many-to-many relationships between Models.</p>
+
+<p>Forms and templates aside, all we need to do to implement a many-to-many relationship using Django is:</p>
+
+<ol>
+  <li>Add a <code>ManyToManyField</code> on one of the Models</li>
+  <li>Create the migration and migrate it to update the database</li>
+</ol>
+
+<p>Django will ensure that a “hidden” join table is created that links the rows of the other two tables together.</p>
+
+<p>Let’s get started!</p>
+
+<h2 id="add-a-manytomanyfield-on-one-side-of-the-relationship">Add a <code>ManyToManyField</code> on one side of the relationship</h2>
+
+<p>To create a <code>M:M</code> relationship between two models, we need to add a <code>ManyToManyField</code> on one of them.</p>
+
+<p>When you add a <code>ManyToManyField</code> to one of your models, you also choose a name for the relationship. This name is used as the attribute through which you access related objects from that model.</p>
+
+<p>Given that our application’s focus is on <code>Cats</code>, we are more likely interested in a cat’s toys, than a toy’s cats, so we’ll add the new attribute to the <code>Cat</code> model and name it “toys”:</p>
+
+<pre><code class="language-python">class Cat(models.Model):
+    name = models.CharField(max_length=100)
+    breed = models.CharField(max_length=100)
+    description = models.TextField(max_length=250)
+    age = models.IntegerField()
+    # Add the M:M relationship
+    toys = models.ManyToManyField(Toy)
+</code></pre>
+
+<blockquote>
+  <p>Tip: If you don’t have your <code>Toy</code> model above your <code>Cat</code> model in <code>models.py</code>, you’ll need to move it there now. This will correct any <code>toy not defined</code> server errors.</p>
+</blockquote>
+
+<h2 id="make-and-run-the-migration">Make and run the migration</h2>
+
+<p>Because we’ve made a change to a Model that impacts the database’s schema, we need to make a migration and migrate it to update the database:</p>
+
+<p>First, make the migration:</p>
+
+<pre><code class="language-bash">python3 manage.py makemigrations
+</code></pre>
+
+<p>Then migrate the created migration to update the schema:</p>
+
+<pre><code class="language-bash">python3 manage.py migrate
+</code></pre>
+
+<p>Thats it, the relationship has been made! Now when we navigate to our new cat page we automatically see an option to add a toy in the new cat form. This means the connection was successful, however it’s not the best user experience. What if we don’t want to add a toy when creating a cat?</p>
+
+<p>We need to make a small change to ensure this field isn’t shown when a user is creating a cat.</p>
+
+<p>Navigate to the <code>CatCreate</code> class in <code>main_app/views</code>:</p>
+
+<p>Change the property:</p>
+
+<pre><code class="language-python">fields = '__all__'
+</code></pre>
+
+<p>to the following:</p>
+
+<pre><code class="language-python">fields = ['name', 'breed', 'description', 'age']
+</code></pre>
+
+<p>This ensures that only the listed fields are shown in the new cat form. We’ll create a separate form for adding toys to cats in a later section.</p>
+
+<h2 id="displaying-a-list-of-all-available-toys">Displaying a list of all available toys</h2>
+
+<p>In this part of the lesson, we will display a list of all toys and provide an option to associate each toy with a cat. This will be achieved by adding an “Add” button next to each toy, which, when clicked, will link the toy to the cat.</p>
+
+<h3 id="update-the-view-to-include-toys">Update the view to include <code>toys</code></h3>
+
+<p>First, update the cat_detail view in your <code>views.py</code> to fetch all toys from the database and pass them to the template:</p>
+
+<pre><code class="language-python">def cat_detail(request, cat_id):
+    cat = Cat.objects.get(id=cat_id)
+    toys = Toy.objects.all()  # Fetch all toys
+    feeding_form = FeedingForm()
+    return render(request, 'cats/detail.html', {
+        'cat': cat,
+        'feeding_form': feeding_form,
+        'toys': toys  # Pass toys to the template
+    })
+</code></pre>
+
+<p>This code ensures that all toys are available in the cats <code>detail</code> page template, enabling us to display them next to the cat’s details.</p>
+
+<h3 id="modify-the-template-to-display-toys">Modify the template to display <code>toys</code></h3>
+
+<p>Now, let’s update the <code>cats/detail.html</code> template to display each toy with an “Give Toy” button that will eventually link the toy to the cat.</p>
+
+<p>Add the following <code>&lt;section&gt;</code> with the class “toys”, below the existing <code>&lt;section&gt;</code> with the class “feedings”:</p>
+
+<pre><code class="language-html">&lt;section class="feedings"&gt;
+  &lt;!-- This is a long section --&gt;
+&lt;/section&gt;
+
+&lt;section class="toys"&gt;
+  &lt;div class="subsection-title"&gt;
+    &lt;h2&gt;Toys&lt;/h2&gt;
+    &lt;img src="{% static 'images/string.svg' %}" alt="A ball of string" /&gt;
+    &lt;img src="{% static 'images/mouse.svg' %}" alt="A mouse" /&gt;
+    &lt;img src="{% static 'images/fish.svg' %}" alt="A fishy toy" /&gt;
+  &lt;/div&gt;
+  &lt;h3&gt;Available Toys&lt;/h3&gt;
+  &lt;div class="subsection-content"&gt;
+    {% for toy in toys %}
+      &lt;div class="toy-container"&gt;
+        &lt;div class="color-block" style="background-color: {{ toy.color }}"&gt;&lt;/div&gt;
+        &lt;p&gt;{{ toy.color }} {{ toy.name }}&lt;/p&gt;
+        &lt;form action="" method="post"&gt;
+          {% csrf_token %}
+          &lt;button type="submit" class="btn submit"&gt;Give Toy&lt;/button&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    {% endfor %}
+  &lt;/div&gt;
+&lt;/section&gt;
+</code></pre>
+
+<p>In the code above:</p>
+
+<ul>
+  <li>
+    <p>Each toy is being programmatically rendered with its <code>color</code> and <code>name</code> properties listed.</p>
+  </li>
+  <li>
+    <p>Each toy is also being rendered with a simple form with a “Give Toy” button, which allows users to associate or “give” a toy to a cat.</p>
+  </li>
+  <li>
+    <p>The form action will be linked to a URL that handles the association.</p>
+  </li>
+  <li>
+    <p>The <code>action</code> attribute is currently empty, as we will implement this feature next once we create the <code>path</code> used to associate cats and toys.</p>
+  </li>
+</ul>
+
+<p>After making these changes, your user interface will display a list of toys on the cat’s detail page, each with an option to give the toy to the cat.</p>
+
+<p>Take a moment to add toys if you don’t see any listed!</p>
+
+<p><img src="./public/cat-toys-available.png" alt="All Available Toys on Details Page" /></p>
+
+<h2 id="associating-cats-and-toys">Associating cats and toys</h2>
+
+<p>Next, we will implement the functionality to link toys to cats using the many-to-many relationship we created earlier. This involves setting up a new view function that handles the association process when a user clicks the “Give Toy” button next to a toy in the cat’s detail page.</p>
+
+<h3 id="define-the-url-pattern">Define the URL pattern</h3>
+
+<p>First, we’ll add a new URL pattern in the <code>urls.py</code> file. This URL will handle the association between a cat and a toy by capturing their respective <code>ids</code>.</p>
+
+<p>To do this, the server needs to know the <code>id</code> of <strong>both</strong> the cat and the toy being associated:</p>
+
+<pre><code class="language-python"># New URL to associate a toy with a cat
+path('cats/&lt;int:cat_id&gt;/associate-toy/&lt;int:toy_id&gt;/', views.associate_toy, name='associate-toy'),
+</code></pre>
+
+<p>This URL pattern includes two dynamic segments <code>cat_id</code> and <code>toy_id</code> which will capture the <code>id</code>s from the URL and pass them to the view function.</p>
+
+<blockquote>
+  <p>This will cause an error with our server temporarily, because we have not created the view for this new path.</p>
+</blockquote>
+
+<h3 id="update-the-form-action-in-the-template">Update the form action in the template</h3>
+
+<p>Next, modify the form in your <code>cat-detail.html</code> template to use this new URL. Ensure that the form’s <code>action</code> attribute is set to the correct URL which will trigger the association when submitted:</p>
+
+<pre><code class="language-html">&lt;form action="{% url 'associate-toy' cat.id toy.id %}" method="post"&gt;
+  {% csrf_token %}
+  &lt;button type="submit" class="btn submit"&gt;Give Toy&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+<p>In this form, the <code>{% url 'assoc-toy' cat.id toy.id %}</code> template tag dynamically generates the correct URL based on the <code>ids</code> of the cat and the toy. This setup ensures that each “Give Toy” button properly associates its corresponding toy with the current cat.</p>
+
+<blockquote>
+  <p>Note how we need to provide both <code>id</code>s as space-separated parameters in the order that they were defined in the path (first the cat’s id, then the toy’s).</p>
+</blockquote>
+
+<h3 id="create-the-association-view-function">Create the association view function</h3>
+
+<p>Finally, create the view function in <code>views.py</code> that will execute the association between the cat and the toy using the <code>ids</code> passed from the form:</p>
+
+<p><em>You can add this function anywhere in your views file:</em></p>
+
+<pre><code class="language-python">def associate_toy(request, cat_id, toy_id):
+    # Note that you can pass a toy's id instead of the whole object
+    Cat.objects.get(id=cat_id).toys.add(toy_id)
+    return redirect('cat-detail', cat_id=cat_id)
+</code></pre>
+
+<p>Now that we have our view function in place, we can test making associations from the UI by verifying the association in the admin portal.
+Give a cat a couple toys and head to the admin portal!</p>
+
+<p><a href="http://127.0.0.1:8000/admin">http://127.0.0.1:8000/admin</a></p>
+
+<p>Toys associated with each cat will appear highlighted in the admin portal.</p>
+
+<p><img src="./public/admin-verify-toy.png" alt="Admin Portal Toy Association" /></p>
+
+<blockquote>
+  <p>Biscuit has been given the two toys highlighted in the toy list.</p>
+</blockquote>
+
+<h2 id="displaying-a-list-of-associated-toys">Displaying a list of associated <code>Toys</code></h2>
+
+<p>Now that we have verified we are able to make associations between cats and toys, we should display them back to the user.</p>
+
+<p>Consider the following user story:</p>
+
+<p><em>As a User, when viewing the detail page of a cat, I want to see a list of toys the cat has and be able to give more toys the cat doesn’t already have</em></p>
+
+<p>Displaying a cat’s toys is just a matter of updating <code>/cats/detail.html</code> to show <code>cat.toys.all</code>:</p>
+
+<pre><code class="language-html">&lt;section class="toys"&gt;
+  &lt;div class="subsection-title"&gt;
+    &lt;h2&gt;Toys&lt;/h2&gt;
+    &lt;img src="{% static 'images/string.svg' %}" alt="A ball of string" /&gt;
+    &lt;img src="{% static 'images/mouse.svg' %}" alt="A mouse" /&gt;
+    &lt;img src="{% static 'images/fish.svg' %}" alt="A fishy toy" /&gt;
+  &lt;/div&gt;
+
+  &lt;!-- displaying a cat's toys --&gt;
+  &lt;h3&gt;{{ cat.name }}'s Toys&lt;/h3&gt;
+  &lt;div class="subsection-content"&gt;
+    {% if cat.toys.count %}
+      {% for toy in cat.toys.all %}
+        &lt;div class="toy-container"&gt;
+          &lt;div class="color-block" style="background-color: {{ toy.color }}"&gt;&lt;/div&gt;
+          &lt;a href="{% url 'toy-detail' toy.id %}"&gt;
+            &lt;p&gt;A {{ toy.color }} {{ toy.name }}&lt;/p&gt;
+          &lt;/a&gt;
+        &lt;/div&gt;
+      {% endfor %}
+    {% else %}
+      &lt;p class="no-toys"&gt;{{cat.name}} doesn't have any toys!&lt;/p&gt;
+    {% endif %}
+  &lt;/div&gt;
+
+  &lt;h3&gt;Available Toys&lt;/h3&gt;
+  &lt;div class="subsection-content"&gt;
+    &lt;!-- Available toys here --&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+</code></pre>
+
+<p>In this section, the template checks whether the cat has any associated toys. If the cat has no toys, a message stating <code>"{{cat.name}} doesn't have any toys!"</code> is displayed. If the cat does have toys, we use a loop to list each toy that belongs to the cat.</p>
+
+<h3 id="removing-toys-from-the-available-list">Removing toys from the available list</h3>
+
+<p>As an improvement to the user experience, you might consider removing toys from the available list once they have been given to a cat. To do this we will make a slight change to the way toys are being filtered in the <code>cat_detail</code> view before rendering the data in the <code>detail</code> template.</p>
+
+<p>In the <code>cat_detail</code> view function we will replace the code to get all toys:</p>
+
+<pre><code class="language-python">toys = Toy.objects.all()
+</code></pre>
+
+<p>And update this function to the following:</p>
+
+<pre><code class="language-python">def cat_detail(request, cat_id):
+    cat = Cat.objects.get(id=cat_id)
+
+    # Only get the toys the cat does not have
+    toys_cat_doesnt_have = Toy.objects.exclude(id__in = cat.toys.all().values_list('id'))
+
+    feeding_form = FeedingForm()
+    return render(request, 'cats/detail.html', {
+        'cat': cat,
+        'feeding_form': feeding_form,
+        'toys': toys_cat_doesnt_have  # send those toys
+    })
+</code></pre>
+
+<p>This line of code is designed to fetch all toys that are not currently associated with that specific cat. It’s useful for displaying only those toys that the cat could still “acquire” or be associated with.</p>
+
+<p>It’s a bit complex looking, so let’s break down each part:</p>
+
+<ul>
+  <li>
+    <p>The first half of this expression <code>Toy.objects.exclude(id__in = </code> retrieves all Toy objects that do not have an <code>id</code> that is in the list of associated toy <code>ids</code>. The <code>exclude()</code> method is the opposite of <code>filter()</code>, which means it will get all toys except those whose <code>ids</code> are listed in the previous query. The <code>id__in</code> is a field lookup that checks if the <code>id</code> field of the <code>Toy</code> model is within the provided list.</p>
+  </li>
+  <li>
+    <p>The second half of this expression <code>cat.toys.all().values_list('id')</code> retrieves a list of <code>ids</code> for all the toys associated with a specific cat. This is done by first accessing all toy instances linked to the cat through the many-to-many relationship <code>(cat.toys.all())</code>, and then narrowing the data down to just the <code>ids</code> of these toys using <code>values_list('id')</code>.</p>
+  </li>
+</ul>
+
+<p>Now we can update the “Available Toys” section in the UI to only show available toys, and a conditional message once a cat has collected all the available toys:</p>
+
+<pre><code class="language-html">&lt;h3&gt;Available Toys&lt;/h3&gt;
+&lt;div class="subsection-content"&gt;
+  {% if toys.count %}
+    {% for toy in toys.all %}
+      &lt;div class="toy-container"&gt;
+        &lt;div class="color-block" style="background-color: {{ toy.color }}"&gt;&lt;/div&gt;
+        &lt;a href="{% url 'toy-detail' toy.id %}"&gt;
+          &lt;p&gt;A {{ toy.color }} {{ toy.name }}&lt;/p&gt;
+        &lt;/a&gt;
+        &lt;form action="{% url 'associate-toy' cat.id toy.id %}" method="post"&gt;
+          {% csrf_token %}
+          &lt;button type="submit" class="btn submit"&gt;Give toy&lt;/button&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    {% endfor %}
+  {% else %}
+    &lt;p class="all-toys"&gt;{{cat.name}} already has all the available toys 🥳&lt;/p&gt;
+  {% endif %}
+&lt;/div&gt;
+</code></pre>
+
+<p>Looking great!</p>
+
+<p><img src="./public/cat-toys-all.png" alt="All Available Toys" /></p>
+
+<h2 id="-you-do-remove-a-toy-from-a-cat">🎓 You Do: Remove a <code>Toy</code> from a <code>Cat</code></h2>
+
+<p>Implement the following user story:</p>
+
+<p><em>As a User, when viewing the detail page for a cat, I want to be able to remove a toy from that cat</em></p>
+
+<p>This process will be nearly identical to what we did when adding an association, but with the opposite action.</p>
+
+<ol>
+  <li>
+    <p>Define the URL.</p>
+
+    <pre><code class="language-python">path('cats/&lt;int:cat_id&gt;/remove-toy/&lt;int:toy_id&gt;/', views.remove_toy, name='remove-toy'),
+
+</code></pre>
+
+  </li>
+  <li>
+    <p>Create the view function. <em>Hint: Check out Django’s <strong><a href="https://docs.djangoproject.com/en/5.1/ref/models/relations/#django.db.models.fields.related.RelatedManager.remove">.remove()</a></strong> method.</em></p>
+
+    <pre><code class="language-python">def remove_toy(request, cat_id, toy_id):
+    # Look up the cat
+    # Look up the toy
+    # Remove the toy from the cat
+    return redirect('cat-detail', cat_id=cat.id)
+
+</code></pre>
+
+  </li>
+  <li>
+    <p>Update the template. Where should this form be added?</p>
+
+    <pre><code class="language-html">&lt;form action="{% url 'remove-toy' cat.id toy.id %}" method="post"&gt;
+
+{% csrf_token %}
+&lt;button type="submit" class="btn btn-danger"&gt;Remove Toy&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+  </li>
+</ol>
