@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}
+    Projects | My Personal Portfolio
+{% endblock title %}
+{% block page_content %}
+    <h1>Projects</h1>
+    <div class="row">
+        {% for project in projects %}
+            <div class="col-md-4">
+                <div class="card mb-2">
+                    {% if project.image %}
+                        <img class="card-img-top"
+                             src="{{ project.image.url }}"
+                             alt="{{ project.title }}"
+                             width="300"
+                             height="auto">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text">{{ project.description }}</p>
+                        {% comment %} This is the link to the project_detail page. Accessing URLs in Django is similar to accessing static files. The code for the URL has the following form: {% url '<url path name>' <view_function_arguments> %} {% endcomment %}
+                        <a href="{% url 'project_detail' project.pk %}" class="btn btn-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock page_content %}
