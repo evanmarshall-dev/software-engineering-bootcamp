@@ -19,6 +19,9 @@
             <br>
             <h5>Technology used:</h5>
             <p>{{ project.technology }}</p>
+            <a href="{% url 'project_update' project.pk %}" class="btn btn-warning">Edit Project</a>
+            <a href="{% url 'project_delete' project.pk %}" class="btn btn-danger">Delete Project</a>
+            <a href="{% url 'project_list' %}" class="btn btn-secondary">Back to Projects</a>
         </div>
     </div>
 {% endblock page_content %}

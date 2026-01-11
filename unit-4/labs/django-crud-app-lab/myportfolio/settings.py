@@ -125,6 +125,15 @@ STATIC_URL = 'static/'
 MEDIA_ROOT = BASE_DIR / "uploads/"
 MEDIA_URL = "media/"
 
+# Add this variable to specify where decorators and mixins should redirect to
+LOGIN_URL = 'home'
+
+# Add this variable to specify where successful logins should redirect to
+LOGIN_REDIRECT_URL = '/projects/'
+
+# Add this variable to specify where logging out redirects to
+LOGOUT_REDIRECT_URL = 'home'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

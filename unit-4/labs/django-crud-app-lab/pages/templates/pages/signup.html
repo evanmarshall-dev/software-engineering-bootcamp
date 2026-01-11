@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}
+    Sign Up | My Personal Portfolio
+{% endblock title %}
+{% block page_content %}
+    <h1>Sign Up</h1>
+    {% if error_message %}<p class="red-text">{{ error_message }}</p>{% endif %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Sign Up</button>
+    </form>
+{% endblock page_content %}

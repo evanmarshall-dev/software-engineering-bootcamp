@@ -3,5 +3,15 @@
     Home | My Personal Portfolio
 {% endblock title %}
 {% block page_content %}
-    <h1>Hello, World!</h1>
+    <h1>Hello, Welcome to My Personal Portfolio</h1>
+    <p>This is the home page of my personal portfolio website. Here you can find information about me and my projects.</p>
+    {% if not user.is_authenticated %}
+        <form method="post" action="{% url 'home' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            {% comment %} Redirect user that tries to access a protected page after login {% endcomment %}
+            <input type="hidden" name="next" value="{{ next }}">
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    {% endif %}
 {% endblock page_content %}

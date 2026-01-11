@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}
+    Add A New Project | My Personal Portfolio
+{% endblock title %}
+{% block page_content %}
+    <style>
+        input[type="text"],
+        textarea,
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 0.375rem 0.75rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+        }
+    </style>
+    {% if project %}
+        <h1>Edit {{ project.title }}</h1>
+    {% else %}
+        <h1>Add A New Project</h1>
+    {% endif %}
+    {% comment %} Action set to empty string to submit to the same URL {% endcomment %}
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% comment %} Since I want to style each form field individually, I won't use {{ form.as_p }} {% endcomment %}
+        {% comment %} {{ form.as_p }} {% endcomment %}
+        <div class="mb-3">
+            {{ form.title.label_tag }}
+            {{ form.title }}
+        </div>
+        <div class="mb-3">
+            {{ form.description.label_tag }}
+            {{ form.description }}
+        </div>
+        <div class="mb-3">
+            {{ form.technology.label_tag }}
+            {{ form.technology }}
+        </div>
+        <div class="mb-3">
+            {{ form.image.label_tag }}
+            {{ form.image }}
+        </div>
+        <button type="submit" class="btn btn-primary">Create Project</button>
+        <a href="{% url 'project_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock page_content %}
