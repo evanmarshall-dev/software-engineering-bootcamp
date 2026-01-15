@@ -18,7 +18,13 @@
             <p>{{ project.description }}</p>
             <br>
             <h5>Technology used:</h5>
-            <p>{{ project.technology }}</p>
+            {% if project.technologies.all %}
+                <p>
+                    {% for tech in project.technologies.all %}<span class="badge bg-primary">{{ tech.name }}</span>{% endfor %}
+                </p>
+            {% else %}
+                <p>No technologies specified</p>
+            {% endif %}
             <a href="{% url 'project_update' project.pk %}" class="btn btn-warning">Edit Project</a>
             <a href="{% url 'project_delete' project.pk %}" class="btn btn-danger">Delete Project</a>
             <a href="{% url 'project_list' %}" class="btn btn-secondary">Back to Projects</a>

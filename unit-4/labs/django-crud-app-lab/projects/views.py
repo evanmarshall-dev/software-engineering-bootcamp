@@ -7,6 +7,8 @@
 from django.shortcuts import render
 # Import Project class from models.py
 from projects.models import Project
+# Import the custom form
+from projects.forms import ProjectForm
 # In order to add class based views, you need to import the generic views module from Django and the model itself.
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 # Import the login_required decorator
@@ -53,8 +55,9 @@ class ProjectDetail(LoginRequiredMixin, DetailView):
 
 class ProjectCreate(LoginRequiredMixin, CreateView):
     model = Project
+    form_class = ProjectForm
     # ? fields = '__all__'
-    fields = ['title', 'description', 'technology', 'image']
+    # fields = ['title', 'description', 'technologies', 'image']
     # Only need template_name if you want to use a custom template name.
     # ? template_name = 'projects/project_form.html'
     # Do not need success URL because get_absolute_url is defined in the Project model.
@@ -71,7 +74,8 @@ class ProjectCreate(LoginRequiredMixin, CreateView):
 
 class ProjectUpdate(LoginRequiredMixin, UpdateView):
     model = Project
-    fields = ['title', 'description', 'technology', 'image']
+    form_class = ProjectForm
+    # fields = ['title', 'description', 'technologies', 'image']
 
 class ProjectDelete(LoginRequiredMixin, DeleteView):
     model = Project

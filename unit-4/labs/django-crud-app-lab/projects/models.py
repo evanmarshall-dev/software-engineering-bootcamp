@@ -2,10 +2,16 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 
+class Technology(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
 class Project(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
-    technology = models.CharField(max_length=20)
+
     # In your Project model, you define a FileField with a subfolder named project_images/. That’s where Django should store the images when you upload them.
     # You also set blank to True. That way, it’s okay if a project doesn’t contain a picture.
     # You could be even more explicit and use an ImageField for your images. If you do so, then you need to install pillow into your development environment first.
@@ -22,3 +28,6 @@ class Project(models.Model):
     def get_absolute_url(self):
         # Use reverse() to dynamically generate the URL for the project_detail view, passing the primary key of the current instance.
         return reverse("project_detail", kwargs={"pk": self.pk})
+
+    # With related_name set to "projects", you can access all projects associated with a technology instance using technology.projects.all().
+    technologies = models.ManyToManyField(Technology, related_name="projects")
